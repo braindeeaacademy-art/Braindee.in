@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Gallery | BrainDEE Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap');
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #0f172a; 
+            color: #f8fafc;
+        }
+        
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; letter-spacing: -0.01em; }
+        
+        .glass-nav { 
+            background: rgba(15, 23, 42, 0.9); 
+            backdrop-filter: blur(12px); 
+            border-bottom: 1px solid rgba(255,255,255,0.1); 
+        }
+
+        .video-card {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            border-color: #4361ee;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        video {
+            width: 100%;
+            display: block;
+            border-bottom: 2px solid rgba(255,255,255,0.05);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animated background elements */
+        .bg-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(60px);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="bg-glow top-[-100px] left-[-100px]"></div>
+    <div class="bg-glow bottom-[-100px] right-[-100px]"></div>
+
+    <!-- Preloader -->
+    <div id="loader" class="fixed inset-0 bg-slate-900 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 py-4 px-6 md:px-12 glass-nav">
+        <div class="max-w-[1440px] mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2">
+                <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="BrainDEE Logo" class="h-10 md:h-14 w-auto">
+                <span class="text-lg md:text-xl font-black text-white uppercase leading-none">BrainDEE Academy</span>
+            </a>
+            <a href="index.html" class="text-sm font-bold text-blue-400 hover:text-white transition-colors flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-12 px-6">
+        <div class="max-w-4xl mx-auto text-center reveal">
+            <span class="px-4 py-1 bg-blue-900/50 text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 inline-block border border-blue-800/50">Experience the Magic</span>
+            <h1 class="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter">Student <span class="text-blue-500">Showcase</span></h1>
+            <p class="text-slate-400 text-lg md:text-xl leading-relaxed">Watch our mathemagicians in action as they demonstrate high-speed mental arithmetic and abacus mastery.</p>
+        </div>
+    </header>
+
+    <main class="pb-32 px-6">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Video 1 -->
+            <div class="video-card reveal">
+                <video controls preload="metadata" poster="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop">
+                    <source src="https://braindeeacademy.com/wp-content/uploads/2025/04/WhatsApp-Video-2025-04-10-at-8.47.16-AM.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="p-6">
+                    <h3 class="font-black uppercase text-lg text-white mb-2">Classroom Action</h3>
+                    <p class="text-slate-500 text-sm">Students performing rapid calculations during a live workshop session.</p>
+                </div>
+            </div>
+
+            <!-- Video 2 -->
+            <div class="video-card reveal">
+                <video controls preload="metadata">
+                    <source src="https://braindeeacademy.com/wp-content/uploads/2025/02/IMG_9601-1-1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="p-6">
+                    <h3 class="font-black uppercase text-lg text-white mb-2">Abacus Mastery</h3>
+                    <p class="text-slate-500 text-sm">Focus and concentration development through traditional 17-rod abacus training.</p>
+                </div>
+            </div>
+
+            <!-- Video 3 -->
+            <div class="video-card reveal">
+                <video controls preload="metadata">
+                    <source src="https://braindeeacademy.com/wp-content/uploads/2025/02/document_6192670644090442398.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="p-6">
+                    <h3 class="font-black uppercase text-lg text-white mb-2">Speed Mental Math</h3>
+                    <p class="text-slate-500 text-sm">Visualizing numbers and performing arithmetic without any physical tools.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-slate-950 text-white text-center px-4 border-t border-slate-900">
+        <div class="container mx-auto">
+            <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="mx-auto mb-4 h-12"> 
+            <p class="text-slate-500 text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold">© 2024 BrainDEE Academy | Empowering The Next Generation</p>
+        </div>
+    </footer>
+
+    <script>
+        function hideLoader() {
+            var loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(function() { loader.style.display = 'none'; }, 500);
+            }
+        }
+        setTimeout(hideLoader, 3000);
+        window.addEventListener('load', hideLoader);
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

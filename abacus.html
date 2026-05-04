@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Abacus Training | BrainDEE Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700&family=Fredoka:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        h1, h2, h3, .brand-font {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* --- Professional Master Abacus Styles --- */
+        .wood-frame {
+            background: #451a03;
+            background: repeating-linear-gradient(45deg, #451a03 0, #451a03 10px, #3c1602 10px, #3c1602 20px);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                inset 0 0 40px rgba(0,0,0,0.8);
+            border-radius: 12px;
+            padding: 8px;
+            position: relative;
+            border: 6px solid #271001;
+            touch-action: pan-x; 
+            height: 380px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rod-stick {
+            background: linear-gradient(90deg, #94a3b8 0%, #f1f5f9 50%, #94a3b8 100%);
+            width: 4px;
+            height: 100%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+            border-radius: 2px;
+        }
+
+        .beam {
+            background: #1e293b;
+            background: linear-gradient(180deg, #0f172a 0%, #334155 50%, #0f172a 100%);
+            height: 10px;
+            width: 100%;
+            position: absolute;
+            top: 28%;
+            z-index: 20;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+        }
+
+        .bead {
+            width: 42px;
+            height: 24px;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            z-index: 10;
+            transition: top 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: radial-gradient(circle at 30% 30%, #fde047, #a16207);
+            border: 1px solid #713f12;
+            box-shadow: 
+                inset -2px -2px 4px rgba(0,0,0,0.3),
+                inset 2px 2px 4px rgba(255,255,255,0.4),
+                0 2px 3px rgba(0,0,0,0.4);
+            touch-action: none; 
+        }
+
+        @media (max-height: 500px) {
+            .bead { width: 36px; height: 18px; }
+        }
+
+        .bead-heaven-inactive { top: 4%; } 
+        .bead-heaven-active { top: 18%; } 
+
+        .earth-pos-0.inactive { top: 52%; }
+        .earth-pos-1.inactive { top: 62%; }
+        .earth-pos-2.inactive { top: 72%; }
+        .earth-pos-3.inactive { top: 82%; }
+
+        .earth-pos-0.active { top: 34%; }
+        .earth-pos-1.active { top: 44%; }
+        .earth-pos-2.active { top: 54%; }
+        .earth-pos-3.active { top: 64%; }
+
+        .unit-dot {
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 25;
+            box-shadow: 0 0 4px rgba(0,0,0,0.5);
+        }
+        
+        .center-marker {
+            width: 8px;
+            height: 8px;
+            background: #fbbf24;
+            border: 1px solid #451a03;
+        }
+
+        .scroll-container::-webkit-scrollbar { height: 6px; }
+        .scroll-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-700 bg-slate-50">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 py-4 px-6 md:px-12 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3">
+                <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="Logo" class="h-10 md:h-14">
+                <span class="text-xl font-bold text-slate-900 tracking-tight">BrainDEE <span class="text-blue-600">Academy</span></span>
+            </a>
+            <a href="index.html" class="text-sm font-bold text-blue-600 flex items-center gap-2 hover:underline">
+                <i class="fas fa-arrow-left"></i> Back to Main Site
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 px-6 bg-white">
+        <div class="max-w-5xl mx-auto text-center">
+            <span class="px-4 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase tracking-widest mb-6 inline-block">Mental Arithmetic Module</span>
+            <h1 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 uppercase tracking-tight">Mastering the <span class="text-blue-600">Abacus</span></h1>
+            <p class="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                Unlock your child's hidden potential with the ancient art of Soroban. Boost calculation speed, visualization, and cognitive memory.
+            </p>
+        </div>
+    </section>
+
+    <!-- Interactive Tool Section -->
+    <section class="py-12 px-4 bg-slate-900 overflow-hidden">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-2xl md:text-3xl font-bold text-white mb-2 uppercase">Interactive 13-Rod Tool</h2>
+                <p class="text-slate-400 text-sm italic">Click beads to calculate. Reset to zero at any time.</p>
+            </div>
+
+            <div class="flex flex-col items-center gap-10">
+                <!-- Digital Abacus (REPLACED WITH MASTER TOOL) -->
+                <div class="w-full scroll-container overflow-x-auto overflow-y-hidden pb-4">
+                    <div id="abacus-frame" class="wood-frame mx-auto w-full max-w-5xl relative select-none">
+                        <div class="beam"></div>
+                        <div id="abacus-grid" class="w-full h-full flex justify-around px-4">
+                            <!-- Rods generated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Result Display -->
+                <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl text-center min-w-[300px]">
+                    <p class="text-[10px] text-blue-400 uppercase font-bold tracking-[0.3em] mb-2">Calculated Value</p>
+                    <div id="display-value" class="text-5xl md:text-7xl font-mono font-black text-amber-400">0</div>
+                    <div class="flex justify-center gap-4 mt-6">
+                        <button onclick="resetAbacus()" class="px-8 py-3 bg-red-500/10 text-red-500 border border-red-500/20 rounded-xl font-bold uppercase text-xs hover:bg-red-500 hover:text-white transition-all">
+                            <i class="fas fa-undo mr-2"></i> Reset Beads
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Educational Content -->
+    <section class="py-20 px-6 bg-white">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-start">
+            <div class="reveal">
+                <h2 class="text-3xl font-black text-slate-900 mb-8 uppercase">What is the <span class="text-blue-600">Abacus Tool?</span></h2>
+                <div class="space-y-6 text-slate-600 leading-relaxed">
+                    <p>
+                        The Abacus is a mechanical device used for mathematical calculations. At **BrainDEE Academy**, we use the **Soroban (Japanese Abacus)**, which is specifically designed to perform complex operations at lightning speed.
+                    </p>
+                    <p>
+                        The 13-rod frame is the professional standard. It allows students to handle large numbers (up to trillions) and decimals. Each rod represents a power of ten, making the decimal system tangible and visual.
+                    </p>
+                    <ul class="space-y-4 pt-4">
+                        <li class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center shrink-0 mt-1"><i class="fas fa-layer-group text-blue-600"></i></div>
+                            <p><strong class="text-slate-900 block">Heaven Bead (Top):</strong> Represents a value of 5. It is moved down to add 5.</p>
+                        </li>
+                        <li class="flex items-start gap-4">
+                            <div class="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center shrink-0 mt-1"><i class="fas fa-th text-orange-600"></i></div>
+                            <p><strong class="text-slate-900 block">Earth Beads (Bottom):</strong> Each represents a value of 1. There are 4 earth beads per rod.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 p-8 md:p-12 rounded-[2.5rem] border border-slate-100 reveal">
+                <h3 class="text-2xl font-bold text-slate-900 mb-8 uppercase text-center tracking-tight">How to Use</h3>
+                <div class="space-y-8">
+                    <div class="flex gap-6">
+                        <span class="text-4xl font-black text-blue-200">01</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Setting Zero</h4>
+                            <p class="text-sm text-slate-500">Ensure all earth beads are down and heaven beads are up. The space along the divider bar must be empty.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <span class="text-4xl font-black text-blue-200">02</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Adding Numbers</h4>
+                            <p class="text-sm text-slate-500">Slide beads toward the center bar. One earth bead up = +1. One heaven bead down = +5.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <span class="text-4xl font-black text-blue-200">03</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Place Values</h4>
+                            <p class="text-sm text-slate-500">Work from right to left. The center marker (7th rod) is usually the Ones rod.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-slate-900 text-white border-t border-slate-800">
+        <div class="container mx-auto px-6 text-center">
+            <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="h-16 mx-auto mb-6">
+            <p class="text-slate-500 text-sm uppercase tracking-widest mb-2 font-bold">BrainDEE Academy</p>
+            <p class="text-slate-600 text-xs italic">Creating Mathemagicians Since 2024</p>
+        </div>
+    </footer>
+
+    <script>
+        const ROD_COUNT = 13;
+        const ONES_ROD_INDEX = 6; 
+        const abacusGrid = document.getElementById('abacus-grid');
+        const displayValue = document.getElementById('display-value');
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playBeadSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(850, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.04);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.04);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.04);
+        }
+
+        function renderAbacus() {
+            abacusGrid.innerHTML = '';
+            for (let i = 0; i < ROD_COUNT; i++) {
+                const col = document.createElement('div');
+                col.className = 'relative flex-1 min-w-[44px] h-full select-none';
+                col.dataset.rodIndex = i;
+
+                addButterflyHandler(col, i);
+
+                const rodStick = document.createElement('div');
+                rodStick.className = 'rod-stick';
+                col.appendChild(rodStick);
+
+                if (i === ONES_ROD_INDEX) {
+                    const dot = document.createElement('div');
+                    dot.className = 'unit-dot center-marker';
+                    col.appendChild(dot);
+                } else if (Math.abs(i - ONES_ROD_INDEX) % 3 === 0) {
+                    const dot = document.createElement('div');
+                    dot.className = 'unit-dot';
+                    col.appendChild(dot);
+                }
+
+                const heaven = document.createElement('div');
+                heaven.className = 'bead bead-heaven-inactive';
+                heaven.dataset.type = 'heaven';
+                heaven.dataset.rod = i;
+                heaven.onclick = () => toggleHeaven(i, heaven);
+                addVerticalSwipeHandler(heaven);
+                col.appendChild(heaven);
+
+                for (let j = 0; j < 4; j++) {
+                    const earth = document.createElement('div');
+                    earth.className = `bead earth-pos-${j} inactive`;
+                    earth.dataset.type = 'earth';
+                    earth.dataset.rod = i;
+                    earth.dataset.idx = j;
+                    earth.onclick = () => toggleEarth(i, j);
+                    addVerticalSwipeHandler(earth);
+                    col.appendChild(earth);
+                }
+
+                abacusGrid.appendChild(col);
+            }
+        }
+
+        function addVerticalSwipeHandler(el) {
+            let startY = 0;
+            let isMoving = false;
+
+            el.addEventListener('touchstart', (e) => {
+                if (e.touches.length > 1) return;
+                startY = e.touches[0].clientY;
+                isMoving = false;
+            }, { passive: true });
+
+            el.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 1) return;
+                const currentY = e.touches[0].clientY;
+                if (Math.abs(currentY - startY) > 5) isMoving = true;
+            }, { passive: true });
+
+            el.addEventListener('touchend', (e) => {
+                if (e.changedTouches.length > 1 || !isMoving) return;
+                const endY = e.changedTouches[0].clientY;
+                const diffY = endY - startY;
+                const threshold = 15;
+
+                const type = el.dataset.type;
+                const rodIdx = parseInt(el.dataset.rod);
+                const beadIdx = el.dataset.idx !== undefined ? parseInt(el.dataset.idx) : null;
+
+                if (Math.abs(diffY) > threshold) {
+                    if (type === 'heaven') {
+                        if (diffY > 0 && el.classList.contains('bead-heaven-inactive')) toggleHeaven(rodIdx, el);
+                        else if (diffY < 0 && el.classList.contains('bead-heaven-active')) toggleHeaven(rodIdx, el);
+                    } else {
+                        if (diffY < 0 && !el.classList.contains('active')) toggleEarth(rodIdx, beadIdx);
+                        else if (diffY > 0 && el.classList.contains('active')) toggleEarth(rodIdx, beadIdx);
+                    }
+                }
+            }, { passive: true });
+        }
+
+        function addButterflyHandler(col, rodIdx) {
+            let initialDist = 0;
+            let pinchActive = false;
+
+            col.addEventListener('touchstart', (e) => {
+                const touches = Array.from(e.touches).filter(t => col.contains(t.target));
+                if (touches.length === 2) {
+                    initialDist = Math.abs(touches[0].clientY - touches[1].clientY);
+                    pinchActive = false;
+                }
+            }, { passive: true });
+
+            col.addEventListener('touchmove', (e) => {
+                const touches = Array.from(e.touches).filter(t => col.contains(t.target));
+                if (touches.length === 2) {
+                    if (e.cancelable) e.preventDefault(); 
+                    const currentDist = Math.abs(touches[0].clientY - touches[1].clientY);
+                    const diff = currentDist - initialDist;
+
+                    if (!pinchActive && Math.abs(diff) > 20) {
+                        pinchActive = true;
+                        if (diff < 0) butterflyAction(rodIdx, true); 
+                        else butterflyAction(rodIdx, false); 
+                    }
+                }
+            }, { passive: false });
+        }
+
+        function butterflyAction(rodIdx, activate) {
+            const col = abacusGrid.children[rodIdx];
+            const heaven = col.querySelector('[data-type="heaven"]');
+            const earths = col.querySelectorAll('[data-type="earth"]');
+
+            if (activate) {
+                heaven.className = 'bead bead-heaven-active';
+                earths[0].className = 'bead earth-pos-0 active';
+                earths[1].className = 'bead earth-pos-1 active';
+            } else {
+                heaven.className = 'bead bead-heaven-inactive';
+                earths.forEach((e, idx) => e.className = `bead earth-pos-${idx} inactive`);
+            }
+            playBeadSound();
+            calculate();
+        }
+
+        function toggleHeaven(rodIdx, el) {
+            const isActive = el.classList.contains('bead-heaven-active');
+            el.className = isActive ? 'bead bead-heaven-inactive' : 'bead bead-heaven-active';
+            playBeadSound();
+            calculate();
+        }
+
+        function toggleEarth(rodIdx, beadIdx) {
+            const col = abacusGrid.children[rodIdx];
+            const earths = col.querySelectorAll('[data-type="earth"]');
+            const isActivating = !earths[beadIdx].classList.contains('active');
+
+            if (isActivating) {
+                for (let k = 0; k <= beadIdx; k++) {
+                    earths[k].className = `bead earth-pos-${k} active`;
+                }
+            } else {
+                for (let k = beadIdx; k < 4; k++) {
+                    earths[k].className = `bead earth-pos-${k} inactive`;
+                }
+            }
+            playBeadSound();
+            calculate();
+        }
+
+        function calculate() {
+            let total = 0n;
+            for (let i = 0; i < ROD_COUNT; i++) {
+                if (i <= ONES_ROD_INDEX) {
+                    const col = abacusGrid.children[i];
+                    let val = 0;
+                    if (col.querySelector('[data-type="heaven"]').classList.contains('bead-heaven-active')) val += 5;
+                    val += col.querySelectorAll('[data-type="earth"].active').length;
+                    
+                    const power = BigInt(ONES_ROD_INDEX - i);
+                    total += BigInt(val) * (10n ** power);
+                }
+            }
+            displayValue.innerText = total.toLocaleString();
+        }
+
+        function resetAbacus() {
+            document.querySelectorAll('.bead-heaven-active').forEach(b => b.className = 'bead bead-heaven-inactive');
+            document.querySelectorAll('[data-type="earth"].active').forEach((b) => {
+                const i = b.dataset.idx;
+                b.className = `bead earth-pos-${i} inactive`;
+            });
+            calculate();
+        }
+
+        // --- Animations ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        window.onload = () => {
+            renderAbacus();
+            calculate();
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }
+        };
+    </script>
+</body>
+</html>
