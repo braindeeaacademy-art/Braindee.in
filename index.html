@@ -34,25 +34,17 @@
             border-bottom: 1px solid #e2e8f0;
         }
 
-        /* --- Animations --- */
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(251, 191, 36, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
-        }
-        .animate-pulse-gold { animation: pulse-gold 2s infinite; }
-
         /* --- Hero Slider --- */
         #home-slider {
             position: relative;
             width: 100%;
-            height: 450px; 
+            height: 480px; 
             max-height: 85vh;
             overflow: hidden;
-            background: #000;
+            background: #1e293b;
         }
 
-        @media (min-width: 768px) { #home-slider { height: 650px; } }
+        @media (min-width: 768px) { #home-slider { height: 700px; } }
 
         .slide {
             position: absolute;
@@ -67,7 +59,7 @@
         .slide-overlay {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at center, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+            background: radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -100,12 +92,15 @@
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 6px;
+            gap: 4px;
             z-index: 10;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 90%;
         }
 
         .indicator {
-            width: 12px;
+            width: 10px;
             height: 3px;
             border-radius: 2px;
             background: rgba(255, 255, 255, 0.3);
@@ -114,6 +109,17 @@
         }
 
         .indicator.active { background: white; width: 30px; }
+
+        /* --- Stats Card NEAT DESIGN --- */
+        .stats-card {
+            background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%);
+            border-radius: 2rem;
+            padding: 2.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
+        }
 
         /* --- Logo Slider --- */
         .logo-slider {
@@ -126,7 +132,7 @@
         .logo-track {
             display: flex;
             width: fit-content;
-            animation: scroll-logos 50s linear infinite;
+            animation: scroll-logos 60s linear infinite;
         }
 
         @keyframes scroll-logos {
@@ -135,7 +141,7 @@
         }
 
         .logo-slide {
-            width: 220px; 
+            width: 240px; 
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
@@ -146,7 +152,7 @@
         }
 
         .logo-slide img {
-            max-height: 60px; 
+            max-height: 65px; 
             width: auto;
             border-radius: 10px;
             box-shadow: 0 8px 12px -3px rgba(0,0,0,0.1);
@@ -154,54 +160,19 @@
             padding: 8px;
         }
 
-        @media (min-width: 768px) {
-            .logo-slide { width: 260px; }
-            .logo-slide img { max-height: 80px; }
-        }
-
         .logo-name {
             font-weight: 800;
             color: #1e293b;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             text-align: center;
             line-height: 1.2;
         }
 
-        /* --- Stats Card --- */
-        .stats-card {
-            background: linear-gradient(135deg, #1e3a8a 0%, #312e81 100%);
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1.5rem;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
-        }
-        @media (min-width: 768px) { .stats-card { gap: 2.5rem; padding: 2rem 1.5rem; } }
-
-        /* --- Category Cards --- */
-        .category-card {
-            background: white;
-            border-radius: 1rem;
-            padding: 1.25rem;
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            display: block;
-            text-align: center;
-        }
-        .category-card:hover {
-            background: var(--primary);
-            transform: translateY(-5px);
-            color: white !important;
-        }
-
-        /* --- Program Container --- */
+        /* --- Program Containers --- */
         .program-img-container {
-            height: 180px;
+            height: 200px;
             background-color: #f8fafc;
             border-radius: 1.5rem;
             border: 2px solid #f1f5f9;
@@ -214,14 +185,44 @@
         .program-img-container img { width: 100%; height: 100%; object-fit: contain; }
         @media (min-width: 768px) { .program-img-container { height: 280px; } }
 
-        /* --- Unique Features --- */
-        .unique-feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+        /* --- Wall of Fame ALIGNMENT --- */
+        .seamless-track {
+            display: flex;
+            width: fit-content;
+            animation: scroll-fast 45s linear infinite;
+            align-items: center;
+        }
+        @keyframes scroll-fast {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .fame-item {
+            width: 200px;
+            margin: 0 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .fame-img {
+            width: 100%;
+            aspect-ratio: 3/4; 
+            border-radius: 1rem; 
+            object-fit: cover;
+            border: 3px solid var(--primary); 
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.15);
+            background: #fff;
+            margin-bottom: 12px;
+        }
+
+        /* --- Unique Features Bento --- */
+        .unique-feature-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
         @media (min-width: 768px) { .unique-feature-grid { gap: 1.5rem; } }
         
         .unique-card-neat {
             background: #ffffff;
-            padding: 1.25rem 0.75rem;
-            border-radius: 1.25rem;
+            padding: 1.5rem 1rem;
+            border-radius: 1.5rem;
             box-shadow: 0 10px 20px -10px rgba(0,0,0,0.08);
             border: 1px solid #f1f5f9;
             transition: all 0.4s ease;
@@ -230,44 +231,22 @@
             align-items: center;
             text-align: center;
         }
+        .unique-card-neat:hover { transform: translateY(-8px); box-shadow: 0 20px 35px -12px rgba(0,0,0,0.12); }
         .icon-box-neat {
-            width: 50px;
-            height: 50px;
-            border-radius: 0.875rem;
+            width: 55px;
+            height: 55px;
+            border-radius: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            margin-bottom: 0.75rem;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
         }
-        @media (min-width: 768px) {
-            .icon-box-neat { width: 70px; height: 70px; font-size: 1.75rem; border-radius: 1.25rem; }
-            .unique-card-neat { padding: 2rem 1.5rem; border-radius: 2rem; }
-        }
+        @media (min-width: 768px) { .icon-box-neat { width: 70px; height: 70px; font-size: 1.75rem; } }
         .bg-soft-blue { background-color: #ebf0ff; color: #4361ee; }
         .bg-soft-orange { background-color: #fff4e6; color: #ff9f1c; }
         .bg-soft-green { background-color: #e6fcf5; color: #2ec4b6; }
         .bg-soft-indigo { background-color: #f3f0ff; color: #7950f2; }
-
-        /* --- Seamless Sliders --- */
-        .seamless-track { display: flex; width: fit-content; animation: scroll-fast 45s linear infinite; }
-        @keyframes scroll-fast { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .gallery-item { width: 260px; margin: 0 8px; border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        @media (min-width: 768px) { .gallery-item { width: 450px; margin: 0 10px; border-radius: 1.5rem; } }
-
-        /* --- Wall of Fame --- */
-        .fame-item { width: 160px; margin: 0 10px; }
-        @media (min-width: 768px) { .fame-item { width: 220px; margin: 0 15px; } }
-        .fame-img {
-            width: 100%;
-            aspect-ratio: 3/4; 
-            border-radius: 0.75rem; 
-            object-fit: cover;
-            border: 2px solid var(--primary); 
-            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1);
-            background: #fff;
-            margin-bottom: 8px;
-        }
 
         /* --- Enrollment Form --- */
         .enroll-input {
@@ -282,16 +261,20 @@
         }
         .enroll-input:focus { border-color: var(--primary); background-color: #ffffff; box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1); }
 
-        /* --- FAQ --- */
-        .faq-item { border-bottom: 1px solid #e2e8f0; }
-        .faq-question { cursor: pointer; padding: 1.125rem 0; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: #1e293b; font-size: 0.9rem; }
-        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; color: #64748b; font-size: 0.85rem; }
-        .faq-item.active .faq-answer { max-height: 500px; padding-bottom: 1rem; }
+        /* --- Team Cards --- */
+        .team-card {
+            background: white;
+            border-radius: 1.25rem;
+            padding: 0.75rem;
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .team-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px -10px rgba(0,0,0,0.05); }
 
         .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
-        /* Mobile Menu */
         #mobile-menu {
             position: fixed;
             top: 0;
@@ -340,91 +323,117 @@
     </div>
 
     <!-- Navigation -->
-    <nav id="navbar" class="fixed w-full z-50 py-2.5 md:py-4 px-4 md:px-8 lg:px-12 glass-nav">
+    <nav id="navbar" class="fixed w-full z-50 py-3 md:py-4 px-4 md:px-8 lg:px-12 glass-nav">
         <div class="max-w-[1440px] mx-auto flex justify-between items-center gap-2">
-            <div class="flex items-center gap-2.5 md:gap-3 shrink-0">
+            <div class="flex items-center gap-2.5 shrink-0">
                 <a href="#home" class="flex items-center gap-2">
-                    <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="BrainDEE Logo" class="h-[32px] md:h-[55px] w-auto object-contain">
+                    <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="BrainDEE Logo" class="h-[36px] md:h-[55px] w-auto">
                     <div class="flex flex-col">
-                        <span class="text-xs md:text-lg lg:text-xl font-black tracking-tight text-slate-900 brand-font uppercase leading-none">BrainDEE Academy</span>
+                        <span class="text-sm md:text-lg lg:text-xl font-black text-slate-900 brand-font uppercase leading-none">BrainDEE Academy</span>
                         <span class="text-[5px] md:text-[8px] uppercase tracking-wider font-bold text-slate-400 mt-0.5">Creating Mathemagicians</span>
                     </div>
                 </a>
             </div>
             
-            <div class="hidden lg:flex items-center gap-4 xl:gap-6 font-extrabold uppercase text-[11px]">
+            <div class="hidden lg:flex items-center gap-6 xl:gap-8 font-extrabold uppercase text-[11px]">
                 <a href="#home" class="text-slate-600 hover:text-blue-600 transition-colors">Home</a>
-                <a href="#categories" class="text-slate-600 hover:text-blue-600 transition-colors">Explore</a>
+                <a href="#unique" class="text-slate-600 hover:text-blue-600 transition-colors">About</a>
                 <div class="relative group">
-                    <button class="flex items-center gap-1 text-slate-600 hover:text-blue-600 transition-colors py-2 uppercase">Courses <i class="fas fa-chevron-down text-[7px] ml-0.5"></i></button>
-                    <div class="absolute left-0 top-full mt-0 w-56 bg-white border border-slate-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-[60]">
-                        <a href="abacus.html" class="block px-5 py-3 hover:bg-slate-50 text-slate-700 border-b border-slate-50"><span class="block font-black">Abacus Training</span></a>
-                        <a href="vedic-maths.html" class="block px-5 py-3 hover:bg-slate-50 text-slate-700"><span class="block font-black">Vedic Maths</span></a>
+                    <button class="flex items-center gap-1 py-2 uppercase text-slate-600">Courses <i class="fas fa-chevron-down text-[7px] ml-0.5"></i></button>
+                    <div class="absolute left-0 top-full mt-0 w-56 bg-white border border-slate-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[60]">
+                        <a href="abacus.html" class="block px-5 py-3 hover:bg-slate-50 font-black">Abacus Training</a>
+                        <a href="vedic-maths.html" class="block px-5 py-3 hover:bg-slate-50 font-black">Vedic Maths</a>
                     </div>
                 </div>
-                <a href="#enroll" class="text-blue-600 hover:text-blue-700 transition-colors">Enroll Now</a>
-                <a href="#team" class="text-slate-600 hover:text-blue-600 transition-colors">Leaders</a>
-                <a href="https://wa.me/918309678108?text=Franchise%20Query" target="_blank" class="nav-cta-btn bg-amber-400 text-slate-900 px-4 py-2 rounded-lg hover:bg-amber-500 transition-all shadow-md font-black animate-pulse-gold text-[10px] uppercase">Franchise</a>
-                <a href="https://braindee-b9f71.web.app" target="_blank" class="nav-cta-btn bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-black text-[10px] uppercase">Get App</a>
+                <a href="#enroll" class="text-blue-600 font-black">Enroll Now</a>
+                <a href="#team" class="text-slate-600">Leaders</a>
+                <a href="https://wa.me/918309678108" target="_blank" class="bg-amber-400 text-slate-900 px-4 py-2 rounded-lg font-black text-[10px] uppercase shadow-md">Franchise</a>
+                <a href="https://braindee-b9f71.web.app" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-black text-[10px] uppercase shadow-md">Get App</a>
             </div>
-
-            <button id="menu-toggle" class="lg:hidden text-2xl text-slate-800 p-2"><i class="fas fa-bars"></i></button>
+            <button id="menu-toggle" class="lg:hidden text-2xl p-2"><i class="fas fa-bars"></i></button>
         </div>
     </nav>
 
     <!-- Mobile Menu -->
     <div id="mobile-menu">
         <button id="menu-close" class="absolute top-4 right-4 text-2xl text-slate-400"><i class="fas fa-times"></i></button>
-        <div class="mb-4 text-center"><img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="h-10 mx-auto"></div>
-        <a href="#home" class="text-lg font-black uppercase text-slate-900 border-b border-slate-50 pb-2">Home</a>
-        <a href="#categories" class="text-lg font-black uppercase text-slate-900 border-b border-slate-50 pb-2">Explore</a>
-        <a href="#enroll" class="text-lg font-black uppercase text-blue-600 border-b border-slate-50 pb-2">Enroll Kids</a>
-        <a href="#team" class="text-lg font-black uppercase text-slate-900 border-b border-slate-50 pb-2">Leadership</a>
+        <div class="mb-6 text-center"><img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="h-10 mx-auto"></div>
+        <a href="#home" class="text-lg font-black uppercase text-slate-900 border-b pb-2">Home</a>
+        <a href="#unique" class="text-lg font-black uppercase text-slate-900 border-b pb-2">About</a>
+        <a href="#courses" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-primary">Courses</a>
+        <a href="#enroll" class="text-lg font-black uppercase text-blue-600 border-b pb-2">Enroll Now</a>
+        <a href="#team" class="text-lg font-black uppercase text-slate-900 border-b pb-2">Leadership</a>
         <div class="mt-auto flex flex-col gap-3">
-            <a href="https://wa.me/918309678108" class="bg-amber-400 text-slate-900 py-3.5 rounded-xl text-center font-black uppercase text-xs">Franchise Query</a>
-            <a href="https://braindee-b9f71.web.app" class="bg-blue-600 text-white py-3.5 rounded-xl text-center font-black uppercase text-xs">Get App</a>
+            <a href="https://wa.me/918309678108" class="bg-amber-400 text-slate-900 py-4 rounded-xl text-center font-black uppercase text-sm">Franchise</a>
+            <a href="https://braindee-b9f71.web.app" class="bg-blue-600 text-white py-4 rounded-xl text-center font-black uppercase text-sm">Get App</a>
         </div>
     </div>
 
-    <!-- Hero Slider -->
+    <!-- Hero Slider (15 SLIDES) -->
     <section id="home" class="pt-12 md:pt-24 lg:pt-28"> 
         <div id="home-slider">
+            <!-- Slide 1 -->
             <div class="slide active">
-                <img src="https://images.unsplash.com/photo-1510172951991-856a654063f9?q=80&w=1920&h=1080&auto=format&fit=crop" class="w-full h-full object-cover">
-                <div class="slide-overlay"><div class="max-w-4xl px-4"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase tracking-tighter text-amber-400">17-Rod Abacus Mastery</h1><p class="text-[10px] md:text-xl text-slate-100 italic mb-6">Master visualization and rapid arithmetic calculations.</p><a href="#enroll" class="inline-block px-8 py-4 bg-white text-blue-600 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-sm">Enroll Now</a></div></div>
+                <img src="https://images.unsplash.com/photo-1510172951991-856a654063f9?q=80&w=1920&h=1080&auto=format&fit=crop">
+                <div class="slide-overlay"><div class="max-w-4xl px-4"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase tracking-tighter text-amber-400">17-Rod Abacus Mastery</h1><p class="text-[10px] md:text-xl text-slate-100 italic mb-6">World-class Soroban training for rapid mental calculation.</p><a href="#enroll" class="inline-block px-8 py-4 bg-white text-blue-600 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-sm">Enroll Now</a></div></div>
             </div>
+            <!-- Slide 2 -->
             <div class="slide">
-                <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=1920&h=1080&auto=format&fit=crop" class="w-full h-full object-cover">
-                <div class="slide-overlay"><div class="max-w-4xl px-4"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-blue-400">Vedic Maths Systems</h1><p class="text-[10px] md:text-xl text-slate-100 font-bold uppercase">10x Speed using 16 Ancient Sutras.</p></div></div>
+                <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=1920&h=1080&auto=format&fit=crop">
+                <div class="slide-overlay"><div class="max-w-4xl px-4"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-blue-400">Vedic Maths Systems</h1><p class="text-[10px] md:text-xl text-slate-100 font-bold uppercase">10x Speed using Ancient 16 Sutras.</p></div></div>
             </div>
-            <!-- More slides loop... -->
-            <div class="slide"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1920&h=1080&auto=format&fit=crop" class="w-full h-full object-cover"><div class="slide-overlay"><div class="max-w-4xl px-4"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase">Cognitive Excellence</h1></div></div></div>
-            <div class="slide"><img src="https://images.unsplash.com/photo-1454165833267-033f235658d1?q=80&w=1920&h=1080&auto=format&fit=crop" class="w-full h-full object-cover"><div class="slide-overlay"><div class="max-w-4xl px-4"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-yellow-400">Join 20,000+ Students</h1></div></div></div>
-            <button class="slider-btn left-3" id="prevSlide"><i class="fas fa-chevron-left text-xs"></i></button>
-            <button class="slider-btn right-3" id="nextSlide"><i class="fas fa-chevron-right text-xs"></i></button>
+            <!-- Slide 3 -->
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1523240715630-362624838420?q=80&w=1920&h=1080&auto=format&fit=crop">
+                <div class="slide-overlay"><div class="max-w-4xl px-4"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-yellow-400">Empowering The Youth</h1><p class="text-sm font-bold uppercase text-white">Join 20,000+ students across India.</p></div></div>
+            </div>
+            <!-- Additional Slides for logic integrity -->
+            <div class="slide"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1920&q=80"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-white">Cognitive Excellence</h1></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1920&q=80"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-green-400">Creative Learning</h1></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1920&q=80"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-orange-400">Ancient Wisdom</h1></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1920&q=80"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-blue-300">Modern Speed</h1></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1920&q=80"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-amber-500">Certified Trainers</h1></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1501503069356-3c6b82a17d89?auto=format&fit=crop&w=1920&q=80"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-cyan-400">Global Standards</h1></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1920&q=80"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-indigo-400">Focus & Logic</h1></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1920&q=80"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-rose-400">Partnered Schools</h1></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?auto=format&fit=crop&w=1920&q=80"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-emerald-400">Empowering Kids</h1></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-violet-400">Future Ready</h1></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&q=80"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-blue-400">Mathemagicians</h1></div></div>
+            <div class="slide"><img src="https://images.unsplash.com/photo-1454165833267-033f235658d1?auto=format&fit=crop&w=1920&q=80"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-yellow-500">Master Tools</h1></div></div>
+
+            <button class="slider-btn left-3" id="prevSlide"><i class="fas fa-chevron-left text-sm"></i></button>
+            <button class="slider-btn right-3" id="nextSlide"><i class="fas fa-chevron-right text-sm"></i></button>
             <div class="slider-indicators" id="sliderIndicators"></div>
         </div>
     </section>
 
-    <!-- STATS SECTION -->
-    <section class="py-8 md:py-12 bg-white text-center">
-        <div class="container mx-auto max-w-4xl px-4 text-center">
-            <div class="stats-card reveal text-center">
-                <div class="flex-1 min-w-[100px]"><div class="text-2xl md:text-5xl font-black text-amber-400 mb-0.5">45+</div><div class="text-white text-[9px] md:text-base font-bold uppercase tracking-widest leading-none">Schools</div></div>
-                <div class="hidden md:block w-px h-12 bg-white/20"></div>
-                <div class="flex-1 min-w-[100px]"><div class="text-2xl md:text-5xl font-black text-blue-400 mb-0.5">20000+</div><div class="text-white text-[9px] md:text-base font-bold uppercase tracking-widest leading-none">Students</div></div>
+    <!-- STATS SECTION NEAT DESIGN -->
+    <section class="py-10 md:py-16 bg-white">
+        <div class="container mx-auto max-w-4xl px-4">
+            <div class="stats-card flex-col md:flex-row reveal py-8 px-6 gap-12 md:gap-24 text-center">
+                <div class="text-center flex-1">
+                    <div class="text-4xl md:text-5xl font-black text-amber-400 mb-1">45+</div>
+                    <div class="text-white text-sm md:text-base font-bold uppercase tracking-widest leading-none">Schools</div>
+                    <div class="w-10 h-1 bg-amber-400 mx-auto mt-3 rounded-full"></div>
+                </div>
+                <div class="hidden md:block w-px h-16 bg-white/20"></div>
+                <div class="text-center flex-1">
+                    <div class="text-4xl md:text-5xl font-black text-blue-400 mb-1">20000+</div>
+                    <div class="text-white text-sm md:text-base font-bold uppercase tracking-widest leading-none">Students</div>
+                    <div class="w-10 h-1 bg-blue-400 mx-auto mt-3 rounded-full"></div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- School Partners -->
+    <!-- School Partners MOVED BELOW STATS -->
     <section class="logo-slider">
         <div class="container mx-auto px-4 mb-6 md:mb-10 text-center">
-            <h2 class="text-lg md:text-4xl font-black text-slate-900 uppercase tracking-widest">Our School Partners</h2>
-            <div class="w-16 md:w-24 h-1 bg-blue-600 mx-auto mt-3 rounded-full"></div>
+            <h2 class="text-lg md:text-4xl font-black text-slate-900 uppercase tracking-widest text-center">Our School Partners</h2>
+            <div class="w-16 md:w-24 h-1 bg-blue-600 mx-auto mt-3 rounded-full text-center"></div>
         </div>
         <div class="logo-track">
-            <!-- 14 verified Logos -->
+            <!-- School Logos Snippet provided by user -->
             <div class="logo-slide"><img src="https://braindeeacademy.com/wp-content/uploads/2026/05/unnamed.webp"><span class="logo-name">KRISHNAVENI TALENT SCHOOL</span></div>
             <div class="logo-slide"><img src="https://braindeeacademy.com/wp-content/uploads/2025/03/WhatsApp-Image-2025-03-25-at-7.25.28-AM-1-e1742867995319-768x734.jpeg"><span class="logo-name">KSR CONCEPT SCHOOL</span></div>
             <div class="logo-slide"><img src="https://braindeeacademy.com/wp-content/uploads/2025/03/WhatsApp-Image-2025-03-25-at-7.42.09-AM-768x848.jpeg"><span class="logo-name">SNEHA PRAGATHI HIGH SCHOOL</span></div>
@@ -445,7 +454,7 @@
         </div>
     </section>
 
-    <!-- WHAT MAKES BRAINDEE UNIQUE -->
+    <!-- ABOUT BRAINDEE UNIQUE SECTION -->
     <section id="unique" class="py-12 md:py-32 bg-white px-4 relative">
         <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#4361ee 1px, transparent 1px); background-size: 30px 32px;"></div>
         <div class="container mx-auto max-w-6xl relative z-10 text-center md:text-left">
@@ -453,33 +462,35 @@
                 <div class="lg:col-span-6 reveal">
                     <div class="mb-8 text-center md:text-left">
                         <span class="px-5 py-2 bg-indigo-50 text-indigo-600 rounded-full text-xs font-black uppercase tracking-[0.2em] mb-4 inline-block">Academy of Excellence</span>
-                        <h2 class="text-2xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-tight mb-6">What makes <br><span class="text-indigo-600">BrainDEE</span> Unique</h2>
+                        <h2 class="text-2xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-tight mb-6 text-center md:text-left">What makes <br><span class="text-indigo-600">BrainDEE</span> Unique</h2>
                     </div>
                     <div class="space-y-4 md:space-y-6 text-slate-600 text-sm md:text-lg leading-relaxed text-left">
-                        <p class="font-extrabold text-slate-900 border-l-4 border-indigo-600 pl-4 md:pl-6 text-base md:text-xl">BrainDEE Academy stands at the forefront of innovative education, offering unparalleled training.</p>
+                        <p class="font-extrabold text-slate-900 border-l-4 border-indigo-600 pl-4 md:pl-6 text-base md:text-xl">BrainDEE Academy stands at the forefront of innovative education, offering unparalleled training in mental math.</p>
                         <p>Our academy is dedicated to unlocking the mathematical genius in every student, using time-tested techniques that make learning both fun and effective.</p>
                     </div>
                 </div>
                 <div class="lg:col-span-6 reveal">
                     <div class="unique-feature-grid">
-                        <div class="unique-card-neat"><div class="icon-box-neat bg-soft-blue"><i class="fas fa-brain"></i></div><h4 class="font-black text-slate-900 uppercase text-[9px] md:text-[10px] mb-1">Memory</h4><p class="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase leading-tight">Enhancement</p></div>
-                        <div class="unique-card-neat"><div class="icon-box-neat bg-soft-orange"><i class="fas fa-bolt"></i></div><h4 class="font-black text-slate-900 uppercase text-[9px] md:text-[10px] mb-1">Calculation</h4><p class="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase leading-tight">Lightning Speed</p></div>
-                        <div class="unique-card-neat"><div class="icon-box-neat bg-soft-green"><i class="fas fa-puzzle-piece"></i></div><h4 class="font-black text-slate-900 uppercase text-[9px] md:text-[10px] mb-1">Problem</h4><p class="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase leading-tight">Solving Skills</p></div>
-                        <div class="unique-card-neat"><div class="icon-box-neat bg-soft-indigo"><i class="fas fa-graduation-cap"></i></div><h4 class="font-black text-slate-900 uppercase text-[9px] md:text-[10px] mb-1">Academic</h4><p class="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase leading-tight">Success Boost</p></div>
+                        <div class="unique-card-neat"><div class="icon-box-neat bg-soft-blue"><i class="fas fa-brain"></i></div><h4 class="font-black text-slate-900 uppercase text-[9px] md:text-[10px] tracking-widest mb-1">Memory</h4><p class="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase leading-tight">Enhancement</p></div>
+                        <div class="unique-card-neat"><div class="icon-box-neat bg-soft-orange"><i class="fas fa-bolt"></i></div><h4 class="font-black text-slate-900 uppercase text-[9px] md:text-[10px] tracking-widest mb-1">Calculation</h4><p class="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase leading-tight">Lightning Speed</p></div>
+                        <div class="unique-card-neat"><div class="icon-box-neat bg-soft-green"><i class="fas fa-puzzle-piece"></i></div><h4 class="font-black text-slate-900 uppercase text-[9px] md:text-[10px] tracking-widest mb-1">Logic</h4><p class="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase leading-tight">Solving Skills</p></div>
+                        <div class="unique-card-neat"><div class="icon-box-neat bg-soft-indigo"><i class="fas fa-graduation-cap"></i></div><h4 class="font-black text-slate-900 uppercase text-[9px] md:text-[10px] tracking-widest mb-1">Academic</h4><p class="text-[8px] md:text-[9px] text-slate-400 font-bold uppercase leading-tight">Success Boost</p></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SPECIALIZED PROGRAMS Detail -->
+    <!-- SPECIALIZED PROGRAMS (Courses) -->
     <section id="courses" class="py-12 md:py-20 bg-slate-50 px-4 text-center">
         <div class="container mx-auto text-center max-w-6xl">
             <h2 class="text-2xl md:text-5xl font-black text-slate-900 mb-10 reveal text-center uppercase tracking-tighter">Specialized Programs</h2>
+            
             <div class="space-y-16 md:space-y-24">
+                <!-- Abacus -->
                 <div id="abacus-training" class="reveal text-left">
                     <div class="flex flex-wrap items-center gap-4 mb-4 md:mb-6">
-                        <h3 class="text-xl md:text-3xl font-black text-slate-900 uppercase border-l-4 md:border-l-8 border-blue-600 pl-4 text-left">Abacus Training</h3>
+                        <h3 class="text-xl md:text-3xl font-black text-slate-900 uppercase border-l-4 md:border-l-8 border-blue-600 pl-4">Abacus Training</h3>
                         <a href="abacus.html" class="px-4 py-2 bg-blue-600 text-white text-[9px] md:text-[10px] font-black rounded-lg hover:bg-blue-700 shadow-md uppercase tracking-widest">More Info</a>
                     </div>
                     <p class="text-slate-600 mb-6 text-sm md:text-lg leading-relaxed max-w-4xl text-left">Developing mental calculations and visualization skills through Soroban training.</p>
@@ -488,9 +499,11 @@
                         <div class="program-img-container shadow-lg"><img src="https://jittery-purple-shwhjyilg2.edgeone.app/ChatGPT%20Image%20Apr%2011,%202026,%2010_57_46%20PM.png"></div>
                     </div>
                 </div>
+
+                <!-- Vedic -->
                 <div id="vedic-maths" class="reveal text-left">
                     <div class="flex flex-wrap items-center gap-4 mb-4 md:mb-6">
-                        <h3 class="text-xl md:text-3xl font-black text-slate-900 uppercase border-l-4 md:border-l-8 border-orange-500 pl-4 text-left">Vedic Maths</h3>
+                        <h3 class="text-xl md:text-3xl font-black text-slate-900 uppercase border-l-4 md:border-l-8 border-orange-500 pl-4">Vedic Maths</h3>
                         <a href="vedic-maths.html" class="px-4 py-2 bg-orange-500 text-white text-[9px] md:text-[10px] font-black rounded-lg hover:bg-orange-600 shadow-md uppercase tracking-widest">More Info</a>
                     </div>
                     <p class="text-slate-600 mb-6 text-sm md:text-lg leading-relaxed max-w-4xl text-left">Ancient system of mathematical techniques that enhances speed and accuracy in calculations.</p>
@@ -503,25 +516,37 @@
         </div>
     </section>
 
-    <!-- ENROLL NOW SECTION -->
-    <section id="enroll" class="py-12 md:py-32 bg-slate-900 px-4 relative overflow-hidden text-center">
-        <div class="container mx-auto max-w-5xl relative z-10">
-            <div class="bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden reveal">
+    <!-- Wall of Fame RESTORED & ALIGNED -->
+    <section id="fame" class="py-16 md:py-24 bg-white overflow-hidden text-center">
+        <div class="container mx-auto text-center mb-12 reveal">
+            <h2 class="text-2xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter">Wall of Fame</h2>
+            <div class="w-16 md:w-24 h-1.5 bg-amber-400 mx-auto mt-4 rounded-full"></div>
+        </div>
+        <div class="seamless-track">
+            <div class="fame-item"><img src="https://okay-white-36tdyig7vr.edgeone.app/Screenshot%202026-03-27%20223027.png" class="fame-img"><p class="font-bold text-[10px] md:text-xs text-slate-700">Champion Achiever</p></div>
+            <div class="fame-item"><img src="https://wasteful-indigo-qhcto2qwpw.edgeone.app/Screenshot%202026-03-27%20223040.png" class="fame-img"><p class="font-bold text-[10px] md:text-xs text-slate-700">Gold Medalist</p></div>
+            <div class="fame-item"><img src="https://spicy-crimson-esw4whm7mb.edgeone.app/Screenshot%202026-03-27%20223056.png" class="fame-img"><p class="font-bold text-[10px] md:text-xs text-slate-700">State Ranker</p></div>
+            <div class="fame-item"><img src="https://incredible-peach-fh31xcmgsx.edgeone.app/Screenshot%202026-03-27%20223046.png" class="fame-img"><p class="font-bold text-[10px] md:text-xs text-slate-700">National Winner</p></div>
+            <!-- Duplicates -->
+            <div class="fame-item"><img src="https://okay-white-36tdyig7vr.edgeone.app/Screenshot%202026-03-27%20223027.png" class="fame-img"></div>
+            <div class="fame-item"><img src="https://wasteful-indigo-qhcto2qwpw.edgeone.app/Screenshot%202026-03-27%20223040.png" class="fame-img"></div>
+        </div>
+    </section>
+
+    <!-- ENROLL NOW -->
+    <section id="enroll" class="py-12 md:py-32 bg-slate-900 px-4">
+        <div class="container mx-auto max-w-5xl">
+            <div class="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden reveal">
                 <div class="grid lg:grid-cols-2">
-                    <div class="bg-blue-600 p-8 md:p-16 text-white flex flex-col justify-center text-center md:text-left">
-                        <span class="text-[10px] font-black uppercase tracking-[0.3em] mb-4 text-blue-200">Start the Journey</span>
-                        <h2 class="text-2xl md:text-5xl font-black uppercase mb-4 leading-tight">Enroll Your <br class="hidden md:block">Child Today</h2>
-                        <p class="text-blue-100 mb-8 text-sm md:text-lg">Our counselor will guide you through the process of unlocking your child's genius.</p>
+                    <div class="bg-blue-600 p-10 md:p-16 text-white flex flex-col justify-center text-center md:text-left">
+                        <h2 class="text-3xl md:text-5xl font-black uppercase mb-4 leading-tight">Enroll Your Child</h2>
+                        <p class="text-blue-100 mb-8 text-sm md:text-lg">Unlocking genius starts with a simple step.</p>
                     </div>
-                    <div class="p-8 md:p-16 text-left">
-                        <form id="enrollForm" class="space-y-4 md:space-y-6" onsubmit="return handleEnrollment(event)">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div><label class="block text-[10px] font-black uppercase text-slate-400 mb-2">Kid's Name</label><input type="text" required class="enroll-input"></div>
-                                <div><label class="block text-[10px] font-black uppercase text-slate-400 mb-2">Kid's Age</label><input type="number" required class="enroll-input"></div>
-                            </div>
-                            <div><label class="block text-[10px] font-black uppercase text-slate-400 mb-2">Parent's Name</label><input type="text" required class="enroll-input"></div>
-                            <div><label class="block text-[10px] font-black uppercase text-slate-400 mb-2">Mobile Number</label><input type="tel" required class="enroll-input"></div>
-                            <button type="submit" class="w-full py-4 bg-blue-600 text-white rounded-xl font-black uppercase tracking-widest shadow-lg hover:bg-blue-700 transition-all text-xs">Submit Application</button>
+                    <div class="p-10 md:p-16 text-left">
+                        <form id="enrollForm" class="space-y-4" onsubmit="return handleEnrollment(event)">
+                            <div><label class="block text-[10px] font-black uppercase text-slate-400 mb-1">Kid's Name</label><input type="text" required class="enroll-input"></div>
+                            <div><label class="block text-[10px] font-black uppercase text-slate-400 mb-1">Parent's Mobile</label><input type="tel" required class="enroll-input"></div>
+                            <button type="submit" class="w-full py-4 bg-blue-600 text-white rounded-xl font-black uppercase tracking-widest text-xs shadow-lg hover:bg-blue-700">Submit Application</button>
                         </form>
                     </div>
                 </div>
@@ -529,117 +554,47 @@
         </div>
     </section>
 
-    <!-- ACADEMY GALLERY -->
-    <section id="gallery" class="academy-gallery-seamless overflow-hidden py-12 md:py-16 bg-slate-900 text-center">
-        <div class="container mx-auto text-center mb-8 md:mb-10 reveal">
-            <h2 class="text-2xl md:text-5xl font-black text-white uppercase tracking-tighter text-center">Academy Gallery</h2>
-            <div class="w-16 md:w-20 h-1 bg-blue-500 mx-auto mt-3 rounded-full text-center"></div>
-        </div>
-        <div class="seamless-track">
-            <div class="gallery-item"><img src="https://braindeeacademy.com/wp-content/uploads/2026/03/IMG_5478-scaled-1920x1080.jpg" class="w-full h-full object-cover"></div>
-            <div class="gallery-item"><img src="https://braindeeacademy.com/wp-content/uploads/2025/06/IMG_2714.JPEG-scaled-1920x1080.jpg" class="w-full h-full object-cover"></div>
-            <div class="gallery-item"><img src="https://braindeeacademy.com/wp-content/uploads/2026/03/IMG_5405-scaled-1920x1080.jpg" class="w-full h-full object-cover"></div>
-            <div class="gallery-item"><img src="https://braindeeacademy.com/wp-content/uploads/2026/03/IMG_5478-scaled-1920x1080.jpg" class="w-full h-full object-cover"></div>
-        </div>
-    </section>
-
-    <!-- Wall of Fame -->
-    <section id="fame" class="py-12 md:py-16 bg-white overflow-hidden text-center">
-        <div class="container mx-auto text-center mb-8 reveal">
-            <h2 class="text-2xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter">Wall of Fame</h2>
-            <div class="w-16 md:w-24 h-1 bg-amber-400 mx-auto mt-3 rounded-full"></div>
-        </div>
-        <div class="seamless-track">
-            <div class="fame-item"><img src="https://okay-white-36tdyig7vr.edgeone.app/Screenshot%202026-03-27%20223027.png" class="fame-img"><p class="font-bold text-[10px] md:text-xs">Achiever</p></div>
-            <div class="fame-item"><img src="https://wasteful-indigo-qhcto2qwpw.edgeone.app/Screenshot%202026-03-27%20223040.png" class="fame-img"><p class="font-bold text-[10px] md:text-xs">Gold Medalist</p></div>
-            <div class="fame-item"><img src="https://spicy-crimson-esw4whm7mb.edgeone.app/Screenshot%202026-03-27%20223056.png" class="fame-img"><p class="font-bold text-[10px] md:text-xs">State Ranker</p></div>
-            <div class="fame-item"><img src="https://okay-white-36tdyig7vr.edgeone.app/Screenshot%202026-03-27%20223027.png" class="fame-img"></div>
-        </div>
-    </section>
-
     <!-- LEADERSHIP SECTION -->
-    <section id="team" class="py-12 md:py-24 bg-slate-50 px-4 text-center">
+    <section id="team" class="py-16 md:py-24 bg-slate-50 px-4 text-center">
         <div class="container mx-auto max-w-6xl">
-            <h2 class="text-2xl md:text-5xl font-black text-slate-900 uppercase mb-8 md:mb-12 reveal">Visionary Leadership</h2>
-            <div class="space-y-12 md:space-y-20 text-center">
-                <div class="space-y-8">
-                    <h3 class="text-lg md:text-xl font-black text-blue-600 uppercase bg-blue-50 py-2.5 px-6 rounded-full inline-block">Board of Directors</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-10">
-                        <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-2xl overflow-hidden bg-slate-100 shadow-md"><img src="https://loose-gold-6nmnvansz8.edgeone.app/WhatsApp%20Image%202026-05-05%20at%203.40.31%20PM.jpeg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase text-center">Meher Teja</h5><p class="text-[9px] text-blue-600 font-bold uppercase mt-1 text-center">Director</p></div>
-                        <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-2xl overflow-hidden bg-slate-100 shadow-md"><img src="https://ashamed-tan-qffqce9afg.edgeone.app/ChatGPT%20Image%20Apr%2024,%202026,%2010_52_24%20AM.png" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase text-center">D. Sunil Reddy</h5><p class="text-[9px] text-blue-600 font-bold uppercase mt-1 text-center">Director</p></div>
-                        <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-2xl overflow-hidden bg-slate-100 shadow-md"><img src="https://specific-tan-tpasnhhau9.edgeone.app/IMG_2908.jpg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase text-center">PAVAN</h5><p class="text-[9px] text-blue-600 font-bold uppercase mt-1 text-center">Director</p></div>
-                    </div>
+            <h2 class="text-2xl md:text-5xl font-black text-slate-900 uppercase mb-12 reveal text-center">Visionary Leadership</h2>
+            <div class="space-y-16">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md"><img src="https://loose-gold-6nmnvansz8.edgeone.app/WhatsApp%20Image%202026-05-05%20at%203.40.31%20PM.jpeg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase">Meher Teja</h5><p class="text-[9px] text-blue-600 font-bold uppercase">Director</p></div>
+                    <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md"><img src="https://ashamed-tan-qffqce9afg.edgeone.app/ChatGPT%20Image%20Apr%2024,%202026,%2010_52_24%20AM.png" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase">D. Sunil Reddy</h5><p class="text-[9px] text-blue-600 font-bold uppercase">Director</p></div>
+                    <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md"><img src="https://specific-tan-tpasnhhau9.edgeone.app/IMG_2908.jpg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase">PAVAN</h5><p class="text-[9px] text-blue-600 font-bold uppercase">Director</p></div>
                 </div>
-                <div class="space-y-8">
-                    <h3 class="text-lg md:text-xl font-black text-orange-500 uppercase bg-orange-50 py-2.5 px-6 rounded-full inline-block">Founding Directors</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-10">
-                        <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-2xl overflow-hidden bg-slate-100 shadow-md"><img src="https://optimistic-silver-rdjsndiveh.edgeone.app/IMG_2702.JPG.jpeg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase text-center">Gayatri</h5><p class="text-[9px] text-orange-600 font-bold uppercase mt-1 text-center">Founder & Director</p></div>
-                        <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-2xl overflow-hidden bg-slate-100 shadow-md"><img src="https://tender-scarlet-sawdl5dmdw.edgeone.app/WhatsApp%20Image%202026-05-05%20at%201.50.26%20PM.jpeg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase text-center">Harisha Reddy Mothe</h5><p class="text-[9px] text-orange-600 font-bold uppercase mt-1 text-center">Founder & Director</p></div>
-                        <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-2xl overflow-hidden bg-slate-100 shadow-md"><img src="https://manual-salmon-yqiimyyeth.edgeone.app/WhatsApp%20Image%202026-05-05%20at%201.31.05%20PM.jpeg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase text-center">LALITHA</h5><p class="text-[9px] text-orange-600 font-bold uppercase mt-1 text-center">Director</p></div>
-                    </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                    <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md"><img src="https://optimistic-silver-rdjsndiveh.edgeone.app/IMG_2702.JPG.jpeg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase">Gayatri</h5><p class="text-[9px] text-orange-600 font-bold uppercase">Founder & Director</p></div>
+                    <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md"><img src="https://tender-scarlet-sawdl5dmdw.edgeone.app/WhatsApp%20Image%202026-05-05%20at%201.50.26%20PM.jpeg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase">Harisha Reddy Mothe</h5><p class="text-[9px] text-orange-600 font-bold uppercase">Founder & Director</p></div>
+                    <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-2xl overflow-hidden bg-slate-100 shadow-md"><img src="https://manual-salmon-yqiimyyeth.edgeone.app/WhatsApp%20Image%202026-05-05%20at%201.31.05%20PM.jpeg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase">LALITHA</h5><p class="text-[9px] text-orange-600 font-bold uppercase">Director</p></div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ -->
-    <section id="faqs" class="py-12 md:py-24 bg-white px-4 text-center">
-        <div class="container mx-auto max-w-4xl text-center">
-            <h2 class="text-2xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter mb-8 md:mb-12 reveal text-center">Frequently Asked Questions</h2>
-            <div class="w-16 md:w-24 h-1 bg-blue-600 mx-auto mb-8 rounded-full text-center"></div>
-            <div class="bg-white p-6 md:p-10 rounded-3xl shadow-xl border border-slate-100 reveal text-left">
-                <div class="faq-item"><div class="faq-question uppercase">Why join BrainDEE? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Transform math from stress to power through neuro-cognitive training.</div></div>
-                <div class="faq-item"><div class="faq-question uppercase">What is the Abacus use? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Develop photographic memory and extreme concentration.</div></div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="pt-16 pb-8 bg-slate-900 text-white px-4 border-t border-slate-800 text-center md:text-left">
+    <footer class="pt-16 pb-8 bg-slate-900 text-white px-4 text-center">
         <div class="container mx-auto max-w-7xl">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
-                <div class="space-y-4 text-center md:text-left">
-                    <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="mx-auto md:mx-0 h-10 md:h-16 text-center"> 
-                    <div class="text-lg font-black brand-font uppercase">BrainDEE Academy</div>
-                </div>
-                <div>
-                    <h4 class="text-sm font-black uppercase mb-5 text-blue-400">Legal</h4>
-                    <ul class="space-y-3 text-slate-400 font-bold uppercase text-[10px]">
-                        <li><a href="privacy-policy.html" class="hover:text-white underline">Privacy Policy</a></li>
-                        <li><a href="terms-and-conditions.html" class="hover:text-white underline">Terms And Conditions</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-sm font-black uppercase mb-5 text-orange-400">Links</h4>
-                    <ul class="space-y-3 text-slate-400 font-bold uppercase text-[10px]">
-                        <li><a href="#home" class="hover:text-white">Home</a></li>
-                        <li><a href="videos.html" class="hover:text-white">Videos</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-sm font-black uppercase mb-5 text-indigo-400 text-center md:text-left">BrainDEE</h4>
-                    <ul class="space-y-3 text-slate-400 text-xs text-center md:text-left">
-                        <li class="flex items-start gap-3 justify-center md:justify-start"><span>Flat no:403, Sai Sreeja’s Devi Heights, Hyderabad - 500090</span></li>
-                        <li class="flex items-center gap-3 justify-center md:justify-start"><a href="mailto:Braindeeabacus@gmail.com" class="hover:text-white">Email Us</a></li>
-                    </ul>
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12 text-center md:text-left">
+                <div class="space-y-4 text-center md:text-left"><img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="h-10 mx-auto md:mx-0 font-black uppercase">BrainDEE Academy</div>
+                <div><h4 class="text-xs font-black uppercase mb-4 text-blue-400">Legal</h4><ul class="space-y-2 text-slate-400 text-[10px]"><li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="terms-and-conditions.html">Terms</a></li></ul></div>
+                <div><h4 class="text-xs font-black uppercase mb-4 text-orange-400">Links</h4><ul class="space-y-2 text-slate-400 text-[10px]"><li><a href="#home">Home</a></li><li><a href="videos.html">Videos</a></li></ul></div>
+                <div><h4 class="text-xs font-black uppercase mb-4 text-indigo-400">Contact</h4><p class="text-slate-400 text-[10px]">Hyderabad - 500090<br><a href="mailto:Braindeeabacus@gmail.com">Email Us</a></p></div>
             </div>
-            <div class="pt-8 border-t border-slate-800 text-center"><p class="text-slate-500 text-[9px] uppercase font-bold">© 2024 BrainDEE Academy</p></div>
+            <p class="text-slate-500 text-[9px] uppercase font-bold border-t border-white/10 pt-8">© 2024 BrainDEE Academy</p>
         </div>
     </footer>
-
-    <!-- WhatsApp -->
-    <a href="https://wa.me/918309678108" target="_blank" class="fixed bottom-6 right-6 z-[60] hover:scale-110 transition-transform"><img src="https://img.icons8.com/color/96/whatsapp.png" alt="WhatsApp" class="w-12 md:w-16 drop-shadow-2xl"></a>
 
     <script>
         window.addEventListener('DOMContentLoaded', function() {
             hideLoader();
-
             const slides = document.querySelectorAll('.slide');
             const indicatorsContainer = document.getElementById('sliderIndicators');
             let currentSlide = 0;
 
             if (slides.length > 0) {
+                indicatorsContainer.innerHTML = '';
                 slides.forEach((_, idx) => {
                     const dot = document.createElement('div');
                     dot.className = `indicator ${idx === 0 ? 'active' : ''}`;
@@ -655,7 +610,6 @@
                     slides[currentSlide].classList.add('active');
                     if(indicators[currentSlide]) indicators[currentSlide].classList.add('active');
                 }
-
                 setInterval(() => showSlide(currentSlide + 1), 6000);
                 document.getElementById('prevSlide').onclick = () => showSlide(currentSlide - 1);
                 document.getElementById('nextSlide').onclick = () => showSlide(currentSlide + 1);
@@ -663,24 +617,15 @@
 
             document.getElementById('menu-toggle').onclick = () => document.getElementById('mobile-menu').classList.add('open');
             document.getElementById('menu-close').onclick = () => document.getElementById('mobile-menu').classList.remove('open');
-
-            document.querySelectorAll('.faq-question').forEach(q => {
-                q.onclick = () => {
-                    const parent = q.parentElement;
-                    const wasActive = parent.classList.contains('active');
-                    document.querySelectorAll('.faq-item').forEach(item => item.classList.remove('active'));
-                    if(!wasActive) parent.classList.add('active');
-                };
-            });
-
+            
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
             }, { threshold: 0.1 });
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         });
 
-        function handleEnrollment(e) { e.preventDefault(); document.getElementById('message-modal').style.display = 'flex'; document.getElementById('enrollForm').reset(); return false; }
-        function closeModal() { document.getElementById('message-modal').style.display = 'none'; }
+        function handleEnrollment(e) { e.preventDefault(); document.getElementById('message-modal').classList.remove('hidden'); document.getElementById('enrollForm').reset(); return false; }
+        function closeModal() { document.getElementById('message-modal').classList.add('hidden'); }
     </script>
 </body>
 </html>
