@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Choose BrainDEE? | BrainDEE Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for reliable icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap');
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #ff9f1c;
+            --accent: #3f37c9;
+            --success: #2ec4b6;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, .brand-font {
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        /* --- Premium Glass Navbar Overlay --- */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        /* --- Custom Interactive Card Highlights --- */
+        .feature-hover-card {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .feature-hover-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -15px rgba(67, 97, 238, 0.15);
+            border-color: rgba(67, 97, 238, 0.3);
+        }
+
+        .premium-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(67, 97, 238, 0.08) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(50px);
+        }
+
+        /* --- Animated Brain Dot --- */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .pulse-effect {
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 85%;
+            height: 100%;
+            background: white;
+            z-index: 100;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            box-shadow: -15px 0 35px rgba(0,0,0,0.15);
+        }
+        #mobile-menu.open { right: 0; }
+    </style>
+</head>
+<body class="antialiased text-slate-700 bg-white">
+
+    <script>
+        function hideLoader() {
+            var loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(function() { loader.style.display = 'none'; }, 500);
+            }
+        }
+        setTimeout(hideLoader, 2000);
+    </script>
+
+    <!-- Preloader -->
+    <div id="loader" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <div class="text-sm font-bold text-slate-900 tracking-widest uppercase text-center">BrainDEE</div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 py-3 md:py-4 px-4 md:px-8 lg:px-12 glass-nav">
+        <div class="max-w-[1440px] mx-auto flex justify-between items-center gap-2">
+            <div class="flex items-center gap-2.5 shrink-0">
+                <a href="index.html" class="flex items-center gap-2">
+                    <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="BrainDEE Logo" class="h-[40px] md:h-[55px] w-auto">
+                    <div class="flex flex-col text-left">
+                        <span class="text-sm md:text-lg lg:text-xl font-black text-slate-900 brand-font uppercase leading-none">BrainDEE Academy</span>
+                        <span class="text-[5px] md:text-[8px] uppercase tracking-wider font-bold text-slate-400 mt-1 leading-none text-left">Creating Mathemagicians</span>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="hidden lg:flex items-center gap-6 xl:gap-8 font-extrabold uppercase text-[11px]">
+                <a href="index.html#home" class="text-slate-600 hover:text-blue-600 transition-colors">Home</a>
+                <a href="index.html#unique" class="text-slate-600 hover:text-blue-600 transition-colors">About</a>
+                <a href="why-choose-us.html" class="text-blue-600 transition-colors">Why Choose Us</a>
+                <div class="relative group">
+                    <button class="flex items-center gap-1 py-2 uppercase text-slate-600">Courses <i class="fas fa-chevron-down text-[7px] ml-0.5"></i></button>
+                    <div class="absolute left-0 top-full mt-0 w-56 bg-white border border-slate-100 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-[60]">
+                        <a href="abacus.html" class="block px-5 py-3 hover:bg-slate-50 font-black">Abacus Training</a>
+                        <a href="vedic-maths.html" class="block px-5 py-3 hover:bg-slate-50 font-black">Vedic Maths</a>
+                    </div>
+                </div>
+                <a href="index.html#enroll" class="text-blue-600 font-black">Enroll Now</a>
+                <a href="index.html#team" class="text-slate-600">Leaders</a>
+                <a href="https://wa.me/918309678108" target="_blank" class="bg-amber-400 text-slate-900 px-4 py-2 rounded-lg font-black text-[10px] uppercase shadow-md">Franchise</a>
+                <a href="https://braindee-b9f71.web.app" target="_blank" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-black text-[10px] uppercase shadow-md">Get App</a>
+            </div>
+            <button id="menu-toggle" class="lg:hidden text-2xl p-2"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu">
+        <button id="menu-close" class="absolute top-4 right-4 text-2xl text-slate-400"><i class="fas fa-times"></i></button>
+        <div class="mb-8 text-center"><img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="h-10 mx-auto"></div>
+        <div class="flex flex-col gap-5 text-center mt-6">
+            <a href="index.html#home" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-center">Home</a>
+            <a href="index.html#unique" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-center">About</a>
+            <a href="why-choose-us.html" class="text-lg font-black uppercase text-blue-600 border-b pb-2 text-center">Why Choose Us</a>
+            <a href="index.html#enroll" class="text-lg font-black uppercase text-blue-600 border-b pb-2 text-center">Enroll Now</a>
+        </div>
+        <div class="mt-auto flex flex-col gap-3 px-4">
+            <a href="https://wa.me/918309678108" target="_blank" class="bg-[#ffb703] hover:bg-[#e6a500] text-slate-900 py-3.5 rounded-xl text-center font-black uppercase text-sm tracking-wider shadow-md transition-all">Franchise</a>
+            <a href="https://braindee-b9f71.web.app" target="_blank" class="bg-[#1d4ed8] hover:bg-[#1e40af] text-white py-3.5 rounded-xl text-center font-black uppercase text-sm tracking-wider shadow-md transition-all">Get App</a>
+        </div>
+    </div>
+
+    <!-- Hero Header Page Section -->
+    <header class="relative pt-32 pb-20 md:pt-44 md:pb-32 bg-slate-900 text-white overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <!-- Background Image of happy Indian students -->
+            <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1920&auto=format&fit=crop" class="w-full h-full object-cover opacity-25 filter grayscale-[30%]" alt="Indian school children learning with happiness">
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/80 to-slate-900/40"></div>
+        </div>
+
+        <div class="container mx-auto max-w-6xl px-6 relative z-10 text-center">
+            <span class="px-5 py-2 bg-blue-600/30 text-blue-400 border border-blue-500/30 rounded-full text-[10px] font-black uppercase tracking-[0.25em] mb-6 inline-block">Elevating Young Minds</span>
+            <h1 class="text-4xl md:text-7xl font-black uppercase tracking-tight leading-none mb-6">Why Choose <br class="md:hidden"><span class="text-amber-400">BrainDEE</span>?</h1>
+            <p class="text-slate-300 text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed font-light">
+                Unlock Your Child's Hidden Potential. We make mathematics intuitive, empowering, and incredibly fun through progressive cognitive mastery.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-4 justify-center">
+                <a href="index.html#enroll" class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-wider rounded-xl shadow-lg shadow-blue-500/20 text-xs md:text-sm transition-all hover:scale-105">Book a Free Demo</a>
+                <a href="#growth-estimator" class="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-amber-400 border border-slate-700 font-black uppercase tracking-wider rounded-xl text-xs md:text-sm transition-all">Estimate Growth</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Cognitive Growth Estimator (INTERACTIVE HERO ATTRACTION) -->
+    <section id="growth-estimator" class="py-16 md:py-24 bg-white px-6 relative">
+        <div class="premium-glow top-10 left-10"></div>
+        <div class="container mx-auto max-w-5xl relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl md:text-5xl font-black text-slate-900 uppercase tracking-tight">Brain Development Predictor</h2>
+                <p class="text-slate-500 text-sm md:text-base font-bold uppercase tracking-widest mt-2 text-primary">Interactive Simulator</p>
+                <div class="w-16 h-1.5 bg-amber-400 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="bg-slate-900 text-white rounded-[2.5rem] shadow-2xl p-8 md:p-12 border border-slate-800 grid md:grid-cols-12 gap-8 items-center">
+                <!-- User Input panel -->
+                <div class="md:col-span-5 space-y-6">
+                    <h3 class="text-xl font-bold uppercase tracking-wide text-amber-400">Estimate Child's Progress</h3>
+                    <p class="text-slate-400 text-xs md:text-sm leading-relaxed">Select your child's attributes to simulate expected developmental gains over months of structured training at BrainDEE.</p>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] font-black uppercase text-slate-400 mb-2">Age Bracket</label>
+                            <select id="child-age" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-3 text-sm text-white font-bold outline-none focus:border-blue-500 transition-all">
+                                <option value="junior">Junior Master (5 - 8 Years)</option>
+                                <option value="senior" selected>Senior Scholar (9 - 13 Years)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black uppercase text-slate-400 mb-2">Months of Study</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="setEstimatorMonths(3, this)" class="month-btn py-2.5 bg-slate-800 border border-slate-700 text-xs font-black uppercase rounded-lg hover:border-blue-500 transition-all">3 Months</button>
+                                <button onclick="setEstimatorMonths(6, this)" class="month-btn py-2.5 bg-blue-600 border border-blue-500 text-xs font-black uppercase rounded-lg transition-all">6 Months</button>
+                                <button onclick="setEstimatorMonths(12, this)" class="month-btn py-2.5 bg-slate-800 border border-slate-700 text-xs font-black uppercase rounded-lg hover:border-blue-500 transition-all">1 Year</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulation Visual Output -->
+                <div class="md:col-span-7 bg-slate-950 p-6 md:p-8 rounded-3xl border border-slate-800/80 space-y-6">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                        <span class="text-xs font-black uppercase tracking-wider text-slate-400">Performance Index Metrics</span>
+                        <span id="simulator-timeline-label" class="px-3 py-1 bg-amber-400/20 text-amber-400 border border-amber-400/30 rounded-md text-[10px] font-black uppercase tracking-wider">6-Month Gain</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Stat 1 -->
+                        <div>
+                            <div class="flex justify-between text-xs font-black uppercase mb-1">
+                                <span>Calculation Speed</span>
+                                <span id="bar-calc-value" class="text-blue-400">5x Faster</span>
+                            </div>
+                            <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+                                <div id="bar-calc" class="h-full bg-blue-500 transition-all duration-700 ease-out-back" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        <!-- Stat 2 -->
+                        <div>
+                            <div class="flex justify-between text-xs font-black uppercase mb-1">
+                                <span>Memory Retention</span>
+                                <span id="bar-memory-value" class="text-amber-400">80% Boost</span>
+                            </div>
+                            <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+                                <div id="bar-memory" class="h-full bg-amber-500 transition-all duration-700 ease-out-back" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <!-- Stat 3 -->
+                        <div>
+                            <div class="flex justify-between text-xs font-black uppercase mb-1">
+                                <span>Concentration Span</span>
+                                <span id="bar-concentration-value" class="text-green-400">120% Increase</span>
+                            </div>
+                            <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
+                                <div id="bar-concentration" class="h-full bg-green-500 transition-all duration-700 ease-out-back" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-[11px] text-slate-500 leading-normal uppercase font-bold text-center italic mt-4">
+                        *Estimates derived from comparative performance tracking data of 40,000+ BrainDEE graduates.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Parents Choose BrainDEE (10 CORE POINTS Grid) -->
+    <section class="py-16 md:py-24 bg-slate-50 px-4 relative">
+        <div class="container mx-auto max-w-6xl relative z-10">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="px-5 py-2 bg-indigo-50 text-indigo-600 rounded-full text-xs font-black uppercase tracking-[0.2em] mb-4 inline-block">Unrivalled Excellence</span>
+                <h2 class="text-3xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter">Why Parents Choose BrainDEE</h2>
+                <div class="w-16 md:w-24 h-1.5 bg-blue-600 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                <!-- 1. Trusted Academy -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm feature-hover-card flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl mb-6"><i class="fas fa-award"></i></div>
+                        <h3 class="text-lg font-black text-slate-900 uppercase mb-3 leading-tight">1. Trusted &amp; Proven Academy</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">BrainDEE is recognized as a quality educational system across India, accelerating mental agility, laser-sharp focus, and numerical assurance.</p>
+                    </div>
+                    <ul class="text-[11px] uppercase font-black text-slate-400 space-y-1.5 border-t border-slate-50 pt-4 text-left">
+                        <li><i class="fas fa-check text-blue-500 mr-1"></i> Rapid mental calculation</li>
+                        <li><i class="fas fa-check text-blue-500 mr-1"></i> Analytical mindset</li>
+                    </ul>
+                </div>
+
+                <!-- 2. Highly Trained Teachers -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm feature-hover-card flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center text-xl mb-6"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <h3 class="text-lg font-black text-slate-900 uppercase mb-3 leading-tight">2. Certified &amp; Friendly Mentors</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Our faculty comprises patient educators, professional mental math specialists, and children-centric psychological coaches.</p>
+                    </div>
+                    <ul class="text-[11px] uppercase font-black text-slate-400 space-y-1.5 border-t border-slate-50 pt-4 text-left">
+                        <li><i class="fas fa-check text-orange-500 mr-1"></i> Individual attention</li>
+                        <li><i class="fas fa-check text-orange-500 mr-1"></i> Interactive feedback</li>
+                    </ul>
+                </div>
+
+                <!-- 3. Professional 17-Rod Abacus -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm feature-hover-card flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center text-xl mb-6"><i class="fas fa-tools"></i></div>
+                        <h3 class="text-lg font-black text-slate-900 uppercase mb-3 leading-tight">3. 17-Rod Abacus Training</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Unlike other classes using standard 13-rods, we train students on professional 17-rod Sorobans for advanced multi-digit calculating agility.</p>
+                    </div>
+                    <ul class="text-[11px] uppercase font-black text-slate-400 space-y-1.5 border-t border-slate-50 pt-4 text-left">
+                        <li><i class="fas fa-check text-indigo-500 mr-1"></i> Fine motor synchronization</li>
+                        <li><i class="fas fa-check text-indigo-500 mr-1"></i> Photographic memory visualization</li>
+                    </ul>
+                </div>
+
+                <!-- 4. Practice App -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm feature-hover-card flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center text-xl mb-6"><i class="fas fa-mobile-alt"></i></div>
+                        <h3 class="text-lg font-black text-slate-900 uppercase mb-3 leading-tight">4. Interactive Practice App</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Our dedicated gaming application makes assignments exciting! Students complete daily speed challenges anywhere, anytime.</p>
+                    </div>
+                    <ul class="text-[11px] uppercase font-black text-slate-400 space-y-1.5 border-t border-slate-50 pt-4 text-left">
+                        <li><i class="fas fa-check text-green-500 mr-1"></i> Interactive tracking</li>
+                        <li><i class="fas fa-check text-green-500 mr-1"></i> Gamified calculations</li>
+                    </ul>
+                </div>
+
+                <!-- 5. Weekly Assessments -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm feature-hover-card flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center text-xl mb-6"><i class="fas fa-chart-line"></i></div>
+                        <h3 class="text-lg font-black text-slate-900 uppercase mb-3 leading-tight">5. Weekly Progress Evaluation</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Clear transparency through progressive metrics reports, speed assessments, and level-completion audits.</p>
+                    </div>
+                    <ul class="text-[11px] uppercase font-black text-slate-400 space-y-1.5 border-t border-slate-50 pt-4 text-left">
+                        <li><i class="fas fa-check text-rose-500 mr-1"></i> Weekly speed tests</li>
+                        <li><i class="fas fa-check text-rose-500 mr-1"></i> Analytical reports</li>
+                    </ul>
+                </div>
+
+                <!-- 6. Student Ranking -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm feature-hover-card flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-yellow-50 text-yellow-600 rounded-2xl flex items-center justify-center text-xl mb-6"><i class="fas fa-trophy"></i></div>
+                        <h3 class="text-lg font-black text-slate-900 uppercase mb-3 leading-tight">6. Student Ranking System</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Healthy state-level competitive rankings inside our gamified system incentivize kids to improve focus and consistency.</p>
+                    </div>
+                    <ul class="text-[11px] uppercase font-black text-slate-400 space-y-1.5 border-t border-slate-50 pt-4 text-left">
+                        <li><i class="fas fa-check text-yellow-500 mr-1"></i> Leaderboard rewards</li>
+                        <li><i class="fas fa-check text-yellow-500 mr-1"></i> Growth motivation</li>
+                    </ul>
+                </div>
+
+                <!-- 7. Beyond Math -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm feature-hover-card flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-cyan-50 text-cyan-600 rounded-2xl flex items-center justify-center text-xl mb-6"><i class="fas fa-yin-yang"></i></div>
+                        <h3 class="text-lg font-black text-slate-900 uppercase mb-3 leading-tight">7. Overall Cognitive Upgrades</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Abacus training is an overall brain exercise, improving concentration, listening prowess, visual imagination, and academic grit.</p>
+                    </div>
+                    <ul class="text-[11px] uppercase font-black text-slate-400 space-y-1.5 border-t border-slate-50 pt-4 text-left">
+                        <li><i class="fas fa-check text-cyan-500 mr-1"></i> Extreme concentration</li>
+                        <li><i class="fas fa-check text-cyan-500 mr-1"></i> Creative visualization</li>
+                    </ul>
+                </div>
+
+                <!-- 8. Fun Environment -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm feature-hover-card flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-pink-50 text-pink-600 rounded-2xl flex items-center justify-center text-xl mb-6"><i class="fas fa-smile"></i></div>
+                        <h3 class="text-lg font-black text-slate-900 uppercase mb-3 leading-tight">8. Fun Learning Spaces</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">We completely remove mathematics phobia. Children enjoy numbers through stress-free learning and activities.</p>
+                    </div>
+                    <ul class="text-[11px] uppercase font-black text-slate-400 space-y-1.5 border-t border-slate-50 pt-4 text-left">
+                        <li><i class="fas fa-check text-pink-500 mr-1"></i> Game-based worksheets</li>
+                        <li><i class="fas fa-check text-pink-500 mr-1"></i> Encouraging approach</li>
+                    </ul>
+                </div>
+
+                <!-- 9. Flexible Modes -->
+                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm feature-hover-card flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl mb-6"><i class="fas fa-shapes"></i></div>
+                        <h3 class="text-lg font-black text-slate-900 uppercase mb-3 leading-tight">9. Flexible Hybrid Options</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed mb-4">Choose from regular physically supervised classrooms, live online courses, or convenient blended options.</p>
+                    </div>
+                    <ul class="text-[11px] uppercase font-black text-slate-400 space-y-1.5 border-t border-slate-50 pt-4 text-left">
+                        <li><i class="fas fa-check text-emerald-500 mr-1"></i> Direct active learning</li>
+                        <li><i class="fas fa-check text-emerald-500 mr-1"></i> Virtual classes</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 10. Level-Based Curriculum Highlighted Banner -->
+            <div class="mt-12 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-3xl p-8 md:p-12 shadow-xl flex flex-col md:flex-row items-center justify-between gap-8 reveal">
+                <div class="max-w-xl text-center md:text-left">
+                    <span class="px-4 py-1.5 bg-white/20 text-white rounded-md text-[10px] font-black uppercase tracking-wider mb-3 inline-block">Comprehensive Standard</span>
+                    <h3 class="text-2xl md:text-3xl font-black uppercase mb-3">10. Structured Level-Based Path</h3>
+                    <p class="text-blue-100 text-sm leading-relaxed">Our carefully designed, step-by-step curriculum moves seamlessly from basic single-digit calculations to highly advanced Vedic algorithms and competitive arithmetic shortcuts.</p>
+                </div>
+                <a href="index.html#enroll" class="px-8 py-4 bg-white text-blue-600 font-black uppercase tracking-wider rounded-xl shadow-lg transition-transform hover:scale-105 shrink-0 text-xs md:text-sm">Explore Curriculum</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visual Impact Grid with happy Indian Children studying -->
+    <section class="py-16 md:py-24 bg-white px-6">
+        <div class="container mx-auto max-w-6xl">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 reveal">
+                    <span class="px-5 py-2 bg-indigo-50 text-indigo-600 rounded-full text-xs font-black uppercase tracking-[0.2em] mb-4 inline-block">Real Transformation</span>
+                    <h2 class="text-3xl md:text-5xl font-black text-slate-900 uppercase leading-none mb-6">How BrainDEE <br><span class="text-blue-600">Stands Apart</span></h2>
+                    <p class="text-slate-600 text-base md:text-lg leading-relaxed mb-6">
+                        Unlike conventional rote tuitions, BrainDEE's modern methods build cognitive foundation, unlocking rapid numeric confidence, long-lasting memory structures, and concentration span.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="border-l-4 border-amber-400 pl-4">
+                            <span class="text-2xl font-black text-slate-900 block leading-tight">10x Speed</span>
+                            <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Fast Calculations</span>
+                        </div>
+                        <div class="border-l-4 border-blue-600 pl-4">
+                            <span class="text-2xl font-black text-slate-900 block leading-tight">40k+ Students</span>
+                            <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Empowered in India</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-6 reveal">
+                    <div class="space-y-6">
+                        <div class="rounded-3xl overflow-hidden shadow-md aspect-[4/3] relative">
+                            <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Indian student concentrating on studies">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                                <p class="text-white text-sm font-black uppercase tracking-wider">100% Concentration Focus</p>
+                            </div>
+                        </div>
+                        <div class="bg-indigo-50 p-8 rounded-3xl border border-indigo-100">
+                            <h4 class="font-black text-slate-900 uppercase mb-2 text-sm md:text-base text-left">Brain Gym Exercises</h4>
+                            <p class="text-slate-600 text-xs md:text-sm leading-relaxed text-left">We utilize specialized mental visualization activities to exercise both hemispheres of the brain symmetrically.</p>
+                        </div>
+                    </div>
+                    <div class="space-y-6 md:mt-12">
+                        <div class="bg-amber-50 p-8 rounded-3xl border border-amber-100">
+                            <h4 class="font-black text-slate-900 uppercase mb-2 text-sm md:text-base text-left">Maths Phobia Eradication</h4>
+                            <p class="text-slate-600 text-xs md:text-sm leading-relaxed text-left">We build an open, positive learning relationship to completely dissolve examination anxiety naturally.</p>
+                        </div>
+                        <div class="rounded-3xl overflow-hidden shadow-md aspect-[4/3] relative">
+                            <img src="https://images.unsplash.com/photo-1598153346810-860daa814c4b?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Happy Indian kids laughing in classroom">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                                <p class="text-white text-sm font-black uppercase tracking-wider">Happy Collaborative Learning</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pt-20 pb-8 bg-slate-900 text-white px-6">
+        <div class="container mx-auto max-w-7xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-center md:text-left">
+                <!-- Branding -->
+                <div class="space-y-6">
+                    <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="h-14 mx-auto md:mx-0">
+                    <div class="text-xl font-black uppercase tracking-tighter">BrainDEE Academy</div>
+                    <p class="text-slate-400 text-xs uppercase font-bold leading-relaxed">Nurturing young minds through <br>ancient speed systems.</p>
+                </div>
+
+                <!-- Helps Column -->
+                <div>
+                    <h4 class="text-sm font-black uppercase mb-6 text-blue-400">Helps</h4>
+                    <ul class="space-y-4 text-slate-400 font-bold uppercase text-[10px]">
+                        <li><a href="index.html#faqs" class="hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Help</a></li>
+                        <li><a href="privacy-policy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms-and-conditions.html" class="hover:text-white transition-colors">Terms And Conditions</a></li>
+                    </ul>
+                </div>
+
+                <!-- Quick Links Column -->
+                <div>
+                    <h4 class="text-sm font-black uppercase mb-6 text-orange-400">Quick Links</h4>
+                    <ul class="space-y-4 text-slate-400 font-bold uppercase text-[10px]">
+                        <li><a href="index.html#home" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="index.html#courses" class="hover:text-white transition-colors">Courses</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="index.html#unique" class="hover:text-white transition-colors">BrainDEE</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Column -->
+                <div>
+                    <h4 class="text-sm font-black uppercase mb-6 text-indigo-400">BrainDEE</h4>
+                    <div class="space-y-4 text-slate-400 text-xs">
+                        <p class="leading-relaxed">Regd. Off: Flat no:403, Sai Sreeja’s Devi Heights<br>Hill Crest Society Rd, Mithila Nagar, Aditya Hills, Pragathi Nagar, Hyderabad, Telangana – 500090</p>
+                        <p class="flex items-center gap-2 justify-center md:justify-start"><i class="fas fa-envelope text-indigo-400"></i> Braindeeabacus@gmail.com</p>
+                        <p class="flex items-center gap-2 justify-center md:justify-start font-black text-white"><i class="fas fa-phone-alt text-indigo-400"></i> 83096 78108</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-white/10 text-center">
+                <p class="text-slate-500 text-[9px] uppercase font-bold tracking-widest">Copyright © 2026 BRAINDEE ACADEMY All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Interactive Predictor Estimator logic
+        const simulatorData = {
+            junior: {
+                3: { calc: "2x Faster", memory: "40% Boost", conc: "50% Increase", calcVal: 40, memoryVal: 50, concVal: 55 },
+                6: { calc: "3.5x Faster", memory: "65% Boost", conc: "90% Increase", calcVal: 65, memoryVal: 70, concVal: 75 },
+                12: { calc: "5x Faster", memory: "85% Boost", conc: "120% Increase", calcVal: 80, memoryVal: 85, concVal: 90 }
+            },
+            senior: {
+                3: { calc: "3x Faster", memory: "50% Boost", conc: "60% Increase", calcVal: 50, memoryVal: 55, concVal: 60 },
+                6: { calc: "5x Faster", memory: "80% Boost", conc: "120% Increase", calcVal: 70, memoryVal: 80, concVal: 85 },
+                12: { calc: "10x Faster", memory: "110% Boost", conc: "180% Increase", calcVal: 100, memoryVal: 95, concVal: 100 }
+            }
+        };
+
+        let currentEstimatedMonths = 6;
+
+        function setEstimatorMonths(months, btnElement) {
+            // Manage UI Active state
+            document.querySelectorAll('.month-btn').forEach(btn => {
+                btn.className = "month-btn py-2.5 bg-slate-800 border border-slate-700 text-xs font-black uppercase rounded-lg hover:border-blue-500 transition-all";
+            });
+            btnElement.className = "month-btn py-2.5 bg-blue-600 border border-blue-500 text-xs font-black uppercase rounded-lg transition-all";
+            
+            currentEstimatedMonths = months;
+            updateSimulation();
+        }
+
+        function updateSimulation() {
+            const ageGroup = document.getElementById('child-age').value;
+            const values = simulatorData[ageGroup][currentEstimatedMonths];
+
+            document.getElementById('simulator-timeline-label').innerText = `${currentEstimatedMonths}-Month Gain`;
+
+            // Update numerical values
+            document.getElementById('bar-calc-value').innerText = values.calc;
+            document.getElementById('bar-memory-value').innerText = values.memory;
+            document.getElementById('bar-concentration-value').innerText = values.conc;
+
+            // Update Progress bars
+            document.getElementById('bar-calc').style.width = values.calcVal + '%';
+            document.getElementById('bar-memory').style.width = values.memoryVal + '%';
+            document.getElementById('bar-concentration').style.width = values.concVal + '%';
+        }
+
+        document.getElementById('child-age').addEventListener('change', updateSimulation);
+
+        window.addEventListener('DOMContentLoaded', function() {
+            hideLoader();
+            updateSimulation();
+
+            document.getElementById('menu-toggle').onclick = () => document.getElementById('mobile-menu').classList.add('open');
+            document.getElementById('menu-close').onclick = () => document.getElementById('mobile-menu').classList.remove('open');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
