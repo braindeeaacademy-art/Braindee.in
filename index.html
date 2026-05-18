@@ -28,23 +28,25 @@
             letter-spacing: -0.01em;
         }
 
+        /* --- Premium Glass Navbar Overlay --- */
         .glass-nav {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid #e2e8f0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
         }
 
-        /* --- Hero Slider --- */
+        /* --- Hero Slider Full-Bleed --- */
         #home-slider {
             position: relative;
             width: 100%;
-            height: 480px; 
-            max-height: 85vh;
+            height: 520px; 
+            max-height: 90vh;
             overflow: hidden;
-            background: #1e293b;
+            background: #0f172a;
         }
 
-        @media (min-width: 768px) { #home-slider { height: 700px; } }
+        @media (min-width: 768px) { #home-slider { height: 750px; } }
 
         .slide {
             position: absolute;
@@ -59,40 +61,46 @@
         .slide-overlay {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 100%);
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.3) 0%, rgba(15, 23, 42, 0.8) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             color: white;
             padding: 0 20px;
+            padding-top: 80px; /* Offset for overlay navbar */
         }
 
         .slider-btn {
             position: absolute;
-            top: 50%;
+            top: 55%;
             transform: translateY(-50%);
             z-index: 10;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            transition: all 0.3s ease;
+        }
+        .slider-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.05);
         }
 
         .slider-indicators {
             position: absolute;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 4px;
+            gap: 6px;
             z-index: 10;
             flex-wrap: wrap;
             justify-content: center;
@@ -100,7 +108,7 @@
         }
 
         .indicator {
-            width: 10px;
+            width: 12px;
             height: 3px;
             border-radius: 2px;
             background: rgba(255, 255, 255, 0.3);
@@ -108,7 +116,7 @@
             transition: all 0.3s ease;
         }
 
-        .indicator.active { background: white; width: 30px; }
+        .indicator.active { background: #ff9f1c; width: 30px; }
 
         /* --- Stats Card NEAT DESIGN --- */
         .stats-card {
@@ -124,7 +132,7 @@
         /* --- Logo Slider (With Mobile Optimizations) --- */
         .logo-slider {
             overflow: hidden;
-            padding: 30px 0;
+            padding: 35px 0;
             background: #fafafa;
             border-bottom: 1px solid #f1f5f9;
         }
@@ -132,7 +140,7 @@
         .logo-track {
             display: flex;
             width: fit-content;
-            animation: scroll-logos 50s linear infinite;
+            animation: scroll-logos 55s linear infinite;
             align-items: center;
         }
 
@@ -142,7 +150,7 @@
         }
 
         .logo-slide {
-            width: 200px; 
+            width: 240px; 
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
@@ -176,8 +184,8 @@
         /* Responsive Mobile 3-Logo View adjustment */
         @media (max-width: 767px) {
             .logo-slide {
-                width: 33.333vw !important; /* Force exactly 3 visible at a time on mobile */
-                padding: 0 4px !important;
+                width: 33.333% !important; /* Force exactly 3 visible at a time on mobile */
+                padding: 0 6px !important;
                 gap: 6px;
             }
             .logo-slide img {
@@ -222,7 +230,7 @@
         .program-img-container img { width: 100%; height: 100%; object-fit: contain; }
         @media (min-width: 768px) { .program-img-container { height: 280px; } }
 
-        /* --- Wall of Fame ALIGNMENT --- */
+        /* --- Seamless Sliders (Wall of Fame & Academy Gallery) --- */
         .seamless-track {
             display: flex;
             width: fit-content;
@@ -233,6 +241,25 @@
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
+
+        /* --- Academy Gallery Styling --- */
+        .gallery-item {
+            width: 260px;
+            margin: 0 8px;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+        @media (min-width: 768px) {
+            .gallery-item {
+                width: 450px;
+                margin: 0 10px;
+                border-radius: 1.5rem;
+            }
+        }
+
+        /* --- Wall of Fame ALIGNMENT --- */
         .fame-item {
             width: 200px;
             margin: 0 15px;
@@ -240,6 +267,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            flex-shrink: 0;
         }
         .fame-img {
             width: 100%;
@@ -309,6 +337,50 @@
         }
         .team-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px -10px rgba(0,0,0,0.05); }
 
+        /* --- Elegant Line FAQ Accordion --- */
+        .faq-item {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1.25rem 0;
+            transition: all 0.3s ease;
+        }
+        .faq-question {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 800;
+            color: #1e293b;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+        .faq-question:hover {
+            color: var(--primary);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease-out;
+            color: #64748b;
+            font-size: 0.925rem;
+            line-height: 1.6;
+            opacity: 0;
+        }
+        .faq-item.active .faq-answer {
+            opacity: 1;
+            margin-top: 0.75rem;
+        }
+        .faq-icon {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #94a3b8;
+        }
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
+        .faq-item.active .faq-question {
+            color: var(--primary);
+        }
+
         .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
@@ -328,14 +400,6 @@
             box-shadow: -15px 0 35px rgba(0,0,0,0.15);
         }
         #mobile-menu.open { right: 0; }
-
-        /* FAQ Style Updates */
-        .faq-item { border-bottom: 1px solid #e2e8f0; }
-        .faq-question { cursor: pointer; padding: 1.25rem 0; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: #1e293b; transition: color 0.3s; }
-        .faq-question:hover { color: var(--primary); }
-        .faq-answer { max-height: 0; overflow: hidden; transition: all 0.4s ease-out; color: #64748b; font-size: 0.95rem; line-height: 1.6; }
-        .faq-item.active .faq-answer { max-height: 500px; padding-bottom: 1.5rem; }
-        .faq-item.active i { transform: rotate(45deg); color: var(--primary); }
     </style>
 </head>
 <body class="antialiased text-slate-700 bg-white">
@@ -372,10 +436,10 @@
         <div class="max-w-[1440px] mx-auto flex justify-between items-center gap-2">
             <div class="flex items-center gap-2.5 shrink-0">
                 <a href="#home" class="flex items-center gap-2">
-                    <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="BrainDEE Logo" class="h-[36px] md:h-[55px] w-auto">
-                    <div class="flex flex-col">
+                    <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="BrainDEE Logo" class="h-[40px] md:h-[55px] w-auto">
+                    <div class="flex flex-col text-left">
                         <span class="text-sm md:text-lg lg:text-xl font-black text-slate-900 brand-font uppercase leading-none">BrainDEE Academy</span>
-                        <span class="text-[5px] md:text-[8px] uppercase tracking-wider font-bold text-slate-400 mt-0.5 text-center md:text-left">Creating Mathemagicians</span>
+                        <span class="text-[5px] md:text-[8px] uppercase tracking-wider font-bold text-slate-400 mt-1 leading-none text-left">Creating Mathemagicians</span>
                     </div>
                 </a>
             </div>
@@ -399,26 +463,29 @@
         </div>
     </nav>
 
-    <!-- Mobile Menu -->
+    <!-- Mobile Menu (With Gorgeous Restored Original Styled Buttons from image_7e5d4e.png) -->
     <div id="mobile-menu">
         <button id="menu-close" class="absolute top-4 right-4 text-2xl text-slate-400"><i class="fas fa-times"></i></button>
-        <div class="mb-6 text-center"><img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="h-10 mx-auto"></div>
-        <a href="#home" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-center">Home</a>
-        <a href="#unique" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-center">About</a>
-        <a href="#categories" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-center">Explore</a>
-        <a href="#enroll" class="text-lg font-black uppercase text-blue-600 border-b pb-2 text-center">Enroll Now</a>
-        <div class="mt-auto flex flex-col gap-3">
-            <a href="https://wa.me/918309678108" class="bg-amber-400 text-slate-900 py-4 rounded-xl text-center font-black uppercase text-sm shadow-md">Franchise</a>
-            <a href="https://braindee-b9f71.web.app" class="bg-blue-600 text-white py-4 rounded-xl text-center font-black uppercase text-sm shadow-md">Get App</a>
+        <div class="mb-8 text-center"><img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="h-10 mx-auto"></div>
+        <div class="flex flex-col gap-5 text-center mt-6">
+            <a href="#home" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-center">Home</a>
+            <a href="#unique" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-center">About</a>
+            <a href="#categories" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-center">Explore</a>
+            <a href="#enroll" class="text-lg font-black uppercase text-blue-600 border-b pb-2 text-center">Enroll Now</a>
+        </div>
+        <!-- High-Contrast Premium Buttons matching image_7e5d4e.png -->
+        <div class="mt-auto flex flex-col gap-3 px-4">
+            <a href="https://wa.me/918309678108" target="_blank" class="bg-[#ffb703] hover:bg-[#e6a500] text-slate-900 py-3.5 rounded-xl text-center font-black uppercase text-sm tracking-wider shadow-md transition-all">Franchise</a>
+            <a href="https://braindee-b9f71.web.app" target="_blank" class="bg-[#1d4ed8] hover:bg-[#1e40af] text-white py-3.5 rounded-xl text-center font-black uppercase text-sm tracking-wider shadow-md transition-all">Get App</a>
         </div>
     </div>
 
-    <!-- Hero Slider (15 SLIDES) -->
-    <section id="home" class="pt-12 md:pt-24 lg:pt-28"> 
+    <!-- Hero Slider (15 SLIDES - PT-0 Full Bleed under the Transparent Navbar) -->
+    <section id="home" class="pt-0"> 
         <div id="home-slider">
             <div class="slide active">
                 <img src="https://images.unsplash.com/photo-1510172951991-856a654063f9?q=80&w=1920&h=1080&auto=format&fit=crop" class="w-full h-full object-cover">
-                <div class="slide-overlay"><div class="max-w-4xl px-4"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase tracking-tighter text-amber-400">17-Rod Abacus Mastery</h1><p class="text-[10px] md:text-xl text-slate-100 italic mb-6">World-class Soroban training for rapid mental calculation.</p><a href="#enroll" class="inline-block px-8 py-4 bg-white text-blue-600 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-sm">Enroll Now</a></div></div>
+                <div class="slide-overlay"><div class="max-w-4xl px-4"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase tracking-tighter text-amber-400">17-Rod Abacus Mastery</h1><p class="text-[10px] md:text-xl text-slate-100 italic mb-6">World-class Soroban training for rapid mental calculation.</p><a href="#enroll" class="inline-block px-8 py-4 bg-white text-blue-600 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-sm shadow-lg hover:scale-105 transition-transform">Enroll Now</a></div></div>
             </div>
             <div class="slide">
                 <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=1920&h=1080&auto=format&fit=crop" class="w-full h-full object-cover">
@@ -428,6 +495,7 @@
                 <img src="https://images.unsplash.com/photo-1523240715630-362624838420?q=80&w=1920&h=1080&auto=format&fit=crop" class="w-full h-full object-cover">
                 <div class="slide-overlay"><div class="max-w-4xl px-4"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-yellow-400 text-center">Empowering The Youth</h1><p class="text-sm font-bold uppercase text-white text-center">Join 40,000+ students across India.</p></div></div>
             </div>
+            <!-- Slides 4 - 15 loop -->
             <div class="slide"><img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1920&q=80" class="w-full h-full object-cover"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-white">Cognitive Excellence</h1></div></div>
             <div class="slide"><img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1920&q=80" class="w-full h-full object-cover"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-green-400">Creative Learning</h1></div></div>
             <div class="slide"><img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1920&q=80" class="w-full h-full object-cover"><div class="slide-overlay"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase text-orange-400">Ancient Wisdom</h1></div></div>
@@ -473,7 +541,7 @@
             <div class="w-16 md:w-24 h-1 bg-blue-600 mx-auto mt-3 rounded-full text-center"></div>
         </div>
         <div class="logo-track">
-            <!-- 21 school logos with names -->
+            <!-- 21 school logos with corrected names -->
             <div class="logo-slide">
                 <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/EKASHILA%20GROUP%20OF%20INSTITUTIONS%20.jpeg" alt="EKASHILA GROUP OF INSTITUTION">
                 <span class="logo-name">EKASHILA GROUP OF INSTITUTION</span>
@@ -511,8 +579,8 @@
                 <span class="logo-name">KSR CONCEPT SCHOOL</span>
             </div>
             <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/MAHARSHI%20VIDYALAYA%20SCHOOL.jpeg" alt="MAHARSHI VIDYALAYA HIGH  SCHOOL">
-                <span class="logo-name">MAHARSHI VIDYALAYA HIGH  SCHOOL</span>
+                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/MAHARSHI%20VIDYALAYA%20SCHOOL.jpeg" alt="MAHARSHI VIDYALAYA HIGH SCHOOL">
+                <span class="logo-name">MAHARSHI VIDYALAYA HIGH SCHOOL</span>
             </div>
             <div class="logo-slide">
                 <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/MOTHER%27S%20LAND%20SCHOOL.jpeg" alt="MOTHER'S LAND HIGH SCHOOL">
@@ -597,52 +665,8 @@
                 <span class="logo-name">KSR CONCEPT SCHOOL</span>
             </div>
             <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/MAHARSHI%20VIDYALAYA%20SCHOOL.jpeg" alt="MAHARSHI VIDYALAYA HIGH  SCHOOL">
-                <span class="logo-name">MAHARSHI VIDYALAYA HIGH  SCHOOL</span>
-            </div>
-            <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/MOTHER%27S%20LAND%20SCHOOL.jpeg" alt="MOTHER'S LAND HIGH SCHOOL">
-                <span class="logo-name">MOTHER'S LAND HIGH SCHOOL</span>
-            </div>
-            <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/PALLAVI%20MODEL%20SCHOOL.jpeg" alt="PALLAVI MODEL SCHOOL">
-                <span class="logo-name">PALLAVI MODEL SCHOOL</span>
-            </div>
-            <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/SRI%20SAI%20SIDDHARTHA%20SCHOOL.jpeg" alt="SRI SAI SIDDHARTH SCHOOL">
-                <span class="logo-name">SRI SAI SIDDHARTH SCHOOL</span>
-            </div>
-            <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/Screenshot-2025-04-19-122612.png" alt="EKASHILA GROUP OF INSTITUTIONS">
-                <span class="logo-name">EKASHILA GROUP OF INSTITUTIONS</span>
-            </div>
-            <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/THAKSHASHILA%20HIGH%20SCHOOL%20.jpeg" alt="THAKSHASHILA HIGH SCHOOL">
-                <span class="logo-name">THAKSHASHILA HIGH SCHOOL</span>
-            </div>
-            <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/TINY%20TOTS%20HIGH%20SCHOOL.jpeg" alt="TINY TOTS HIGH SCHOOL">
-                <span class="logo-name">TINY TOTS HIGH SCHOOL</span>
-            </div>
-            <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/WhatsApp%20Image%202026-05-11%20at%2012.03.59%20AM.jpeg" alt="VIKRAM EDUCATIONAL INSTITUTIONS">
-                <span class="logo-name">VIKRAM EDUCATIONAL INSTITUTIONS</span>
-            </div>
-            <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/braindee-.png" alt="NEW VISION EDUCATIONAL SOCIETY">
-                <span class="logo-name">NEW VISION EDUCATIONAL SOCIETY</span>
-            </div>
-            <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/geethanjali%20school%20.jpeg" alt="GEETHANJALI SCHOOL">
-                <span class="logo-name">GEETHANJALI SCHOOL</span>
-            </div>
-            <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/pallavi%20kidz%20school.jpeg" alt="PALLAVI KIDZ SCHOOL">
-                <span class="logo-name">PALLAVI KIDZ SCHOOL</span>
-            </div>
-            <div class="logo-slide">
-                <img src="https://imaginative-yellow-mdwvxvil5v-rax06r0m6n.edgeone.app/vikram%20school.jpeg?eo_token=f430499a839e7828e0fa90404b864854&eo_time=1779006496" alt="VIKRAM SCHOOL">
-                <span class="logo-name">VIKRAM SCHOOL</span>
+                <img src="https://imaginative-yellow-mdwvxvil5v.edgeone.app/MAHARSHI%20VIDYALAYA%20SCHOOL.jpeg" alt="MAHARSHI VIDYALAYA HIGH SCHOOL">
+                <span class="logo-name">MAHARSHI VIDYALAYA HIGH SCHOOL</span>
             </div>
         </div>
     </section>
@@ -720,6 +744,41 @@
         </div>
     </section>
 
+    <!-- ACADEMY GALLERY (Seamless 15 Images with restored scroller) -->
+    <section id="gallery" class="academy-gallery-seamless overflow-hidden py-12 md:py-16 bg-slate-900 text-center">
+        <div class="container mx-auto text-center mb-8 md:mb-10 reveal">
+            <h2 class="text-2xl md:text-5xl font-black text-white uppercase tracking-tighter">Academy Gallery</h2>
+            <div class="w-16 md:w-20 h-1 bg-blue-500 mx-auto mt-3 rounded-full"></div>
+        </div>
+        <div class="seamless-track">
+            <!-- Added specific WhatsApp classroom photo first -->
+            <div class="gallery-item"><img src="https://experimental-jade-asyogtpprh.edgeone.app/WhatsApp%20Image%202026-05-18%20at%2012.32.45%20PM.jpeg" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Active Learning Classroom"></div>
+            <!-- 14 Unique high-quality client images -->
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4934.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4938.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4941.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4945.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5405.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5438.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5466.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5478.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5530.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5570.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5632.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5640.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5653.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5655.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+
+            <!-- Duplicates to loop perfectly & infinitely -->
+            <div class="gallery-item"><img src="https://experimental-jade-asyogtpprh.edgeone.app/WhatsApp%20Image%202026-05-18%20at%2012.32.45%20PM.jpeg" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Active Learning Classroom"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4934.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4938.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4941.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4945.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+            <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5405.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
+        </div>
+    </section>
+
     <!-- Wall of Fame -->
     <section id="fame" class="py-16 md:py-24 bg-white overflow-hidden text-center text-center">
         <div class="container mx-auto text-center mb-12 reveal text-center">
@@ -757,68 +816,150 @@
         </div>
     </section>
 
-    <!-- LEADERSHIP SECTION -->
+    <!-- LEADERSHIP SECTION (LADIES SHOWN FIRST, MEN SHOWN SECOND WITH REDUCED PORTRAIT SCALE) -->
     <section id="team" class="py-16 md:py-24 bg-slate-50 px-4 text-center">
         <div class="container mx-auto max-w-6xl">
             <h2 class="text-2xl md:text-5xl font-black text-slate-900 uppercase mb-12 reveal text-center">Visionary Leadership</h2>
             <div class="space-y-16">
+                <!-- ROW 1: LADIES (Full-grid Portrait Sizing) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
+                    <!-- Gayatri bio link -->
+                    <a href="gayatri-bio.html" class="team-card reveal block hover:scale-[1.02] transition-transform">
+                        <div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://screeching-amber-piwx3m9igy.edgeone.app/ChatGPT%20Image%20May%2011,%202026,%2012_35_00%20AM.png" class="w-full h-full object-cover" alt="Gayatri">
+                        </div>
+                        <h5 class="text-sm font-black uppercase">Gayatri</h5>
+                        <p class="text-[9px] text-orange-600 font-bold uppercase">Founder & Director</p>
+                        <p class="text-[8px] text-slate-400 mt-2 uppercase font-black tracking-widest">View Bio</p>
+                    </a>
+                    <div class="team-card reveal">
+                        <div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://tender-scarlet-sawdl5dmdw.edgeone.app/WhatsApp%20Image%202026-05-05%20at%201.50.26%20PM.jpeg" class="w-full h-full object-cover" alt="Harisha Reddy Mothe">
+                        </div>
+                        <h5 class="text-sm font-black uppercase">Harisha Reddy Mothe</h5>
+                        <p class="text-[9px] text-orange-600 font-bold uppercase text-center">Founder & Director</p>
+                    </div>
+                    <div class="team-card reveal">
+                        <div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://manual-salmon-yqiimyyeth.edgeone.app/WhatsApp%20Image%202026-05-05%20at%201.31.05%20PM.jpeg" class="w-full h-full object-cover" alt="Lalitha">
+                        </div>
+                        <h5 class="text-sm font-black uppercase text-center">LALITHA</h5>
+                        <p class="text-[9px] text-orange-600 font-bold uppercase text-center">Director</p>
+                    </div>
+                </div>
+
+                <!-- ROW 2: MEN (Reduced Photo Size compared to ladies) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
+                    <!-- Meher Teja updated title to CEO -->
                     <div class="team-card reveal text-center">
-                        <div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md"><img src="https://loose-gold-6nmnvansz8.edgeone.app/WhatsApp%20Image%202026-05-05%20at%203.40.31%20PM.jpeg" class="w-full h-full object-cover"></div>
+                        <div class="aspect-[3/4] max-w-[190px] w-4/5 mx-auto mb-4 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://loose-gold-6nmnvansz8.edgeone.app/WhatsApp%20Image%202026-05-05%20at%203.40.31%20PM.jpeg" class="w-full h-full object-cover" alt="Meher Teja">
+                        </div>
                         <h5 class="text-sm font-black uppercase">Meher Teja</h5>
                         <p class="text-[9px] text-blue-600 font-bold uppercase">CEO</p>
                     </div>
-                    <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md"><img src="https://ashamed-tan-qffqce9afg.edgeone.app/ChatGPT%20Image%20Apr%2024,%202026,%2010_52_24%20AM.png" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase">D. Sunil Reddy</h5><p class="text-[9px] text-blue-600 font-bold uppercase">Director</p></div>
-                    <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md"><img src="https://specific-tan-tpasnhhau9.edgeone.app/IMG_2908.jpg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase">PAVAN</h5><p class="text-[9px] text-blue-600 font-bold uppercase mt-1">Director</p></div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center">
-                    <a href="gayatri-bio.html" class="team-card reveal block hover:scale-[1.02] transition-transform">
-                        <div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md"><img src="https://screeching-amber-piwx3m9igy.edgeone.app/ChatGPT%20Image%20May%2011,%202026,%2012_35_00%20AM.png" class="w-full h-full object-cover"></div>
-                        <h5 class="text-sm font-black uppercase">Gayatri</h5><p class="text-[9px] text-orange-600 font-bold uppercase">Founder & Director</p><p class="text-[8px] text-slate-400 mt-2 uppercase font-black tracking-widest">View Bio</p>
-                    </a>
-                    <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md"><img src="https://tender-scarlet-sawdl5dmdw.edgeone.app/WhatsApp%20Image%202026-05-05%20at%201.50.26%20PM.jpeg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase">Harisha Reddy Mothe</h5><p class="text-[9px] text-orange-600 font-bold uppercase text-center">Founder & Director</p></div>
-                    <div class="team-card reveal"><div class="aspect-[3/4] mb-4 rounded-xl overflow-hidden shadow-md"><img src="https://manual-salmon-yqiimyyeth.edgeone.app/WhatsApp%20Image%202026-05-05%20at%201.31.05%20PM.jpeg" class="w-full h-full object-cover"></div><h5 class="text-sm font-black uppercase text-center">LALITHA</h5><p class="text-[9px] text-orange-600 font-bold uppercase text-center">Director</p></div>
+                    <div class="team-card reveal">
+                        <div class="aspect-[3/4] max-w-[190px] w-4/5 mx-auto mb-4 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://ashamed-tan-qffqce9afg.edgeone.app/ChatGPT%20Image%20Apr%2024,%202026,%2010_52_24%20AM.png" class="w-full h-full object-cover" alt="D. Sunil Reddy">
+                        </div>
+                        <h5 class="text-sm font-black uppercase">D. Sunil Reddy</h5>
+                        <p class="text-[9px] text-blue-600 font-bold uppercase">Director</p>
+                    </div>
+                    <div class="team-card reveal">
+                        <div class="aspect-[3/4] max-w-[190px] w-4/5 mx-auto mb-4 rounded-xl overflow-hidden shadow-md">
+                            <img src="https://specific-tan-tpasnhhau9.edgeone.app/IMG_2908.jpg" class="w-full h-full object-cover" alt="Pavan">
+                        </div>
+                        <h5 class="text-sm font-black uppercase text-center">PAVAN</h5>
+                        <p class="text-[9px] text-blue-600 font-bold uppercase mt-1 text-center">Director</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ (15 ITEMS) -->
-    <section id="faqs" class="py-16 md:py-24 bg-white px-4 text-center">
+    <!-- PREMIUM FAQ (15 ITEMS - Line Design) -->
+    <section id="faqs" class="py-16 md:py-24 bg-white px-6 text-center">
         <div class="container mx-auto max-w-4xl text-center">
-            <h2 class="text-2xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter mb-8 reveal text-center">Frequently Asked Questions</h2>
-            <div class="w-16 md:w-24 h-1 bg-blue-600 mx-auto mb-12 rounded-full"></div>
-            <div class="bg-white p-6 md:p-10 rounded-3xl shadow-xl border border-slate-100 reveal text-left">
+            <h2 class="text-2xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter mb-4 reveal text-center">Frequently Asked Questions</h2>
+            <p class="text-slate-500 mb-8 text-sm md:text-base font-medium uppercase tracking-wider">Everything you need to know about BrainDEE Academy</p>
+            <div class="w-16 md:w-24 h-1.5 bg-blue-600 mx-auto mb-12 rounded-full"></div>
+            
+            <div class="space-y-2 max-w-3xl mx-auto text-left reveal">
                 <!-- FAQ 1 -->
-                <div class="faq-item"><div class="faq-question uppercase">Why join BrainDEE? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Transform math from stress to power through neuro-cognitive training.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">Why join BrainDEE? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">Transform math from stress to power through neuro-cognitive training.</div>
+                </div>
                 <!-- FAQ 2 -->
-                <div class="faq-item"><div class="faq-question uppercase">What is the ideal age? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">The ideal age is between 5 and 13 years for peak brain development.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">What is the ideal age? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">The ideal age is between 5 and 13 years for peak brain development.</div>
+                </div>
                 <!-- FAQ 3 -->
-                <div class="faq-item"><div class="faq-question uppercase">Benefits of Abacus? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Develop focus, visualization, and photographic memory.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">Benefits of Abacus? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">Develop focus, visualization, and photographic memory.</div>
+                </div>
                 <!-- FAQ 4 -->
-                <div class="faq-item"><div class="faq-question uppercase">What is Vedic Maths? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">An ancient Indian math system providing 16 Sutras for fast arithmetic.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">What is Vedic Maths? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">An ancient Indian math system providing 16 Sutras for fast arithmetic.</div>
+                </div>
                 <!-- FAQ 5 -->
-                <div class="faq-item"><div class="faq-question uppercase">How many Abacus levels? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">There are typically 8-10 levels in our full Abacus curriculum.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">How many Abacus levels? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">There are typically 8-10 levels in our full Abacus curriculum.</div>
+                </div>
                 <!-- FAQ 6 -->
-                <div class="faq-item"><div class="faq-question uppercase">Time per level? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Each level takes approximately 3-4 months with regular practice.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">Time per level? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">Each level takes approximately 3-4 months with regular practice.</div>
+                </div>
                 <!-- FAQ 7 -->
-                <div class="faq-item"><div class="faq-question uppercase">Are teachers certified? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Yes, all our instructors are professionally trained and certified.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">Are teachers certified? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">Yes, all our instructors are professionally trained and certified.</div>
+                </div>
                 <!-- FAQ 8 -->
-                <div class="faq-item"><div class="faq-question uppercase">Online classes available? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">We offer both interactive online and physical classroom sessions.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">Online classes available? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">We offer both interactive online and physical classroom sessions.</div>
+                </div>
                 <!-- FAQ 9 -->
-                <div class="faq-item"><div class="faq-question uppercase">Does it help school math? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Absolutely. It builds a strong arithmetic foundation and calculation speed.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">Does it help school math? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">Absolutely. It builds a strong arithmetic foundation and calculation speed.</div>
+                </div>
                 <!-- FAQ 10 -->
-                <div class="faq-item"><div class="faq-question uppercase">How to apply for a franchise? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Contact us at 83096 78108 for details on our partnership model.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">How to apply for a franchise? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">Contact us at 83096 78108 for details on our partnership model.</div>
+                </div>
                 <!-- FAQ 11 -->
-                <div class="faq-item"><div class="faq-question uppercase">Can it remove math phobia? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Yes, our fun and interactive methods make numbers approachable for every child.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">Can it remove math phobia? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">Yes, our fun and interactive methods make numbers approachable for every child.</div>
+                </div>
                 <!-- FAQ 12 -->
-                <div class="faq-item"><div class="faq-question uppercase">Is practice necessary? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Consistent 10-minute daily practice is key to developing mental speed.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">Is practice necessary? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">Consistent 10-minute daily practice is key to developing mental speed.</div>
+                </div>
                 <!-- FAQ 13 -->
-                <div class="faq-item"><div class="faq-question uppercase">Do you provide course kits? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Yes, all students receive Abacus frames, books, and practice tools.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">Do you provide course kits? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">Yes, all students receive Abacus frames, books, and practice tools.</div>
+                </div>
                 <!-- FAQ 14 -->
-                <div class="faq-item"><div class="faq-question uppercase">Are there exams? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Level-completion certificates are awarded after successful assessments.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">Are there exams? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">Level-completion certificates are awarded after successful assessments.</div>
+                </div>
                 <!-- FAQ 15 -->
-                <div class="faq-item"><div class="faq-question uppercase">Is it for competitive exams? <i class="fas fa-plus text-xs"></i></div><div class="faq-answer">Yes, Vedic Maths shortcuts are essential for saving time in Olympiads and competitive tests.</div></div>
+                <div class="faq-item">
+                    <div class="faq-question uppercase">Is it for competitive exams? <i class="fas fa-chevron-down faq-icon text-xs"></i></div>
+                    <div class="faq-answer">Yes, Vedic Maths shortcuts are essential for saving time in Olympiads and competitive tests.</div>
+                </div>
             </div>
         </div>
     </section>
@@ -905,14 +1046,26 @@
             document.getElementById('menu-toggle').onclick = () => document.getElementById('mobile-menu').classList.add('open');
             document.getElementById('menu-close').onclick = () => document.getElementById('mobile-menu').classList.remove('open');
             
-            // FAQ Logic
-            document.querySelectorAll('.faq-question').forEach(q => {
-                q.onclick = () => {
-                    const parent = q.parentElement;
-                    const wasActive = parent.classList.contains('active');
-                    document.querySelectorAll('.faq-item').forEach(item => item.classList.remove('active'));
-                    if(!wasActive) parent.classList.add('active');
-                };
+            // Accordion Logic
+            document.querySelectorAll('.faq-item').forEach(item => {
+                const question = item.querySelector('.faq-question');
+                question.addEventListener('click', () => {
+                    const wasActive = item.classList.contains('active');
+                    
+                    // Close all active cards
+                    document.querySelectorAll('.faq-item').forEach(i => {
+                        i.classList.remove('active');
+                        const answer = i.querySelector('.faq-answer');
+                        answer.style.maxHeight = null;
+                    });
+
+                    // If it wasn't active, activate it
+                    if (!wasActive) {
+                        item.classList.add('active');
+                        const answer = item.querySelector('.faq-answer');
+                        answer.style.maxHeight = answer.scrollHeight + "px";
+                    }
+                });
             });
 
             const observer = new IntersectionObserver((entries) => {
