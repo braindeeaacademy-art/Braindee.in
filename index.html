@@ -129,17 +129,18 @@
             box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2);
         }
 
-        /* --- Logo Slider (With Mobile Optimizations) --- */
+        /* --- Logo Slider (With Mobile 3-at-a-time Optimizations) --- */
         .logo-slider {
             overflow: hidden;
             padding: 35px 0;
             background: #fafafa;
             border-bottom: 1px solid #f1f5f9;
+            width: 100%;
         }
 
         .logo-track {
             display: flex;
-            width: fit-content;
+            width: max-content;
             animation: scroll-logos 55s linear infinite;
             align-items: center;
         }
@@ -184,16 +185,17 @@
         /* Responsive Mobile 3-Logo View adjustment */
         @media (max-width: 767px) {
             .logo-slide {
-                width: 33.333% !important; /* Force exactly 3 visible at a time on mobile */
-                padding: 0 6px !important;
+                width: 33.333vw !important; /* Force exactly 3 visible at a time using viewport width */
+                padding: 0 8px !important;
                 gap: 6px;
             }
             .logo-slide img {
-                max-height: 50px !important;
+                max-height: 48px !important;
                 padding: 6px !important;
             }
             .logo-slide .logo-name {
-                font-size: 0.45rem !important;
+                font-size: 0.42rem !important;
+                font-weight: 800;
             }
         }
 
@@ -446,6 +448,7 @@
             
             <div class="hidden lg:flex items-center gap-6 xl:gap-8 font-extrabold uppercase text-[11px]">
                 <a href="#home" class="text-slate-600 hover:text-blue-600 transition-colors">Home</a>
+                <a href="why-choose-us.html" class="text-slate-600 hover:text-blue-600 transition-colors">Why Choose Us</a>
                 <a href="#unique" class="text-slate-600 hover:text-blue-600 transition-colors">About</a>
                 <div class="relative group">
                     <button class="flex items-center gap-1 py-2 uppercase text-slate-600">Courses <i class="fas fa-chevron-down text-[7px] ml-0.5"></i></button>
@@ -469,6 +472,7 @@
         <div class="mb-8 text-center"><img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="h-10 mx-auto"></div>
         <div class="flex flex-col gap-5 text-center mt-6">
             <a href="#home" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-center">Home</a>
+            <a href="why-choose-us.html" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-center text-[#1d4ed8]">Why Choose Us</a>
             <a href="#unique" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-center">About</a>
             <a href="#categories" class="text-lg font-black uppercase text-slate-900 border-b pb-2 text-center">Explore</a>
             <a href="#enroll" class="text-lg font-black uppercase text-blue-600 border-b pb-2 text-center">Enroll Now</a>
@@ -485,7 +489,17 @@
         <div id="home-slider">
             <div class="slide active">
                 <img src="https://images.unsplash.com/photo-1510172951991-856a654063f9?q=80&w=1920&h=1080&auto=format&fit=crop" class="w-full h-full object-cover">
-                <div class="slide-overlay"><div class="max-w-4xl px-4"><h1 class="text-2xl md:text-6xl font-black mb-3 uppercase tracking-tighter text-amber-400">17-Rod Abacus Mastery</h1><p class="text-[10px] md:text-xl text-slate-100 italic mb-6">World-class Soroban training for rapid mental calculation.</p><a href="#enroll" class="inline-block px-8 py-4 bg-white text-blue-600 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-sm shadow-lg hover:scale-105 transition-transform">Enroll Now</a></div></div>
+                <div class="slide-overlay">
+                    <div class="max-w-4xl px-4">
+                        <h1 class="text-2xl md:text-6xl font-black mb-3 uppercase tracking-tighter text-amber-400">17-Rod Abacus Mastery</h1>
+                        <p class="text-[10px] md:text-xl text-slate-100 italic mb-6">World-class Soroban training for rapid mental calculation.</p>
+                        <!-- Integrated Button linking why-choose-us.html next to Enroll Now -->
+                        <div class="flex flex-wrap justify-center gap-4">
+                            <a href="#enroll" class="inline-block px-8 py-4 bg-white text-blue-600 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-sm shadow-lg hover:scale-105 transition-transform">Enroll Now</a>
+                            <a href="why-choose-us.html" class="inline-block px-8 py-4 bg-blue-600 text-white border border-blue-500 rounded-xl font-black uppercase tracking-widest text-[10px] md:text-sm shadow-lg hover:scale-105 transition-transform">Why BrainDEE?</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="slide">
                 <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=1920&h=1080&auto=format&fit=crop" class="w-full h-full object-cover">
@@ -744,14 +758,14 @@
         </div>
     </section>
 
-    <!-- ACADEMY GALLERY (Seamless 15 Images with restored scroller) -->
+    <!-- ACADEMY GALLERY RESTORED (UPDATED WITH 14 NEW IMAGES AND SPECIFIED WHATSAPP ATTACHMENT) -->
     <section id="gallery" class="academy-gallery-seamless overflow-hidden py-12 md:py-16 bg-slate-900 text-center">
         <div class="container mx-auto text-center mb-8 md:mb-10 reveal">
             <h2 class="text-2xl md:text-5xl font-black text-white uppercase tracking-tighter">Academy Gallery</h2>
             <div class="w-16 md:w-20 h-1 bg-blue-500 mx-auto mt-3 rounded-full"></div>
         </div>
         <div class="seamless-track">
-            <!-- Added specific WhatsApp classroom photo first -->
+            <!-- Added the user's specific premium WhatsApp classroom image first -->
             <div class="gallery-item"><img src="https://experimental-jade-asyogtpprh.edgeone.app/WhatsApp%20Image%202026-05-18%20at%2012.32.45%20PM.jpeg" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Active Learning Classroom"></div>
             <!-- 14 Unique high-quality client images -->
             <div class="gallery-item"><img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4934.JPG" class="w-full h-48 md:h-72 object-cover" alt="BrainDEE Activity"></div>
@@ -1046,7 +1060,7 @@
             document.getElementById('menu-toggle').onclick = () => document.getElementById('mobile-menu').classList.add('open');
             document.getElementById('menu-close').onclick = () => document.getElementById('mobile-menu').classList.remove('open');
             
-            // Accordion Logic
+            // FAQ Logic
             document.querySelectorAll('.faq-item').forEach(item => {
                 const question = item.querySelector('.faq-question');
                 question.addEventListener('click', () => {
