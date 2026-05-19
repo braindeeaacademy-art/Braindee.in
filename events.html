@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academy Events | BrainDEE Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #334155; }
+        h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; letter-spacing: -0.01em; }
+        .glass-nav { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-bottom: 1px solid #e2e8f0; }
+        
+        /* --- Premium Filter Button Styles --- */
+        .filter-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .filter-btn.active {
+            background-color: #4361ee;
+            color: white;
+            box-shadow: 0 4px 14px rgba(67, 97, 238, 0.3);
+            border-color: #4361ee;
+        }
+
+        /* --- Event Card Layout --- */
+        .event-card {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .event-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.08);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Preloader -->
+    <div id="loader" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 py-4 px-6 md:px-12 glass-nav">
+        <div class="max-w-[1440px] mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2">
+                <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="BrainDEE Logo" class="h-10 md:h-14 w-auto">
+                <span class="text-lg md:text-xl font-black text-slate-900 uppercase leading-none">BrainDEE Academy</span>
+            </a>
+            <a href="index.html" class="text-sm font-bold text-blue-600 hover:underline">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- Header Banner -->
+    <header class="pt-32 pb-16 md:pt-44 md:pb-24 bg-slate-900 text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-15">
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 to-transparent"></div>
+            <img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5478.JPG" class="w-full h-full object-cover">
+        </div>
+        <div class="container mx-auto max-w-6xl px-6 relative z-10 text-center">
+            <span class="px-5 py-2 bg-blue-600/30 text-blue-400 border border-blue-500/30 rounded-full text-[10px] font-black uppercase tracking-[0.25em] mb-4 inline-block">Championships & Celebrations</span>
+            <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tight mb-4">Academy <span class="text-amber-400">Events</span></h1>
+            <p class="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
+                Celebrating outstanding young minds in our Regional and State-Level Competitions during the 2025 and 2026 academic years.
+            </p>
+        </div>
+    </header>
+
+    <!-- Interactive Filters & Event Showcase -->
+    <main class="py-16 px-6">
+        <div class="max-w-6xl mx-auto">
+            
+            <!-- Filters Control Panel -->
+            <div class="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm mb-12 space-y-6">
+                <!-- Filter Category Row 1: Years -->
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
+                    <span class="text-xs font-black uppercase tracking-wider text-slate-400 min-w-[100px]">Filter by Year:</span>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterEvents('year', 'all', this)" class="filter-btn active px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">All Years</button>
+                        <button onclick="filterEvents('year', '2026', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">2026</button>
+                        <button onclick="filterEvents('year', '2025', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">2025</button>
+                    </div>
+                </div>
+
+                <!-- Filter Category Row 2: Categories -->
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-4 pt-4 border-t border-slate-100">
+                    <span class="text-xs font-black uppercase tracking-wider text-slate-400 min-w-[100px]">Competition:</span>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterEvents('type', 'all', this)" class="filter-btn active px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">All Categories</button>
+                        <button onclick="filterEvents('type', 'abacus', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">Abacus</button>
+                        <button onclick="filterEvents('type', 'vedic', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">Vedic Maths</button>
+                        <button onclick="filterEvents('type', 'drawing-painting', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">Drawing &amp; Painting</button>
+                        <button onclick="filterEvents('type', 'listening', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">Listening</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Events Grid -->
+            <div id="events-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Event 1: State Level Abacus 2026 -->
+                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2026" data-type="abacus" data-level="state">
+                    <div>
+                        <div class="relative h-56 bg-slate-100">
+                            <img src="https://experimental-jade-asyogtpprh.edgeone.app/WhatsApp%20Image%202026-05-18%20at%2012.32.45%20PM.jpeg" class="w-full h-full object-cover">
+                            <div class="absolute top-4 left-4 bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">State Level</div>
+                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2026</div>
+                        </div>
+                        <div class="p-6 text-left">
+                            <span class="text-[9px] font-black uppercase tracking-widest text-blue-600 mb-2 block">Mental Abacus Challenge</span>
+                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">State Abacus Championship</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Students from 70+ schools competed in lightning-fast mental math arithmetic. They visualized the 17-rod abacus bead frame perfectly.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
+                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-trophy mr-1.5 text-amber-500"></i>1st &amp; 2nd Rank Medals</span>
+                        <span class="text-[10px] font-bold text-blue-600 uppercase">State Level</span>
+                    </div>
+                </div>
+
+                <!-- Event 2: Regional Drawing & Painting 2025 -->
+                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2025" data-type="drawing-painting" data-level="regional">
+                    <div>
+                        <div class="relative h-56 bg-slate-100">
+                            <img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5405.JPG" class="w-full h-full object-cover">
+                            <div class="absolute top-4 left-4 bg-orange-500 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">Regional Level</div>
+                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2025</div>
+                        </div>
+                        <div class="p-6 text-left">
+                            <span class="text-[9px] font-black uppercase tracking-widest text-orange-600 mb-2 block">Creativity Showcase</span>
+                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">Regional Drawing and Painting</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Nurturing creative skills beyond numbers. Our students expressed their limitless imaginations beautifully on canvases.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
+                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-palette mr-1.5 text-purple-500"></i>Creative Arts</span>
+                        <span class="text-[10px] font-bold text-orange-600 uppercase">Regional</span>
+                    </div>
+                </div>
+
+                <!-- Event 3: State Vedic Maths Speed 2026 -->
+                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2026" data-type="vedic" data-level="state">
+                    <div>
+                        <div class="relative h-56 bg-slate-100">
+                            <img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5478.JPG" class="w-full h-full object-cover">
+                            <div class="absolute top-4 left-4 bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">State Level</div>
+                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2026</div>
+                        </div>
+                        <div class="p-6 text-left">
+                            <span class="text-[9px] font-black uppercase tracking-widest text-blue-600 mb-2 block">Ancient Vedic Algorithms</span>
+                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">State Vedic Maths Challenge</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Highlighting 16 magical sutras. High school scholars calculated complex mathematical squares and divisions inside seconds.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
+                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-bolt mr-1.5 text-yellow-500"></i>10x Calculation Speed</span>
+                        <span class="text-[10px] font-bold text-blue-600 uppercase">State Level</span>
+                    </div>
+                </div>
+
+                <!-- Event 4: Regional Listening Accuracy 2025 -->
+                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2025" data-type="listening" data-level="regional">
+                    <div>
+                        <div class="relative h-56 bg-slate-100">
+                            <img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4934.JPG" class="w-full h-full object-cover">
+                            <div class="absolute top-4 left-4 bg-orange-500 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">Regional Level</div>
+                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2025</div>
+                        </div>
+                        <div class="p-6 text-left">
+                            <span class="text-[9px] font-black uppercase tracking-widest text-orange-600 mb-2 block">Concentration &amp; Hearing</span>
+                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">Regional Listening Battle</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Students listened to rapid arithmetic dictations, computing large sums without looking or writing. Testing peak sensory reflex.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
+                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-volume-up mr-1.5 text-blue-500"></i>Memory Auditing</span>
+                        <span class="text-[10px] font-bold text-orange-600 uppercase">Regional</span>
+                    </div>
+                </div>
+
+                <!-- Event 5: Regional Abacus Summit 2025 -->
+                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2025" data-type="abacus" data-level="regional">
+                    <div>
+                        <div class="relative h-56 bg-slate-100">
+                            <img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5653.JPG" class="w-full h-full object-cover">
+                            <div class="absolute top-4 left-4 bg-orange-500 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">Regional Level</div>
+                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2025</div>
+                        </div>
+                        <div class="p-6 text-left">
+                            <span class="text-[9px] font-black uppercase tracking-widest text-orange-600 mb-2 block">Soroban Speed Trial</span>
+                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">Regional Abacus Summit</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">A grand regional gathering where school champions competed side-by-side using physical wood-frame abacus tools.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
+                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-users mr-1.5 text-emerald-500"></i>45+ Schools Participated</span>
+                        <span class="text-[10px] font-bold text-orange-600 uppercase">Regional</span>
+                    </div>
+                </div>
+
+                <!-- Event 6: State Painting & Drawing Exhibit 2026 -->
+                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2026" data-type="drawing-painting" data-level="state">
+                    <div>
+                        <div class="relative h-56 bg-slate-100">
+                            <img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4938.JPG" class="w-full h-full object-cover">
+                            <div class="absolute top-4 left-4 bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">State Level</div>
+                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2026</div>
+                        </div>
+                        <div class="p-6 text-left">
+                            <span class="text-[9px] font-black uppercase tracking-widest text-blue-600 mb-2 block">Art &amp; Visual Logic</span>
+                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">State Painting Exhibition</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Combining spatial intelligence with fine motor execution. Celebrating our students' award-winning artwork.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
+                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-brush mr-1.5 text-pink-500"></i>Symmetrical Design</span>
+                        <span class="text-[10px] font-bold text-blue-600 uppercase">State Level</span>
+                    </div>
+                </div>
+
+                <!-- Event 7: State Level Listening Olympiad 2026 -->
+                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2026" data-type="listening" data-level="state">
+                    <div>
+                        <div class="relative h-56 bg-slate-100">
+                            <img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5530.JPG" class="w-full h-full object-cover">
+                            <div class="absolute top-4 left-4 bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">State Level</div>
+                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2026</div>
+                        </div>
+                        <div class="p-6 text-left">
+                            <span class="text-[9px] font-black uppercase tracking-widest text-blue-600 mb-2 block">Auditory Math Speed</span>
+                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">State Listening Accuracy Event</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">The ultimate showcase of auditory retention. Speed computations read aloud at 1.5 calculations per second.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
+                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-headphones mr-1.5 text-indigo-500"></i>99% Accuracy Target</span>
+                        <span class="text-[10px] font-bold text-blue-600 uppercase">State Level</span>
+                    </div>
+                </div>
+
+                <!-- Event 8: Regional Vedic Math Challenge 2025 -->
+                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2025" data-type="vedic" data-level="regional">
+                    <div>
+                        <div class="relative h-56 bg-slate-100">
+                            <img src="https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5570.JPG" class="w-full h-full object-cover">
+                            <div class="absolute top-4 left-4 bg-orange-500 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">Regional Level</div>
+                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2025</div>
+                        </div>
+                        <div class="p-6 text-left">
+                            <span class="text-[9px] font-black uppercase tracking-widest text-orange-600 mb-2 block">Mental Shortcut Formulas</span>
+                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">Regional Vedic Maths Event</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">Students demonstrated extreme proficiency in Ekadhikena Purvena techniques to resolve complex multiplications rapidly.</p>
+                        </div>
+                    </div>
+                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
+                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-award mr-1.5 text-amber-500"></i>Olympiad Shortcuts</span>
+                        <span class="text-[10px] font-bold text-orange-600 uppercase">Regional</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden py-16 text-center">
+                <i class="fas fa-calendar-times text-5xl text-slate-300 mb-4 block"></i>
+                <h3 class="text-xl font-bold uppercase text-slate-800">No Events Match Filters</h3>
+                <p class="text-slate-500 text-sm mt-1">Try selecting a different year or category filter combinations.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="pt-20 pb-8 bg-slate-900 text-white px-6">
+        <div class="container mx-auto max-w-7xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-center md:text-left">
+                <!-- Branding -->
+                <div class="space-y-6">
+                    <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="h-14 mx-auto md:mx-0">
+                    <div class="text-xl font-black uppercase tracking-tighter">BrainDEE Academy</div>
+                    <p class="text-slate-400 text-xs uppercase font-bold leading-relaxed">Nurturing young minds through <br>ancient speed systems.</p>
+                </div>
+
+                <!-- Helps Column -->
+                <div>
+                    <h4 class="text-sm font-black uppercase mb-6 text-blue-400">Helps</h4>
+                    <ul class="space-y-4 text-slate-400 font-bold uppercase text-[10px]">
+                        <li><a href="index.html#faqs" class="hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Help</a></li>
+                        <li><a href="privacy-policy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms-and-conditions.html" class="hover:text-white transition-colors">Terms And Conditions</a></li>
+                    </ul>
+                </div>
+
+                <!-- Quick Links Column -->
+                <div>
+                    <h4 class="text-sm font-black uppercase mb-6 text-orange-400">Quick Links</h4>
+                    <ul class="space-y-4 text-slate-400 font-bold uppercase text-[10px]">
+                        <li><a href="index.html#home" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="index.html#courses" class="hover:text-white transition-colors">Courses</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="index.html#unique" class="hover:text-white transition-colors">BrainDEE</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Column -->
+                <div>
+                    <h4 class="text-sm font-black uppercase mb-6 text-indigo-400">BrainDEE</h4>
+                    <div class="space-y-4 text-slate-400 text-xs">
+                        <p class="leading-relaxed">Regd. Off: Flat no:403, Sai Sreeja’s Devi Heights<br>Hill Crest Society Rd, Mithila Nagar, Aditya Hills, Pragathi Nagar, Hyderabad, Telangana – 500090</p>
+                        <p class="flex items-center gap-2 justify-center md:justify-start"><i class="fas fa-envelope text-indigo-400"></i> Braindeeabacus@gmail.com</p>
+                        <p class="flex items-center gap-2 justify-center md:justify-start font-black text-white"><i class="fas fa-phone-alt text-indigo-400"></i> 83096 78108</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-white/10 text-center">
+                <p class="text-slate-500 text-[9px] uppercase font-bold tracking-widest">Copyright © 2026 BRAINDEE ACADEMY All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Filtering Script -->
+    <script>
+        const activeFilters = {
+            year: 'all',
+            type: 'all'
+        };
+
+        function hideLoader() {
+            var loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(function() { loader.style.display = 'none'; }, 500);
+            }
+        }
+        setTimeout(hideLoader, 2000);
+
+        function filterEvents(category, value, buttonEl) {
+            // Update Active Class on Buttons within the same group
+            const buttonGroup = buttonEl.parentElement.querySelectorAll('.filter-btn');
+            buttonGroup.forEach(btn => btn.classList.remove('active'));
+            buttonEl.classList.add('active');
+
+            // Set filter attributes
+            activeFilters[category] = value;
+
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const cards = document.querySelectorAll('.event-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const cardYear = card.dataset.year;
+                const cardType = card.dataset.type;
+
+                const matchYear = (activeFilters.year === 'all' || activeFilters.year === cardYear);
+                const matchType = (activeFilters.type === 'all' || activeFilters.type === cardType);
+
+                if (matchYear && matchType) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Handle empty state visibility
+            const emptyState = document.getElementById('empty-state');
+            if (visibleCount === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
