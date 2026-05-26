@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academy Gallery | BrainDEE Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap');
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #f8fafc; 
+            color: #334155; 
+        }
+        h1, h2, h3, h4 { 
+            font-family: 'Poppins', sans-serif; 
+            letter-spacing: -0.01em; 
+        }
+        .glass-nav { 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(12px); 
+            border-bottom: 1px solid #e2e8f0; 
+        }
+        
+        /* --- Masonry Grid --- */
+        .gallery-card {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .gallery-card:hover {
+            transform: scale(1.025);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+        }
+
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 1.5rem;
+        }
+        @media (min-width: 640px) { .masonry-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+
+        /* --- Filter Button --- */
+        .filter-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .filter-btn.active {
+            background-color: #4361ee;
+            color: white;
+            box-shadow: 0 4px 14px rgba(67, 97, 238, 0.3);
+            border-color: #4361ee;
+        }
+
+        /* Lightbox modal overlay */
+        #lightbox-modal {
+            transition: opacity 0.3s ease-out;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Preloader -->
+    <div id="loader" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 py-4 px-6 md:px-12 glass-nav">
+        <div class="max-w-[1440px] mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-2">
+                <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="BrainDEE Logo" class="h-10 md:h-14 w-auto">
+                <span class="text-lg md:text-xl font-black text-slate-900 uppercase leading-none">BrainDEE Academy</span>
+            </a>
+            <a href="index.html" class="text-sm font-bold text-blue-600 hover:underline">
+                <i class="fas fa-arrow-left mr-2"></i> Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- Header Banner -->
+    <header class="pt-32 pb-16 md:pt-44 md:pb-24 bg-slate-900 text-white relative overflow-hidden text-center">
+        <div class="absolute inset-0 opacity-15">
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 to-transparent"></div>
+            <img src="https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3265.JPG" class="w-full h-full object-cover">
+        </div>
+        <div class="container mx-auto max-w-6xl px-6 relative z-10 text-center">
+            <span class="px-5 py-2 bg-blue-600/30 text-blue-400 border border-blue-500/30 rounded-full text-[10px] font-black uppercase tracking-[0.25em] mb-4 inline-block">Moments of Triumph</span>
+            <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tight mb-4">BrainDEE <span class="text-amber-400">Gallery</span></h1>
+            <p class="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
+                Browse through all our captured memories from active classes, regional contests, and state celebrations.
+            </p>
+        </div>
+    </header>
+
+    <!-- Interactive Filters & Gallery Grid -->
+    <main class="py-16 px-6">
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Category Filter Control Panel -->
+            <div class="flex flex-wrap gap-3 justify-center mb-12">
+                <button onclick="filterGallery('all', this)" class="filter-btn active px-6 py-2.5 bg-white text-slate-700 font-black uppercase text-[10px] tracking-wider rounded-full border border-slate-200">All Photos</button>
+                <button onclick="filterGallery('competition', this)" class="filter-btn px-6 py-2.5 bg-white text-slate-700 font-black uppercase text-[10px] tracking-wider rounded-full border border-slate-200">Championships</button>
+                <button onclick="filterGallery('abacus', this)" class="filter-btn px-6 py-2.5 bg-white text-slate-700 font-black uppercase text-[10px] tracking-wider rounded-full border border-slate-200">Abacus Class</button>
+                <button onclick="filterGallery('vedic', this)" class="filter-btn px-6 py-2.5 bg-white text-slate-700 font-black uppercase text-[10px] tracking-wider rounded-full border border-slate-200">Vedic Maths</button>
+                <button onclick="filterGallery('arts', this)" class="filter-btn px-6 py-2.5 bg-white text-slate-700 font-black uppercase text-[10px] tracking-wider rounded-full border border-slate-200">Drawing &amp; Painting</button>
+            </div>
+
+            <!-- Masonry Grid containing all 45 Uploaded Images -->
+            <div id="gallery-grid" class="masonry-grid">
+                <!-- Javascript will load the 45 images dynamically -->
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Fullscreen Lightbox Modal -->
+    <div id="lightbox-modal" class="hidden fixed inset-0 bg-black/95 z-[9999] flex flex-col justify-between p-6">
+        <!-- Top bar with close -->
+        <div class="flex justify-end p-2 z-[10000]">
+            <button onclick="closeLightbox()" class="text-white text-3xl hover:text-slate-300 transition-colors p-3"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Main Display Container -->
+        <div class="flex-grow flex items-center justify-between gap-4 max-w-6xl mx-auto w-full relative">
+            <button onclick="prevImage()" class="text-white text-4xl hover:text-blue-500 transition-colors p-4 z-[10000]"><i class="fas fa-chevron-left"></i></button>
+            <div class="flex-grow h-full flex items-center justify-center p-4">
+                <img id="lightbox-img" src="" class="max-h-[75vh] max-w-full object-contain rounded-xl shadow-2xl transition-all duration-300">
+            </div>
+            <button onclick="nextImage()" class="text-white text-4xl hover:text-blue-500 transition-colors p-4 z-[10000]"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
+        <!-- Bottom bar counting -->
+        <div class="text-center text-slate-400 font-black text-xs uppercase tracking-widest pb-4">
+            Image <span id="lightbox-index">1</span> of <span id="lightbox-total">45</span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="pt-20 pb-8 bg-slate-900 text-white px-6">
+        <div class="container mx-auto max-w-7xl">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-center md:text-left">
+                <!-- Branding -->
+                <div class="space-y-6">
+                    <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="h-14 mx-auto md:mx-0">
+                    <div class="text-xl font-black uppercase tracking-tighter">BrainDEE Academy</div>
+                    <p class="text-slate-400 text-xs uppercase font-bold leading-relaxed">Nurturing young minds through <br>ancient speed systems.</p>
+                </div>
+
+                <!-- Helps Column -->
+                <div>
+                    <h4 class="text-sm font-black uppercase mb-6 text-blue-400">Helps</h4>
+                    <ul class="space-y-4 text-slate-400 font-bold uppercase text-[10px]">
+                        <li><a href="index.html#faqs" class="hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Help</a></li>
+                        <li><a href="privacy-policy.html" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="terms-and-conditions.html" class="hover:text-white transition-colors">Terms And Conditions</a></li>
+                    </ul>
+                </div>
+
+                <!-- Quick Links Column -->
+                <div>
+                    <h4 class="text-sm font-black uppercase mb-6 text-orange-400">Quick Links</h4>
+                    <ul class="space-y-4 text-slate-400 font-bold uppercase text-[10px]">
+                        <li><a href="index.html#home" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="index.html#courses" class="hover:text-white transition-colors">Courses</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="index.html#unique" class="hover:text-white transition-colors">BrainDEE</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Column -->
+                <div>
+                    <h4 class="text-sm font-black uppercase mb-6 text-indigo-400">BrainDEE</h4>
+                    <div class="space-y-4 text-slate-400 text-xs">
+                        <p class="leading-relaxed">Regd. Off: Flat no:403, Sai Sreeja’s Devi Heights<br>Hill Crest Society Rd, Mithila Nagar, Aditya Hills, Pragathi Nagar, Hyderabad, Telangana – 500090</p>
+                        <p class="flex items-center gap-2 justify-center md:justify-start"><i class="fas fa-envelope text-indigo-400"></i> Braindeeabacus@gmail.com</p>
+                        <p class="flex items-center gap-2 justify-center md:justify-start font-black text-white"><i class="fas fa-phone-alt text-indigo-400"></i> 83096 78108</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-white/10 text-center">
+                <p class="text-slate-500 text-[9px] uppercase font-bold tracking-widest">Copyright © 2026 BRAINDEE ACADEMY All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Filtering & Lightbox script -->
+    <script>
+        // Array containing all 45 user uploaded image files
+        const galleryImages = [
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3265.JPG", cat: "competition", desc: "State level calculation champion trials" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3269.JPG", cat: "arts", desc: "Painting exhibition participants" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3278.JPG", cat: "vedic", desc: "Vedic Maths logic worksheets session" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3286.JPG", cat: "abacus", desc: "Pinnacle concentrations training" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3295.JPG", cat: "competition", desc: "State Championship participants group" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3301.JPG", cat: "arts", desc: "Creative arts awards celebrations" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3303.JPG", cat: "competition", desc: "National Olympiad delegation" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3304.JPG", cat: "vedic", desc: "Mental speed division algorithms" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3308.JPG", cat: "abacus", desc: "Active Soroban finger moves session" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3316.JPG", cat: "competition", desc: "State medalists celebration" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3325.JPG", cat: "arts", desc: "Vibrant drawing contest" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3337.JPG", cat: "abacus", desc: "Classroom concentration peak" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3339.JPG", cat: "vedic", desc: "Vedic Maths speedy formulas" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3349.JPG", cat: "competition", desc: "Regional Champions group" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3352.JPG", cat: "arts", desc: "Kids displaying colorful paints" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3354.JPG", cat: "abacus", desc: "Active abacus bead frame play" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3355.JPG", cat: "competition", desc: "Awards and certificates presentation" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3358.JPG", cat: "vedic", desc: "Vedic Maths level completions" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3359.JPG", cat: "abacus", desc: "Youth calculation focus" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3362.JPG", cat: "competition", desc: "Triumphant regional champions" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3374.JPG", cat: "arts", desc: "Creative arts masterworks" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3380.JPG", cat: "abacus", desc: "Classroom presentation" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3383.JPG", cat: "vedic", desc: "Student showcase calculations" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3386.JPG", cat: "competition", desc: "Medal display ceremony" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3395.JPG", cat: "arts", desc: "Drawing class focus" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3397.JPG", cat: "abacus", desc: "Interactive math tools learning" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3400.JPG", cat: "competition", desc: "State level champions meet" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3404.JPG", cat: "vedic", desc: "Multiplication speed trials" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3407.JPG", cat: "abacus", desc: "Soroban active session" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3410.JPG", cat: "competition", desc: "Gold trophy award display" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3419.JPG", cat: "arts", desc: "Young painters exhibition" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3425.JPG", cat: "abacus", desc: "Classroom study focus" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3437.JPG", cat: "vedic", desc: "Math puzzle resolution" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3467.JPG", cat: "competition", desc: "Olympiad achievements meet" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3470.JPG", cat: "arts", desc: "Painting exhibition" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3482.JPG", cat: "abacus", desc: "Interactive group play" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3488.JPG", cat: "competition", desc: "Regional Champions group" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3505.JPG", cat: "vedic", desc: "Vedic maths algorithms" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3509.JPG", cat: "abacus", desc: "Concentrated arithmetic focus" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3518.JPG", cat: "competition", desc: "Gold medalists delegation" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3524.JPG", cat: "arts", desc: "Pencil sketch and creative trials" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3530.JPG", cat: "abacus", desc: "Interactive workshop" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3542.JPG", cat: "vedic", desc: "Advanced speed techniques" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3554.JPG", cat: "competition", desc: "Certificate of Honor display" },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3555.JPG", cat: "competition", desc: "National champion group photo" }
+        ];
+
+        let activeLightboxList = [...galleryImages];
+        let currentLightboxIndex = 0;
+
+        function hideLoader() {
+            var loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(function() { loader.style.display = 'none'; }, 500);
+            }
+        }
+        setTimeout(hideLoader, 2000);
+
+        function initGallery() {
+            const grid = document.getElementById('gallery-grid');
+            grid.innerHTML = '';
+
+            galleryImages.forEach((img, idx) => {
+                const card = document.createElement('div');
+                card.className = "gallery-card bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm hover:shadow-xl cursor-pointer";
+                card.dataset.category = img.cat;
+                card.onclick = () => openLightbox(idx);
+
+                card.innerHTML = `
+                    <div class="relative overflow-hidden aspect-[4/3] bg-slate-100">
+                        <img src="${img.src}" alt="${img.desc}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        <div class="absolute top-3 left-3 bg-slate-900/80 text-white text-[8px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md">${img.cat}</div>
+                    </div>
+                    <div class="p-4 bg-white text-left">
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-wider leading-none mb-1">${img.cat}</p>
+                        <h4 class="text-sm font-black text-slate-800 uppercase leading-snug">${img.desc}</h4>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterGallery(category, buttonEl) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            buttonEl.classList.add('active');
+
+            const cards = document.querySelectorAll('.gallery-card');
+            activeLightboxList = [];
+
+            cards.forEach((card, index) => {
+                const cardCat = card.dataset.category;
+                if (category === 'all' || category === cardCat) {
+                    card.style.display = 'block';
+                    activeLightboxList.push(galleryImages[index]);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function openLightbox(originalIndex) {
+            const selectedImg = galleryImages[originalIndex];
+            currentLightboxIndex = activeLightboxList.indexOf(selectedImg);
+            if(currentLightboxIndex === -1) {
+                activeLightboxList = [...galleryImages];
+                currentLightboxIndex = originalIndex;
+            }
+            updateLightbox();
+            document.getElementById('lightbox-modal').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox-modal').classList.add('hidden');
+        }
+
+        function prevImage() {
+            currentLightboxIndex = (currentLightboxIndex - 1 + activeLightboxList.length) % activeLightboxList.length;
+            updateLightbox();
+        }
+
+        function nextImage() {
+            currentLightboxIndex = (currentLightboxIndex + 1) % activeLightboxList.length;
+            updateLightbox();
+        }
+
+        function updateLightbox() {
+            const currentImg = activeLightboxList[currentLightboxIndex];
+            const modalImg = document.getElementById('lightbox-img');
+            modalImg.src = currentImg.src;
+            document.getElementById('lightbox-index').innerText = currentLightboxIndex + 1;
+            document.getElementById('lightbox-total').innerText = activeLightboxList.length;
+        }
+
+        // Handle Arrow key presses for elite accessibility
+        window.addEventListener('keydown', (e) => {
+            const modal = document.getElementById('lightbox-modal');
+            if (modal.classList.contains('hidden')) return;
+            if (e.key === "ArrowLeft") prevImage();
+            if (e.key === "ArrowRight") nextImage();
+            if (e.key === "Escape") closeLightbox();
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initGallery();
+        });
+    </script>
+</body>
+</html>
