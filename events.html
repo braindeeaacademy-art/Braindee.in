@@ -24,7 +24,16 @@
             border-bottom: 1px solid #e2e8f0; 
         }
         
-        /* --- Premium Filter Button Styles --- */
+        /* --- Event Card Layout --- */
+        .event-card {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .event-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.08);
+        }
+
+        /* --- Filter Button Styles --- */
         .filter-btn {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -35,13 +44,9 @@
             border-color: #4361ee;
         }
 
-        /* --- Event Card Layout --- */
-        .event-card {
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .event-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 30px -10px rgba(0,0,0,0.08);
+        /* Lightbox modal overlay */
+        #lightbox-modal {
+            transition: opacity 0.3s ease-out;
         }
 
         .reveal {
@@ -79,220 +84,91 @@
     <header class="pt-32 pb-16 md:pt-44 md:pb-24 bg-slate-900 text-white relative overflow-hidden">
         <div class="absolute inset-0 opacity-15">
             <div class="absolute inset-0 bg-gradient-to-r from-slate-950 to-transparent"></div>
-            <!-- Updated to use premium PRI image -->
             <img src="https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3265.JPG" class="w-full h-full object-cover" alt="State Championship Celebration">
         </div>
         <div class="container mx-auto max-w-6xl px-6 relative z-10 text-center">
             <span class="px-5 py-2 bg-blue-600/30 text-blue-400 border border-blue-500/30 rounded-full text-[10px] font-black uppercase tracking-[0.25em] mb-4 inline-block">Championships & Celebrations</span>
             <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tight mb-4">Academy <span class="text-amber-400">Events</span></h1>
             <p class="text-slate-400 text-lg max-w-2xl mx-auto leading-relaxed">
-                Celebrating outstanding young minds in our Regional and State-Level Competitions during the 2025 and 2026 academic years.
+                Celebrating outstanding young minds in our Regional (2025) and State-Level (2026) Competitions.
             </p>
         </div>
     </header>
 
     <!-- Interactive Filters & Event Showcase -->
-    <main class="py-16 px-6">
-        <div class="max-w-6xl mx-auto">
+    <main class="py-12 px-6">
+        <div class="max-w-7xl mx-auto">
             
-            <!-- Filters Control Panel -->
+            <!-- Triple-Filter Control Panel -->
             <div class="bg-white p-6 rounded-3xl border border-slate-200/60 shadow-sm mb-12 space-y-6">
-                <!-- Filter Category Row 1: Years -->
+                <!-- Filter Category 1: Levels of Competition -->
                 <div class="flex flex-col md:flex-row items-start md:items-center gap-4">
-                    <span class="text-xs font-black uppercase tracking-wider text-slate-400 min-w-[100px]">Filter by Year:</span>
+                    <span class="text-xs font-black uppercase tracking-wider text-slate-400 min-w-[120px]">Competition Level:</span>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="filterEvents('year', 'all', this)" class="filter-btn active px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">All Years</button>
-                        <button onclick="filterEvents('year', '2026', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">2026</button>
-                        <button onclick="filterEvents('year', '2025', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">2025</button>
+                        <button onclick="setFilter('level', 'all', this)" class="filter-btn active px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] tracking-wider rounded-full border border-slate-200">All Levels</button>
+                        <button onclick="setFilter('level', 'state', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] tracking-wider rounded-full border border-slate-200">State Level (45 Photos)</button>
+                        <button onclick="setFilter('level', 'regional', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] tracking-wider rounded-full border border-slate-200">Regional Level (15 Photos)</button>
                     </div>
                 </div>
 
-                <!-- Filter Category Row 2: Categories -->
+                <!-- Filter Category 2: Years -->
                 <div class="flex flex-col md:flex-row items-start md:items-center gap-4 pt-4 border-t border-slate-100">
-                    <span class="text-xs font-black uppercase tracking-wider text-slate-400 min-w-[100px]">Competition:</span>
+                    <span class="text-xs font-black uppercase tracking-wider text-slate-400 min-w-[120px]">Year:</span>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="filterEvents('type', 'all', this)" class="filter-btn active px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">All Categories</button>
-                        <button onclick="filterEvents('type', 'abacus', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">Abacus</button>
-                        <button onclick="filterEvents('type', 'vedic', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">Vedic Maths</button>
-                        <button onclick="filterEvents('type', 'drawing-painting', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">Drawing &amp; Painting</button>
-                        <button onclick="filterEvents('type', 'listening', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] rounded-full border border-slate-200">Listening</button>
+                        <button onclick="setFilter('year', 'all', this)" class="filter-btn active px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] tracking-wider rounded-full border border-slate-200">All Years</button>
+                        <button onclick="setFilter('year', '2026', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] tracking-wider rounded-full border border-slate-200">2026</button>
+                        <button onclick="setFilter('year', '2025', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] tracking-wider rounded-full border border-slate-200">2025</button>
+                    </div>
+                </div>
+
+                <!-- Filter Category 3: Categories -->
+                <div class="flex flex-col md:flex-row items-start md:items-center gap-4 pt-4 border-t border-slate-100">
+                    <span class="text-xs font-black uppercase tracking-wider text-slate-400 min-w-[120px]">Category:</span>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="setFilter('category', 'all', this)" class="filter-btn active px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] tracking-wider rounded-full border border-slate-200">All Subjects</button>
+                        <button onclick="setFilter('category', 'abacus', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] tracking-wider rounded-full border border-slate-200">Abacus</button>
+                        <button onclick="setFilter('category', 'vedic', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] tracking-wider rounded-full border border-slate-200">Vedic Maths</button>
+                        <button onclick="setFilter('category', 'arts', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] tracking-wider rounded-full border border-slate-200">Arts &amp; Drawing</button>
+                        <button onclick="setFilter('category', 'listening', this)" class="filter-btn px-5 py-2 bg-slate-100 text-slate-700 font-bold uppercase text-[10px] tracking-wider rounded-full border border-slate-200">Listening Accuracy</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Events Grid -->
+            <!-- Dynamic Events Grid -->
             <div id="events-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <!-- Event 1: State Level Abacus 2026 -->
-                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2026" data-type="abacus" data-level="state">
-                    <div>
-                        <div class="relative h-56 bg-slate-100">
-                            <img src="https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3265.JPG" class="w-full h-full object-cover" alt="Abacus competition layout">
-                            <div class="absolute top-4 left-4 bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">State Level</div>
-                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2026</div>
-                        </div>
-                        <div class="p-6 text-left">
-                            <span class="text-[9px] font-black uppercase tracking-widest text-blue-600 mb-2 block">Mental Abacus Challenge</span>
-                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">State Abacus Championship</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">Students from 70+ schools competed in lightning-fast mental math arithmetic, visualizing the 17-rod abacus bead frame perfectly.</p>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
-                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-trophy mr-1.5 text-amber-500"></i>1st &amp; 2nd Rank Medals</span>
-                        <span class="text-[10px] font-bold text-blue-600 uppercase">State Level</span>
-                    </div>
-                </div>
-
-                <!-- Event 2: Regional Drawing & Painting 2025 -->
-                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2025" data-type="drawing-painting" data-level="regional">
-                    <div>
-                        <div class="relative h-56 bg-slate-100">
-                            <img src="https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3269.JPG" class="w-full h-full object-cover" alt="Painting contest highlights">
-                            <div class="absolute top-4 left-4 bg-orange-500 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">Regional Level</div>
-                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2025</div>
-                        </div>
-                        <div class="p-6 text-left">
-                            <span class="text-[9px] font-black uppercase tracking-widest text-orange-600 mb-2 block">Creativity Showcase</span>
-                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">Regional Drawing and Painting</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">Nurturing creative skills beyond numbers. Our students expressed their limitless imaginations beautifully on canvases.</p>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
-                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-palette mr-1.5 text-purple-500"></i>Creative Arts</span>
-                        <span class="text-[10px] font-bold text-orange-600 uppercase">Regional</span>
-                    </div>
-                </div>
-
-                <!-- Event 3: State Vedic Maths Speed 2026 -->
-                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2026" data-type="vedic" data-level="state">
-                    <div>
-                        <div class="relative h-56 bg-slate-100">
-                            <img src="https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3278.JPG" class="w-full h-full object-cover" alt="Vedic math contest venue">
-                            <div class="absolute top-4 left-4 bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">State Level</div>
-                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2026</div>
-                        </div>
-                        <div class="p-6 text-left">
-                            <span class="text-[9px] font-black uppercase tracking-widest text-blue-600 mb-2 block">Ancient Vedic Algorithms</span>
-                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">State Vedic Maths Challenge</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">Highlighting 16 magical sutras. High school scholars calculated complex mathematical squares and divisions inside seconds.</p>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
-                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-bolt mr-1.5 text-yellow-500"></i>10x Calculation Speed</span>
-                        <span class="text-[10px] font-bold text-blue-600 uppercase">State Level</span>
-                    </div>
-                </div>
-
-                <!-- Event 4: Regional Listening Accuracy 2025 -->
-                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2025" data-type="listening" data-level="regional">
-                    <div>
-                        <div class="relative h-56 bg-slate-100">
-                            <img src="https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3286.JPG" class="w-full h-full object-cover" alt="Focus development listening test">
-                            <div class="absolute top-4 left-4 bg-orange-500 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">Regional Level</div>
-                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2025</div>
-                        </div>
-                        <div class="p-6 text-left">
-                            <span class="text-[9px] font-black uppercase tracking-widest text-orange-600 mb-2 block">Concentration &amp; Hearing</span>
-                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">Regional Listening Battle</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">Students listened to rapid arithmetic dictations, computing large sums without looking or writing, testing peak sensory reflex.</p>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
-                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-volume-up mr-1.5 text-blue-500"></i>Memory Auditing</span>
-                        <span class="text-[10px] font-bold text-orange-600 uppercase">Regional</span>
-                    </div>
-                </div>
-
-                <!-- Event 5: Regional Abacus Summit 2025 -->
-                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2025" data-type="abacus" data-level="regional">
-                    <div>
-                        <div class="relative h-56 bg-slate-100">
-                            <img src="https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3295.JPG" class="w-full h-full object-cover" alt="Soroban tool competitors group">
-                            <div class="absolute top-4 left-4 bg-orange-500 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">Regional Level</div>
-                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2025</div>
-                        </div>
-                        <div class="p-6 text-left">
-                            <span class="text-[9px] font-black uppercase tracking-widest text-orange-600 mb-2 block">Soroban Speed Trial</span>
-                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">Regional Abacus Summit</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">A grand regional gathering where school champions competed side-by-side using physical wood-frame abacus tools.</p>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
-                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-users mr-1.5 text-emerald-500"></i>45+ Schools Participated</span>
-                        <span class="text-[10px] font-bold text-orange-600 uppercase">Regional</span>
-                    </div>
-                </div>
-
-                <!-- Event 6: State Painting & Drawing Exhibit 2026 -->
-                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2026" data-type="drawing-painting" data-level="state">
-                    <div>
-                        <div class="relative h-56 bg-slate-100">
-                            <img src="https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3301.JPG" class="w-full h-full object-cover" alt="Trophy display with paintings">
-                            <div class="absolute top-4 left-4 bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">State Level</div>
-                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2026</div>
-                        </div>
-                        <div class="p-6 text-left">
-                            <span class="text-[9px] font-black uppercase tracking-widest text-blue-600 mb-2 block">Art &amp; Visual Logic</span>
-                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">State Painting Exhibition</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">Combining spatial intelligence with fine motor execution, celebrating our students' award-winning artwork.</p>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
-                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-brush mr-1.5 text-pink-500"></i>Symmetrical Design</span>
-                        <span class="text-[10px] font-bold text-blue-600 uppercase">State Level</span>
-                    </div>
-                </div>
-
-                <!-- Event 7: State Level Listening Olympiad 2026 -->
-                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2026" data-type="listening" data-level="state">
-                    <div>
-                        <div class="relative h-56 bg-slate-100">
-                            <img src="https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3303.JPG" class="w-full h-full object-cover" alt="State final listening arithmetic exam">
-                            <div class="absolute top-4 left-4 bg-blue-600 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">State Level</div>
-                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2026</div>
-                        </div>
-                        <div class="p-6 text-left">
-                            <span class="text-[9px] font-black uppercase tracking-widest text-blue-600 mb-2 block">Auditory Math Speed</span>
-                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">State Listening Accuracy Event</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">The ultimate showcase of auditory retention. Speed computations read aloud at 1.5 calculations per second.</p>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
-                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-headphones mr-1.5 text-indigo-500"></i>99% Accuracy Target</span>
-                        <span class="text-[10px] font-bold text-blue-600 uppercase">State Level</span>
-                    </div>
-                </div>
-
-                <!-- Event 8: Regional Vedic Math Challenge 2025 -->
-                <div class="bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between" data-year="2025" data-type="vedic" data-level="regional">
-                    <div>
-                        <div class="relative h-56 bg-slate-100">
-                            <img src="https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3304.JPG" class="w-full h-full object-cover" alt="Students calculating fast math">
-                            <div class="absolute top-4 left-4 bg-orange-500 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">Regional Level</div>
-                            <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">2025</div>
-                        </div>
-                        <div class="p-6 text-left">
-                            <span class="text-[9px] font-black uppercase tracking-widest text-orange-600 mb-2 block">Mental Shortcut Formulas</span>
-                            <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">Regional Vedic Maths Event</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed">Students demonstrated extreme proficiency in Ekadhikena Purvena techniques to resolve complex multiplications rapidly.</p>
-                        </div>
-                    </div>
-                    <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
-                        <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-award mr-1.5 text-amber-500"></i>Olympiad Shortcuts</span>
-                        <span class="text-[10px] font-bold text-orange-600 uppercase">Regional</span>
-                    </div>
-                </div>
-
+                <!-- Javascript will load the 60 events dynamically -->
             </div>
 
             <!-- Empty State -->
             <div id="empty-state" class="hidden py-16 text-center">
                 <i class="fas fa-calendar-times text-5xl text-slate-300 mb-4 block"></i>
                 <h3 class="text-xl font-bold uppercase text-slate-800">No Events Match Filters</h3>
-                <p class="text-slate-500 text-sm mt-1">Try selecting a different year or category filter combinations.</p>
+                <p class="text-slate-500 text-sm mt-1">Try selecting a different level or category filter combination.</p>
             </div>
         </div>
     </main>
+
+    <!-- Fullscreen Lightbox Modal -->
+    <div id="lightbox-modal" class="hidden fixed inset-0 bg-black/95 z-[9999] flex flex-col justify-between p-6">
+        <!-- Top bar with close -->
+        <div class="flex justify-end p-2 z-[10000]">
+            <button onclick="closeLightbox()" class="text-white text-3xl hover:text-slate-300 transition-colors p-3"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Main Display Container -->
+        <div class="flex-grow flex items-center justify-between gap-4 max-w-6xl mx-auto w-full relative">
+            <button onclick="prevImage()" class="text-white text-4xl hover:text-blue-500 transition-colors p-4 z-[10000]"><i class="fas fa-chevron-left"></i></button>
+            <div class="flex-grow h-full flex items-center justify-center p-4">
+                <img id="lightbox-img" src="" class="max-h-[75vh] max-w-full object-contain rounded-xl shadow-2xl transition-all duration-300">
+            </div>
+            <button onclick="nextImage()" class="text-white text-4xl hover:text-blue-500 transition-colors p-4 z-[10000]"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
+        <!-- Bottom bar counting -->
+        <div class="text-center text-slate-400 font-black text-xs uppercase tracking-widest pb-4">
+            Image <span id="lightbox-index">1</span> of <span id="lightbox-total">60</span>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="pt-20 pb-8 bg-slate-900 text-white px-6">
@@ -346,10 +222,82 @@
 
     <!-- Interactive Filtering Script -->
     <script>
+        // Combined Array of all 60 high-resolution images (15 Regional Level + 45 State Level)
+        const eventData = [
+            // --- REGIONAL LEVEL COMPETITION IMAGES (15 Photos from 2025) ---
+            { src: "https://experimental-jade-asyogtpprh.edgeone.app/WhatsApp%20Image%202026-05-18%20at%2012.32.45%20PM.jpeg", level: "regional", year: "2025", cat: "abacus", title: "Regional Abacus Speed trials", desc: "Regional level abacus champions exercising fine-motor speed on 17-rod bead frames." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4934.JPG", level: "regional", year: "2025", cat: "listening", title: "Regional Listening Dictation Practice", desc: "Testing auditory memory with rapid single and double-digit math equations read aloud." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4938.JPG", level: "regional", year: "2025", cat: "arts", title: "Regional Painting Showcase", desc: "Students highlighting their visual creativity and aesthetic imagination with colored canvas." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4941.JPG", level: "regional", year: "2025", cat: "abacus", title: "Regional Soroban Speed Calculation", desc: "Interactive student exercises displaying outstanding focus with Wood-frame abacus systems." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_4945.JPG", level: "regional", year: "2025", cat: "vedic", title: "Regional Vedic Maths Workshop", desc: "Scholars demonstrating mental math division shortcuts using ancient Vedic calculation methods." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5405.JPG", level: "regional", year: "2025", cat: "arts", title: "Regional Arts Honors Ceremony", desc: "Rewarding children for beautiful, symmetrical visual paintings and innovative designs." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5438.JPG", level: "regional", year: "2025", cat: "abacus", title: "Regional Level Soroban Practice", desc: "Building photographic bead imagery systems during our weekly local training rounds." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5466.JPG", level: "regional", year: "2025", cat: "listening", title: "Regional Level Oral Dictation Challenge", desc: "Testing rapid calculation reflexes on long-series mathematical numbers." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5478.JPG", level: "regional", year: "2025", cat: "vedic", title: "Vedic Maths Level Verification", desc: "Reviewing multiplication and division speed curves after structured mental training." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5530.JPG", level: "regional", year: "2025", cat: "abacus", title: "Active Finger Movement Coordination", desc: "Pinching exercises designed to stimulate right-hemisphere brain development." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5570.JPG", level: "regional", year: "2025", cat: "vedic", title: "Regional Arithmetic Contest", desc: "High-speed competitive math challenge between regional scholars." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5632.JPG", level: "regional", year: "2025", cat: "arts", title: "Regional Drawing Exhibition", desc: "Expressing cognitive balance through colors, shades, and visual design layout structures." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5640.JPG", level: "regional", year: "2025", cat: "abacus", title: "Regional Level Graduation Trials", desc: "Certifying students on advanced multi-digit abacus operations." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5653.JPG", level: "regional", year: "2025", cat: "listening", title: "Auditory Focus Development Drills", desc: "Strengthening concentration spans through verbal mathematical triggers." },
+            { src: "https://breezy-amethyst-kszxfo3qvx.edgeone.app/IMG_5655.JPG", level: "regional", year: "2025", cat: "vedic", title: "Vedic Mental Maths Seminar", desc: "Solving arithmetic division and squares in seconds using mental shortcuts." },
+
+            // --- STATE LEVEL COMPETITION IMAGES (45 Photos from 2026) ---
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3265.JPG", level: "state", year: "2026", cat: "abacus", title: "State Abacus Level Championship Arena", desc: "Hundreds of school champions gather at the state level to compete under strict speed guidelines." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3269.JPG", level: "state", year: "2026", cat: "arts", title: "State Level Drawing Competition Exhibition", desc: "Displaying award-winning paintings and visual designs of talented young artists." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3278.JPG", level: "state", year: "2026", cat: "vedic", desc: "State Vedic Mathematics Logic Challenge", desc: "Competing for the title of fastest Vedic calculator in Hyderabad." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3286.JPG", level: "state", year: "2026", cat: "listening", title: "State Level Listening Focus Assessment", desc: "Evaluating auditory-visual cognitive focus during the state mathematical finals." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3295.JPG", level: "state", year: "2026", cat: "abacus", title: "State Championship Medalist Platform", desc: "Celebrating our top scoring abacus students who cleared all speed benchmarks." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3301.JPG", level: "state", year: "2026", cat: "arts", title: "State Level Fine Arts Achievement", desc: "Encouraging child-friendly artistic development and visual motor control." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3303.JPG", level: "state", year: "2026", cat: "listening", title: "State Listening Dictation Finals", desc: "Resolving fast calculations purely by ear, without any draft paper support." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3304.JPG", level: "state", year: "2026", cat: "vedic", title: "State Level Vedic Arithmetic Speed-Run", desc: "Students showcasing rapid arithmetic solutions on state levels." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3308.JPG", level: "state", year: "2026", cat: "abacus", title: "State Level Soroban Calculation Trials", desc: "Perfect synchronization between mental imagery and physical abacus bead manipulation." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3316.JPG", level: "state", year: "2026", cat: "listening", title: "State Oral Arithmetic Speed Contest", desc: "National standard speed calculators competing in auditory-visual accuracy." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3325.JPG", level: "state", year: "2026", cat: "arts", title: "State Painting and Drawing Exhibition", desc: "Beautiful showcases of the students' creative art achievements." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3337.JPG", level: "state", year: "2026", cat: "abacus", title: "State Soroban Speed Championship", desc: "Lightning fast bead manipulation showcasing exceptional mental agility." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3339.JPG", level: "state", year: "2026", cat: "vedic", title: "State Vedic Maths Mental Challenge", desc: "Students applying the 16 sutras to complete three-digit multiplication under 5 seconds." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3349.JPG", level: "state", year: "2026", cat: "listening", title: "State Level Concentration Battle", desc: "Testing maximum sound retention to calculate long series numerical sums." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3352.JPG", level: "state", year: "2026", cat: "arts", title: "State Children Drawing Masterpieces", desc: "Developing spatial orientation, color theory, and coordination index." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3354.JPG", level: "state", year: "2026", cat: "abacus", title: "State Level Soroban Rapid Calculations", desc: "Solving multiple multi-digit calculations with precision." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3355.JPG", level: "state", year: "2026", cat: "listening", title: "State Auditory Math Challenge", desc: "State level listening accuracy and focus development." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3358.JPG", level: "state", year: "2026", cat: "vedic", title: "State Vedic Mathematics Speed Trials", desc: "Vedic maths champion speed runs." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3359.JPG", level: "state", year: "2026", cat: "abacus", title: "State 17-Rod Abacus Super Challenge", desc: "Pro-level abacus calculations demonstration." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3362.JPG", level: "state", year: "2026", cat: "arts", title: "State Canvas Painting Showcase", desc: "State level drawing award ceremony." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3374.JPG", level: "state", year: "2026", cat: "listening", title: "State Oral Dictation Contestants", desc: "Concentrated listening tests for students." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3380.JPG", level: "state", year: "2026", cat: "abacus", title: "State Soroban Speed Calculations Meet", desc: "Soroban championship speed tests." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3383.JPG", level: "state", year: "2026", cat: "vedic", title: "State Vedic Fast Arithmetic", desc: "Advanced level Vedic maths speed calculations." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3386.JPG", level: "state", year: "2026", cat: "listening", title: "State Concentration Dictation Trials", desc: "Testing maximum sound retention parameters." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3395.JPG", level: "state", year: "2026", cat: "arts", title: "State Level Canvas Arts Awards", desc: "Rewarding color balance and creative paintings." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3397.JPG", level: "state", year: "2026", cat: "abacus", title: "State Soroban Finger Agility", desc: "Pinching exercises and 17-rod speed trials." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3400.JPG", level: "state", year: "2026", cat: "listening", title: "State Concentration Olympiad Meets", desc: "State level listening speed calculations." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3404.JPG", level: "state", year: "2026", cat: "vedic", title: "State Level Vedic Division Battle", desc: "Simplifying divisions using ancient math shortcuts." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3407.JPG", level: "state", year: "2026", cat: "abacus", title: "State Abacus Level Speed-Run", desc: "Abacus training level assessments." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3410.JPG", level: "state", year: "2026", cat: "listening", title: "State Oral Numbers Battle", desc: "Evaluating numeric focus index." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3419.JPG", level: "state", year: "2026", cat: "arts", title: "State Fine Arts Canvas Exhibition", desc: "Exhibition of artistic masterpieces of child genius." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3425.JPG", level: "state", year: "2026", cat: "abacus", title: "State Soroban Level Final Trials", desc: "Visual calculations final speed evaluations." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3437.JPG", level: "state", year: "2026", cat: "vedic", title: "State Vedic Mathematics Fast Arithmetic", desc: "Solving advanced operations in seconds." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3467.JPG", level: "state", year: "2026", cat: "listening", title: "State Oral Dictation Speed Finals", desc: "Final speed listening challenge." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3470.JPG", level: "state", year: "2026", cat: "arts", title: "State Creative Drawing Winners", desc: "Rewarding creative excellence in regional arts." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3482.JPG", level: "state", year: "2026", cat: "abacus", title: "State Level Soroban Calculation Trials", desc: "Evaluating visual abacus calculations speed." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3488.JPG", level: "state", year: "2026", cat: "listening", title: "State Level Concentrated Listening Contest", desc: "Championship level dictation tests." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3505.JPG", level: "state", year: "2026", cat: "vedic", title: "State Level Vedic Arithmetic Finals", desc: "Vedic maths state level calculations." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3509.JPG", level: "state", year: "2026", cat: "abacus", title: "State Level Soroban Speed Championship", desc: "Speed run level championships." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3518.JPG", level: "state", year: "2026", cat: "listening", title: "State Dictation Hearing Trials", desc: "Final parameters evaluations." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3524.JPG", level: "state", year: "2026", cat: "arts", title: "State Level Drawing Competition Winners", desc: "Arts championship award display." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3530.JPG", level: "state", year: "2026", cat: "abacus", title: "State Level Abacus Finalist Arena", desc: "Championship arena final speed-run." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3542.JPG", level: "state", year: "2026", cat: "vedic", title: "State Level Vedic Maths Rapid Multiplication", desc: "Rapid multiplication level challenges." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3554.JPG", level: "state", year: "2026", cat: "listening", title: "State Dictation Speed Battle Finals", desc: "Hearing speed final tests." },
+            { src: "https://present-violet-k1yz4hfc7w.edgeone.app/PRI_3555.JPG", level: "state", year: "2026", cat: "abacus", title: "State Level Soroban Calculation Finals", desc: "State level calculation champion finals." }
+        ];
+
+        // Active State Filter parameters
         const activeFilters = {
+            level: 'all',
             year: 'all',
-            type: 'all'
+            category: 'all'
         };
+
+        let currentLightboxList = [...eventData];
+        let currentLightboxIndex = 0;
 
         function hideLoader() {
             var loader = document.getElementById('loader');
@@ -358,47 +306,122 @@
                 setTimeout(function() { loader.style.display = 'none'; }, 500);
             }
         }
-        setTimeout(hideLoader, 2000);
+        setTimeout(hideLoader, 1500);
 
-        function filterEvents(category, value, buttonEl) {
-            // Update Active Class on Buttons within the same group
-            const buttonGroup = buttonEl.parentElement.querySelectorAll('.filter-btn');
-            buttonGroup.forEach(btn => btn.classList.remove('active'));
-            buttonEl.classList.add('active');
+        function renderEventCards() {
+            const grid = document.getElementById('events-grid');
+            grid.innerHTML = '';
+            let count = 0;
 
-            // Set filter attributes
-            activeFilters[category] = value;
+            eventData.forEach((event, originalIndex) => {
+                const matchLevel = (activeFilters.level === 'all' || activeFilters.level === event.level);
+                const matchYear = (activeFilters.year === 'all' || activeFilters.year === event.year);
+                const matchCategory = (activeFilters.category === 'all' || activeFilters.category === event.cat);
 
-            applyFilters();
-        }
+                if (matchLevel && matchYear && matchCategory) {
+                    count++;
+                    const card = document.createElement('div');
+                    card.className = "bg-white border rounded-[2rem] overflow-hidden event-card relative flex flex-col justify-between cursor-pointer reveal active";
+                    card.onclick = () => openLightbox(event);
 
-        function applyFilters() {
-            const cards = document.querySelectorAll('.event-card');
-            let visibleCount = 0;
+                    const badgeColor = event.level === 'state' ? 'bg-blue-600' : 'bg-orange-500';
+                    const categoryName = event.cat === 'arts' ? 'Arts & Drawing' : event.cat === 'vedic' ? 'Vedic Maths' : event.cat === 'listening' ? 'Listening' : 'Abacus';
+                    const textLabelColor = event.cat === 'arts' ? 'text-pink-600' : event.cat === 'vedic' ? 'text-yellow-600' : event.cat === 'listening' ? 'text-indigo-600' : 'text-blue-600';
 
-            cards.forEach(card => {
-                const cardYear = card.dataset.year;
-                const cardType = card.dataset.type;
-
-                const matchYear = (activeFilters.year === 'all' || activeFilters.year === cardYear);
-                const matchType = (activeFilters.type === 'all' || activeFilters.type === cardType);
-
-                if (matchYear && matchType) {
-                    card.style.display = 'flex';
-                    visibleCount++;
-                } else {
-                    card.style.display = 'none';
+                    card.innerHTML = `
+                        <div>
+                            <div class="relative h-56 bg-slate-100 overflow-hidden">
+                                <img src="${event.src}" alt="${event.title}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                                <div class="absolute top-4 left-4 ${badgeColor} text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">${event.level === 'state' ? 'State Level' : 'Regional Level'}</div>
+                                <div class="absolute top-4 right-4 bg-slate-900/80 text-white text-[9px] font-black uppercase tracking-wider px-3 py-1 rounded-full">${event.year}</div>
+                            </div>
+                            <div class="p-6 text-left">
+                                <span class="text-[9px] font-black uppercase tracking-widest ${textLabelColor} mb-2 block">${categoryName}</span>
+                                <h3 class="text-xl font-black text-slate-900 uppercase leading-snug mb-3">${event.title}</h3>
+                                <p class="text-slate-500 text-sm leading-relaxed">${event.desc}</p>
+                            </div>
+                        </div>
+                        <div class="p-6 pt-0 flex justify-between items-center border-t border-slate-50 mt-4 text-left">
+                            <span class="text-[10px] font-black uppercase text-slate-400"><i class="fas fa-medal mr-1.5 text-amber-500"></i>Active Contest</span>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase">${event.year} Year</span>
+                        </div>
+                    `;
+                    grid.appendChild(card);
                 }
             });
 
-            // Handle empty state visibility
             const emptyState = document.getElementById('empty-state');
-            if (visibleCount === 0) {
+            if (count === 0) {
                 emptyState.classList.remove('hidden');
             } else {
                 emptyState.classList.add('hidden');
             }
+
+            // Update Lightbox filter list
+            currentLightboxList = eventData.filter(event => {
+                const matchLevel = (activeFilters.level === 'all' || activeFilters.level === event.level);
+                const matchYear = (activeFilters.year === 'all' || activeFilters.year === event.year);
+                const matchCategory = (activeFilters.category === 'all' || activeFilters.category === event.cat);
+                return matchLevel && matchYear && matchCategory;
+            });
         }
+
+        function setFilter(type, value, buttonEl) {
+            // Manage Active button states
+            const siblingButtons = buttonEl.parentElement.querySelectorAll('.filter-btn');
+            siblingButtons.forEach(btn => btn.classList.remove('active'));
+            buttonEl.classList.add('active');
+
+            // Set filter attributes
+            activeFilters[type] = value;
+            renderEventCards();
+        }
+
+        // Lightbox modal logic
+        function openLightbox(event) {
+            currentLightboxIndex = currentLightboxList.indexOf(event);
+            if (currentLightboxIndex === -1) {
+                currentLightboxList = [...eventData];
+                currentLightboxIndex = eventData.indexOf(event);
+            }
+            updateLightbox();
+            document.getElementById('lightbox-modal').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox-modal').classList.add('hidden');
+        }
+
+        function prevImage() {
+            currentLightboxIndex = (currentLightboxIndex - 1 + currentLightboxList.length) % currentLightboxList.length;
+            updateLightbox();
+        }
+
+        function nextImage() {
+            currentLightboxIndex = (currentLightboxIndex + 1) % currentLightboxList.length;
+            updateLightbox();
+        }
+
+        function updateLightbox() {
+            const currentImg = currentLightboxList[currentLightboxIndex];
+            const modalImg = document.getElementById('lightbox-img');
+            modalImg.src = currentImg.src;
+            document.getElementById('lightbox-index').innerText = currentLightboxIndex + 1;
+            document.getElementById('lightbox-total').innerText = currentLightboxList.length;
+        }
+
+        // Keyboard arrow navigation support
+        window.addEventListener('keydown', (e) => {
+            const modal = document.getElementById('lightbox-modal');
+            if (modal.classList.contains('hidden')) return;
+            if (e.key === "ArrowLeft") prevImage();
+            if (e.key === "ArrowRight") nextImage();
+            if (e.key === "Escape") closeLightbox();
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderEventCards();
+        });
     </script>
 </body>
 </html>
