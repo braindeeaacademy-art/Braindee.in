@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BrainDEE Academy - Admin Dashboard</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-mono-custom {
+      font-family: 'Share Tech Mono', monospace;
+    }
+    
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9; 
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1; 
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8; 
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen overflow-hidden">
+
+  <!-- ========================================== -->
+  <!-- CUSTOM ALERT & CONFIRM MODAL (No alerts)  -->
+  <!-- ========================================== -->
+  <div id="custom-alert-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl border border-slate-100 animate-modalEnter">
+      <div id="alert-icon" class="w-12 h-12 rounded-full flex items-center justify-center text-xl mx-auto mb-4"></div>
+      <h3 id="alert-title" class="text-base font-black text-slate-900 uppercase">Alert Title</h3>
+      <p id="alert-message" class="text-xs text-slate-500 mt-2 leading-relaxed">Alert message body goes here...</p>
+      <div class="mt-6 flex gap-2" id="alert-actions">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- LOGIN SCREEN (Gateway with Braindee@2026) -->
+  <!-- ========================================== -->
+  <div id="login-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 transition-opacity duration-300">
+    <div class="absolute top-0 left-0 w-96 h-96 bg-amber-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+    <div class="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+    
+    <div class="relative bg-white w-full max-w-md p-8 rounded-2xl shadow-2xl border border-slate-100 transform transition-all">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 bg-white rounded-2xl border-2 border-amber-400 p-1 mx-auto shadow-sm flex items-center justify-center mb-4">
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <path d="M50,15 L80,25 L80,55 C80,75 50,90 50,90 C50,90 20,75 20,55 L20,25 Z" fill="#0f172a" stroke="#d97706" stroke-width="4" />
+            <path d="M38,35 H52 C60,35 64,38 64,43 C64,47 61,50 54,50 H38 Z" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M38,50 H54 C62,50 66,54 66,59 C66,65 61,68 52,68 H38 Z" fill="none" stroke="#d97706" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+            <line x1="38" y1="35" x2="38" y2="68" stroke="#fff" stroke-width="5" stroke-linecap="round" />
+          </svg>
+        </div>
+        <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">Master Control</h2>
+        <p class="text-sm text-slate-500 mt-1">BrainDEE Academy Administration</p>
+      </div>
+
+      <form onsubmit="handleLogin(event)" class="space-y-5">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Access Password</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              id="admin-password" 
+              class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all font-bold"
+              placeholder="Enter administrator password"
+            >
+            <svg class="w-5 h-5 text-slate-400 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+          </div>
+          <p id="login-error" class="text-rose-500 text-xs font-semibold mt-2 hidden">Incorrect password. Access denied.</p>
+        </div>
+        
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-3 rounded-xl shadow-lg shadow-amber-500/30 transition-all flex justify-center items-center gap-2">
+          <span>Authenticate & Enter</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </button>
+      </form>
+      
+      <div class="mt-6 text-center">
+        <p class="text-[10px] text-slate-400">Restricted Area. Unauthorized access is prohibited and monitored.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MAIN DASHBOARD APPLICATION                 -->
+  <!-- ========================================== -->
+  <div id="dashboard-app" class="flex h-screen w-full hidden opacity-0 transition-opacity duration-500">
+    
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col hidden md:flex">
+      <div class="p-6 flex items-center gap-3 border-b border-slate-800">
+        <div class="w-10 h-10 bg-white rounded-lg border-2 border-amber-400 p-0.5 flex-shrink-0">
+          <svg viewBox="0 0 100 100" class="w-full h-full"><path d="M50,15 L80,25 L80,55 C80,75 50,90 50,90 C50,90 20,75 20,55 L20,25 Z" fill="#0f172a" stroke="#d97706" stroke-width="4" /><path d="M38,35 H52 C60,35 64,38 64,43 C64,47 61,50 54,50 H38 Z" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" /><path d="M38,50 H54 C62,50 66,54 66,59 C66,65 61,68 52,68 H38 Z" fill="none" stroke="#d97706" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" /><line x1="38" y1="35" x2="38" y2="68" stroke="#fff" stroke-width="5" stroke-linecap="round" /></svg>
+        </div>
+        <div class="text-left">
+          <h1 class="text-sm font-black text-white tracking-wider uppercase">BrainDEE</h1>
+          <p class="text-[10px] text-amber-500 font-bold uppercase tracking-widest">Admin Portal</p>
+        </div>
+      </div>
+
+      <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+        <a href="#" onclick="switchDashboardTab('overview')" id="nav-overview" class="flex items-center gap-3 px-4 py-3 bg-amber-500/10 text-amber-500 rounded-xl font-semibold transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+          Dashboard Overview
+        </a>
+        <a href="#" onclick="switchDashboardTab('applications')" id="nav-applications" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl font-semibold transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          Enrollments Database
+        </a>
+        <div class="pt-6 pb-2 text-left">
+          <p class="px-4 text-xs font-bold text-slate-600 uppercase tracking-wider">System</p>
+        </div>
+        <button onclick="handleLogout()" class="flex items-center gap-3 w-full px-4 py-3 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl font-semibold text-left transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+          Secure Logout
+        </button>
+      </nav>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 flex flex-col min-w-0 bg-slate-50">
+      
+      <!-- Top Header -->
+      <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-6 z-10 shadow-sm">
+        <div class="flex items-center gap-4">
+          <h2 class="text-xl font-bold text-slate-800" id="header-title">Dashboard Overview</h2>
+        </div>
+        
+        <div class="flex items-center gap-4">
+          <span class="text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full flex items-center gap-1.5 border border-emerald-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            Real-time Database Sync Active
+          </span>
+          <div class="h-8 w-8 bg-amber-500 text-slate-900 font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm cursor-pointer">
+            AD
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable Dashboard Content -->
+      <div class="flex-1 overflow-auto p-6 lg:p-8" id="dashboard-content">
+        
+        <!-- Tab 1: Overview -->
+        <div id="tab-overview-view" class="space-y-8">
+          <!-- Welcome Banner -->
+          <div class="bg-gradient-to-r from-slate-900 to-slate-800 rounded-2xl p-6 lg:p-8 text-white shadow-lg relative overflow-hidden text-left">
+            <div class="absolute right-0 top-0 opacity-10">
+              <svg width="200" height="200" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 22h20L12 2zm0 4.5l6.5 13h-13L12 6.5z"/></svg>
+            </div>
+            <div class="relative z-10">
+              <h2 class="text-2xl lg:text-3xl font-bold mb-2">Welcome back, Master Admin</h2>
+              <p class="text-slate-300 max-w-2xl text-sm leading-relaxed">This is the secure live command center for BrainDEE Academy. Review incoming student enrollment packages, audit uploaded parent ID papers, verify payment screenshots, and finalize student admissions.</p>
+            </div>
+          </div>
+
+          <!-- Key Metrics Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow text-left">
+              <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-file-invoice text-xl"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">Total Applications</p>
+                <h3 class="text-3xl font-black text-slate-800 mt-1" id="metric-total">0</h3>
+              </div>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow text-left">
+              <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-user-graduate text-xl"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">Enrolled Students</p>
+                <h3 class="text-3xl font-black text-slate-800 mt-1" id="metric-enrolled">0</h3>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow text-left">
+              <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-money-bill-wave text-xl"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">Pending Payments</p>
+                <h3 class="text-3xl font-black text-slate-800 mt-1" id="metric-pending-payment">0</h3>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow text-left">
+              <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="fas fa-exclamation-circle text-xl"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-500 uppercase tracking-wide">Review Required</p>
+                <h3 class="text-3xl font-black text-slate-800 mt-1" id="metric-review">0</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Applications Database -->
+        <div id="tab-applications-view" class="space-y-6 hidden">
+          
+          <!-- Filter Panel -->
+          <div class="bg-white p-4 rounded-xl border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm">
+            <div class="flex flex-wrap gap-2 w-full md:w-auto">
+              <input 
+                type="text" 
+                id="search-filter" 
+                placeholder="Search Student/Parent name..." 
+                oninput="window.renderApplicationsTable()" 
+                class="bg-slate-100 border border-slate-200 rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-amber-500 w-full sm:w-64"
+              />
+              <select 
+                id="level-filter" 
+                onchange="window.renderApplicationsTable()" 
+                class="bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-amber-500 font-bold"
+              >
+                <option value="">All Course Levels</option>
+                <option value="Junior Level 1 (5 years)">Junior Level 1</option>
+                <option value="Junior Level 2 (5 years+)">Junior Level 2</option>
+                <option value="Senior Level 1 (8 years+)">Senior Level 1</option>
+                <option value="Senior Level 2 and above (has to complete level 1)">Senior Level 2+</option>
+              </select>
+            </div>
+            
+            <div class="flex items-center gap-2 self-end sm:self-auto text-xs font-semibold text-slate-500">
+              <span id="record-count-badge" class="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full">0 Records Found</span>
+            </div>
+          </div>
+
+          <!-- Applications Data Table -->
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="overflow-x-auto font-medium">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider font-bold border-b border-slate-200">
+                    <th class="p-4">App ID</th>
+                    <th class="p-4">Student &amp; Photo</th>
+                    <th class="p-4">Parent Details</th>
+                    <th class="p-4">Level Applied</th>
+                    <th class="p-4">Payment Method</th>
+                    <th class="p-4 text-center">Status</th>
+                    <th class="p-4 text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="text-sm divide-y divide-slate-100" id="applications-table-body">
+                  <tr>
+                    <td colspan="7" class="p-8 text-center text-slate-400">
+                      <div class="flex flex-col items-center justify-center gap-2">
+                        <i class="fas fa-spinner animate-spin text-amber-500 text-2xl"></i>
+                        <span>Establishing Live Database Handshake...</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- APPLICATION DETAIL AUDIT MODAL             -->
+  <!-- ========================================== -->
+  <div id="detail-modal" class="hidden fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto animate-fadeIn">
+    <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl relative">
+      
+      <!-- Modal Header -->
+      <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-900 text-white rounded-t-2xl">
+        <div class="text-left">
+          <h3 class="text-xl font-bold tracking-tight" id="modal-title-student-name">Audit Application</h3>
+          <p class="text-xs text-amber-400 font-mono mt-1" id="modal-title-app-id">ID: BDA-2026-9042</p>
+        </div>
+        <button onclick="closeDetailModal()" class="text-slate-400 hover:text-white transition p-2">
+          <i class="fas fa-times text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Scrollable Modal Body -->
+      <div class="flex-1 overflow-y-auto p-6 space-y-8">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+          
+          <!-- Left side details (8 columns) -->
+          <div class="md:col-span-8 space-y-6 text-left">
+            <!-- Student Information Section -->
+            <div>
+              <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-1.5 mb-3">Student Information</h4>
+              <div class="grid grid-cols-2 gap-4 text-xs">
+                <div>
+                  <p class="text-slate-500 font-semibold">Date of Birth</p>
+                  <p class="text-slate-800 font-bold mt-0.5 text-sm" id="modal-dob"></p>
+                </div>
+                <div>
+                  <p class="text-slate-500 font-semibold">Age &amp; Sex</p>
+                  <p class="text-slate-800 font-bold mt-0.5 text-sm" id="modal-age-sex"></p>
+                </div>
+                <div>
+                  <p class="text-slate-500 font-semibold">Mother Tongue</p>
+                  <p class="text-slate-800 font-bold mt-0.5 text-sm" id="modal-mother-tongue"></p>
+                </div>
+                <div>
+                  <p class="text-slate-500 font-semibold">School &amp; Grade</p>
+                  <p class="text-slate-800 font-bold mt-0.5 text-sm" id="modal-school-grade"></p>
+                </div>
+                <div>
+                  <p class="text-slate-500 font-semibold">Class Mode</p>
+                  <p class="text-slate-800 font-bold mt-0.5 text-sm" id="modal-mode"></p>
+                </div>
+                <div>
+                  <p class="text-slate-500 font-semibold">Admission Franchisee Center</p>
+                  <p class="text-slate-800 font-bold mt-0.5 text-sm" id="modal-franchisee"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Parent/Family Information Section -->
+            <div>
+              <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-1.5 mb-3">Parent / Contact Details</h4>
+              <div class="grid grid-cols-2 gap-4 text-xs">
+                <div>
+                  <p class="text-slate-500 font-semibold">Father's Name &amp; Mobile</p>
+                  <p class="text-slate-800 font-bold mt-0.5 text-sm" id="modal-father"></p>
+                </div>
+                <div>
+                  <p class="text-slate-500 font-semibold">Mother's Name &amp; Mobile</p>
+                  <p class="text-slate-800 font-bold mt-0.5 text-sm" id="modal-mother"></p>
+                </div>
+                <div class="col-span-2">
+                  <p class="text-slate-500 font-semibold">Residential Address</p>
+                  <p class="text-slate-800 font-bold mt-0.5 text-sm uppercase leading-relaxed" id="modal-address"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Documents Verification Section -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-1.5 mb-3">Identity Document Proof</h4>
+                <div class="space-y-2 text-xs">
+                  <p><span class="font-semibold text-slate-500">Doc Type:</span> <strong class="text-slate-800" id="modal-id-type"></strong></p>
+                  <p><span class="font-semibold text-slate-500">ID Number:</span> <strong class="text-slate-800" id="modal-id-number"></strong></p>
+                  <div class="pt-1">
+                    <a id="modal-id-attachment-link" target="_blank" class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg border font-semibold text-xs transition">
+                      <i class="fas fa-external-link-alt text-slate-500"></i>
+                      Preview ID File
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-1.5 mb-3">Online Payment Verification</h4>
+                <div class="space-y-2 text-xs">
+                  <p><span class="font-semibold text-slate-500">UTR / Txn No:</span> <strong class="text-slate-800 font-mono uppercase" id="modal-payment-utr"></strong></p>
+                  <div class="pt-1">
+                    <a id="modal-payment-attachment-link" target="_blank" class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg border font-semibold text-xs transition">
+                      <i class="fas fa-receipt text-slate-500"></i>
+                      Preview Receipt File
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right side column (4 columns): Photos & Fast-Office Assign Drawer -->
+          <div class="md:col-span-4 bg-slate-50 p-6 rounded-xl border border-slate-200 space-y-6">
+            <!-- Student Photo Frame -->
+            <div class="flex flex-col items-center text-center">
+              <div class="w-24 h-28 bg-white border border-slate-300 rounded overflow-hidden shadow-sm flex items-center justify-center">
+                <img id="modal-student-img" class="w-full h-full object-cover hidden" src="" alt="Student Avatar" />
+                <svg id="modal-student-avatar-placeholder" class="w-10 h-10 text-slate-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
+              </div>
+              <p class="text-[10px] font-bold text-slate-400 mt-2 uppercase tracking-wide">Passport Photograph</p>
+            </div>
+
+            <!-- ADMINISTRATIVE ACTION CARD -->
+            <form id="action-drawer-form" onsubmit="window.handleAdminFormSave(event)" class="space-y-4 text-left">
+              <h5 class="text-xs font-bold text-slate-800 uppercase tracking-widest border-b pb-1 mb-2">Office Action Drawer</h5>
+              
+              <div class="space-y-3 text-xs">
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-1">Student Code No.</label>
+                  <input type="text" id="modal-action-studentCodeNo" class="w-full border rounded p-1.5 outline-none focus:ring-2 focus:ring-amber-500 border-slate-300 font-bold" placeholder="e.g. BD-2026-102" required />
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-1">Date of Admission</label>
+                  <input type="text" id="modal-action-dateOfAdmission" class="w-full border rounded p-1.5 outline-none focus:ring-2 focus:ring-amber-500 border-slate-300 font-bold" placeholder="e.g. 07/07/2024" required />
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-1">Fee Receipt No.</label>
+                  <input type="text" id="modal-action-feeReceiptNo" class="w-full border rounded p-1.5 outline-none focus:ring-2 focus:ring-amber-500 border-slate-300 font-bold" placeholder="e.g. REC-9082" required />
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-1">Batch No.</label>
+                  <input type="text" id="modal-action-batchNo" class="w-full border rounded p-1.5 outline-none focus:ring-2 focus:ring-amber-500 border-slate-300 font-bold" placeholder="e.g. B-12" required />
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block font-semibold text-slate-600 mb-1">Batch Day</label>
+                    <input type="text" id="modal-action-batchDay" class="w-full border rounded p-1.5 outline-none focus:ring-2 focus:ring-amber-500 border-slate-300 font-bold" placeholder="Saturday" required />
+                  </div>
+                  <div>
+                    <label class="block font-semibold text-slate-600 mb-1">Batch Time</label>
+                    <input type="text" id="modal-action-batchTime" class="w-full border rounded p-1.5 outline-none focus:ring-2 focus:ring-amber-500 border-slate-300 font-bold" placeholder="10:00 AM" required />
+                  </div>
+                </div>
+                <div>
+                  <label class="block font-semibold text-slate-600 mb-1">Course Instructor Name</label>
+                  <input type="text" id="modal-action-ciName" class="w-full border rounded p-1.5 outline-none focus:ring-2 focus:ring-amber-500 border-slate-300 font-bold" placeholder="e.g. L. Swetha" required />
+                </div>
+              </div>
+
+              <!-- Button actions -->
+              <div class="pt-4 flex flex-col gap-2">
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg transition-colors text-xs shadow-sm uppercase tracking-wider">
+                  Save &amp; Approve Student
+                </button>
+                <button type="button" onclick="window.handleAdminFormDelete()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold py-2 px-4 rounded-lg border border-rose-200 transition-colors text-xs text-center uppercase tracking-wider">
+                  Trash Application
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-slate-100 bg-slate-50 rounded-b-2xl text-right flex justify-end gap-2">
+        <button onclick="closeDetailModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-5 py-2.5 rounded-xl text-xs transition uppercase">
+          Cancel
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FIREBASE SDK CONFIGURATION (COMPLIANT TO RULE 1, 2 & 3) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Your requested configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAg_pyfnqS3oPZdDBQ3HxnGPmWA00T3Xr4",
+      authDomain: "braindee-b9f71.firebaseapp.com",
+      projectId: "braindee-b9f71",
+      storageBucket: "braindee-b9f71.firebasestorage.app",
+      messagingSenderId: "787718214409",
+      appId: "1:787718214409:web:1f2a06276c726203ba39d8",
+      measurementId: "G-KF4B6HWF6C"
+    };
+
+    // Initialize Services
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'braindee-portal';
+
+    let currentUser = null;
+
+    // Secure Anonymous Auth before database querying (RULE 3)
+    async function initAuth() {
+      try {
+        await signInAnonymously(auth);
+      } catch (err) {
+        console.error("Firebase Auth Handshake Failure:", err);
+        window.showAlert("Security Error", "Unable to establish anonymous session with Firestore database.", "error");
+      }
+    }
+
+    initAuth();
+
+    // Set up database listeners immediately on Auth resolve
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (user) {
+        // Strict database path (RULE 1)
+        const collectionRef = collection(db, 'artifacts', appId, 'public', 'data', 'enrollments');
+        
+        onSnapshot(collectionRef, (snapshot) => {
+          const applications = [];
+          snapshot.forEach((doc) => {
+            applications.push(doc.data());
+          });
+          window.applicationsList = applications;
+          window.renderApplicationsTable();
+          window.updateMetrics();
+        }, (error) => {
+          console.error("Real-time database stream disrupted: ", error);
+          window.showAlert("Connection Lost", "Failed to retrieve real-time enrollment updates.", "error");
+        });
+      }
+    });
+
+    // Expose write operations to window scope guarded by auth check (RULE 3)
+    window.approveApplication = async function(appIdStr, officeData) {
+      if (!currentUser) {
+        window.showAlert("Unauthorized", "Session expired. Authenticating credentials...", "error");
+        return false;
+      }
+      try {
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'enrollments', appIdStr);
+        await updateDoc(docRef, officeData);
+        window.showAlert("Success", "Student Approved and credentials saved.", "success");
+        return true;
+      } catch (error) {
+        console.error("Failed to write to document path:", error);
+        window.showAlert("Save Failed", error.message, "error");
+        return false;
+      }
+    };
+
+    window.deleteApplication = async function(appIdStr) {
+      if (!currentUser) return false;
+      try {
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'enrollments', appIdStr);
+        await deleteDoc(docRef);
+        window.showAlert("Deleted", "Enrollment record successfully trashed.", "success");
+        return true;
+      } catch (error) {
+        console.error("Failed to delete record:", error);
+        window.showAlert("Delete Failed", error.message, "error");
+        return false;
+      }
+    }
+  </script>
+
+  <!-- CONTROL PANEL LOGIC -->
+  <script>
+    window.applicationsList = [];
+    window.selectedAppForAudit = null;
+
+    // Login system control
+    function handleLogin(e) {
+      e.preventDefault();
+      const pwdInput = document.getElementById('admin-password').value;
+      const errorMsg = document.getElementById('login-error');
+      const loginOverlay = document.getElementById('login-overlay');
+      const dashboard = document.getElementById('dashboard-app');
+
+      if (pwdInput === 'Braindee@2026') {
+        errorMsg.classList.add('hidden');
+        loginOverlay.classList.add('opacity-0');
+        
+        setTimeout(() => {
+          loginOverlay.classList.add('hidden');
+          dashboard.classList.remove('hidden');
+          setTimeout(() => {
+            dashboard.classList.remove('opacity-0');
+          }, 50);
+        }, 300);
+      } else {
+        errorMsg.classList.remove('hidden');
+        document.getElementById('admin-password').classList.add('border-rose-500', 'ring-rose-500');
+        
+        const box = document.querySelector('#login-overlay > div.relative');
+        box.classList.add('translate-x-2');
+        setTimeout(() => box.classList.replace('translate-x-2', '-translate-x-2'), 100);
+        setTimeout(() => box.classList.replace('-translate-x-2', 'translate-x-1'), 200);
+        setTimeout(() => box.classList.replace('translate-x-1', 'translate-x-0'), 300);
+      }
+    }
+
+    function handleLogout() {
+      const loginOverlay = document.getElementById('login-overlay');
+      const dashboard = document.getElementById('dashboard-app');
+      
+      document.getElementById('admin-password').value = '';
+      document.getElementById('admin-password').classList.remove('border-rose-500', 'ring-rose-500');
+      document.getElementById('login-error').classList.add('hidden');
+      
+      dashboard.classList.add('opacity-0');
+      setTimeout(() => {
+        dashboard.classList.add('hidden');
+        loginOverlay.classList.remove('hidden');
+        setTimeout(() => {
+          loginOverlay.classList.remove('opacity-0');
+        }, 50);
+      }, 500);
+    }
+
+    // Tab swapper
+    function switchDashboardTab(tabId) {
+      const overviewNav = document.getElementById('nav-overview');
+      const applicationsNav = document.getElementById('nav-applications');
+      const overviewView = document.getElementById('tab-overview-view');
+      const applicationsView = document.getElementById('tab-applications-view');
+      const headerTitle = document.getElementById('header-title');
+
+      if (tabId === 'overview') {
+        overviewNav.className = "flex items-center gap-3 px-4 py-3 bg-amber-500/10 text-amber-500 rounded-xl font-semibold transition-colors";
+        applicationsNav.className = "flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl font-semibold transition-colors";
+        overviewView.classList.remove('hidden');
+        applicationsView.classList.add('hidden');
+        headerTitle.innerText = "Dashboard Overview";
+      } else {
+        applicationsNav.className = "flex items-center gap-3 px-4 py-3 bg-amber-500/10 text-amber-500 rounded-xl font-semibold transition-colors";
+        overviewNav.className = "flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl font-semibold transition-colors";
+        applicationsView.classList.remove('hidden');
+        overviewView.classList.add('hidden');
+        headerTitle.innerText = "Student Applications Database";
+      }
+    }
+
+    // In-Memory calculation metrics (No complex DB requests - Compliance with RULE 2)
+    window.updateMetrics = function() {
+      const total = window.applicationsList.length;
+      const enrolled = window.applicationsList.filter(app => app.studentCodeNo && app.studentCodeNo.trim() !== '').length;
+      const pendingPayment = window.applicationsList.filter(app => !app.studentCodeNo && app.paymentMethod === 'Online Payment').length;
+      const reviewRequired = window.applicationsList.filter(app => !app.studentCodeNo).length;
+
+      document.getElementById('metric-total').innerText = total;
+      document.getElementById('metric-enrolled').innerText = enrolled;
+      document.getElementById('metric-pending-payment').innerText = pendingPayment;
+      document.getElementById('metric-review').innerText = reviewRequired;
+    };
+
+    // Render applications datatable (compliance with RULE 2 - sorting & filtering done on client side)
+    window.renderApplicationsTable = function() {
+      const tbody = document.getElementById('applications-table-body');
+      const search = document.getElementById('search-filter').value.toLowerCase();
+      const level = document.getElementById('level-filter').value;
+
+      const filtered = window.applicationsList.filter(app => {
+        const matchSearch = (app.studentName || '').toLowerCase().includes(search) || 
+                            (app.fatherName || '').toLowerCase().includes(search) ||
+                            (app.appId || '').toLowerCase().includes(search);
+        const matchLevel = level === "" || app.selectedLevel === level;
+        return matchSearch && matchLevel;
+      });
+
+      document.getElementById('record-count-badge').innerText = `${filtered.length} Records Found`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="p-8 text-center text-slate-400">
+              No matching application records found in database.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = '';
+      filtered.forEach(app => {
+        const isApproved = app.studentCodeNo && app.studentCodeNo.trim() !== '';
+        
+        let paymentBadge = '';
+        if (app.paymentMethod === 'Cash') {
+          paymentBadge = `<span class="inline-flex items-center gap-1 bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full text-xs font-semibold">Cash (Center)</span>`;
+        } else {
+          paymentBadge = `
+            <div class="space-y-0.5">
+              <span class="inline-flex items-center gap-1 bg-amber-50 text-amber-700 px-2.5 py-0.5 rounded-full text-xs font-semibold">Online</span>
+              <p class="text-[10px] text-slate-400 font-mono tracking-wide uppercase">${app.utrNumber || 'No UTR'}</p>
+            </div>
+          `;
+        }
+
+        const avatarMarkup = app.studentPhotoUrl 
+          ? `<img src="${app.studentPhotoUrl}" class="w-8 h-8 rounded-full object-cover border border-slate-200" />`
+          : `<div class="w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center font-bold text-xs">ST</div>`;
+
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50/50 transition-colors">
+            <td class="p-4 font-mono text-slate-500 text-xs">${app.appId}</td>
+            <td class="p-4">
+              <div class="flex items-center gap-2.5">
+                ${avatarMarkup}
+                <div class="text-left">
+                  <p class="font-bold text-slate-800">${app.studentName.toUpperCase()}</p>
+                  <p class="text-[10px] text-slate-400 uppercase">${app.gender || 'Sex N/A'} • ${app.age || 'Age N/A'} yrs</p>
+                </div>
+              </div>
+            </td>
+            <td class="p-4 text-left">
+              <p class="font-semibold text-slate-700 text-xs">Father: ${app.fatherName || 'N/A'}</p>
+              <p class="text-[10px] text-slate-400">Mob: ${app.fatherPhone || 'N/A'}</p>
+            </td>
+            <td class="p-4 text-left">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                app.selectedLevel.includes('Junior') ? 'bg-sky-50 text-sky-700 border border-sky-100' : 'bg-indigo-50 text-indigo-700 border border-indigo-100'
+              }">
+                ${app.selectedLevel || 'N/A'}
+              </span>
+            </td>
+            <td class="p-4 text-left">${paymentBadge}</td>
+            <td class="p-4 text-center">
+              ${isApproved 
+                ? `<span class="inline-flex items-center gap-1.5 text-emerald-600 font-bold text-xs"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Approved (${app.studentCodeNo})</span>`
+                : `<span class="inline-flex items-center gap-1.5 text-rose-500 font-bold text-xs"><span class="w-2 h-2 bg-rose-400 rounded-full"></span> Action Required</span>`
+              }
+            </td>
+            <td class="p-4 text-center">
+              <button 
+                onclick="window.openApplicationDetails('${app.appId}')"
+                class="text-amber-700 hover:text-white hover:bg-amber-500 border border-amber-500 font-bold text-xs px-3.5 py-1.5 rounded-lg transition uppercase tracking-wider"
+              >
+                Review Package
+              </button>
+            </td>
+          </tr>
+        `;
+      });
+    };
+
+    // Open detail modal with correct parameters
+    window.openApplicationDetails = function(appIdStr) {
+      const app = window.applicationsList.find(a => a.appId === appIdStr);
+      if (!app) return;
+
+      window.selectedAppForAudit = app;
+
+      // Map values
+      document.getElementById('modal-title-student-name').innerText = `Audit Package: ${app.studentName.toUpperCase()}`;
+      document.getElementById('modal-title-app-id').innerText = `Registration ID: ${app.appId}`;
+      document.getElementById('modal-dob').innerText = app.dob ? app.dob.split('-').reverse().join('/') : 'N/A';
+      document.getElementById('modal-age-sex').innerText = `${app.age || 'N/A'} Years old • ${app.gender || 'N/A'}`;
+      document.getElementById('modal-mother-tongue').innerText = app.motherTongue || 'N/A';
+      document.getElementById('modal-school-grade').innerText = `${app.schoolName || 'N/A'} (${app.classStudying || 'N/A'})`;
+      document.getElementById('modal-mode').innerText = app.classMode || 'N/A';
+      document.getElementById('modal-franchisee').innerText = app.franchisee || 'N/A';
+      document.getElementById('modal-father').innerText = `${app.fatherName || 'N/A'} (Mob: ${app.fatherPhone || 'N/A'} • ${app.fatherOccup || 'N/A'})`;
+      document.getElementById('modal-mother').innerText = `${app.motherName || 'N/A'} (Mob: ${app.motherPhone || 'N/A'} • ${app.motherOccup || 'N/A'})`;
+      document.getElementById('modal-address').innerText = app.address || 'N/A';
+      document.getElementById('modal-id-type').innerText = app.parentIdType || 'N/A';
+      document.getElementById('modal-id-number').innerText = app.parentIdNumber || 'N/A';
+      document.getElementById('modal-payment-utr').innerText = app.paymentMethod === 'Cash' ? 'CASH PAYMENT' : (app.utrNumber || 'N/A');
+
+      // Setup images
+      const img = document.getElementById('modal-student-img');
+      const placeholder = document.getElementById('modal-student-avatar-placeholder');
+      if (app.studentPhotoUrl) {
+        img.src = app.studentPhotoUrl;
+        img.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+      } else {
+        img.src = '';
+        img.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+      }
+
+      // Link attachments
+      const idLink = document.getElementById('modal-id-attachment-link');
+      if (app.parentIdProofUrl) {
+        idLink.href = app.parentIdProofUrl;
+        idLink.classList.remove('opacity-50', 'pointer-events-none');
+      } else {
+        idLink.removeAttribute('href');
+        idLink.classList.add('opacity-50', 'pointer-events-none');
+      }
+
+      const receiptLink = document.getElementById('modal-payment-attachment-link');
+      if (app.paymentProofUrl) {
+        receiptLink.href = app.paymentProofUrl;
+        receiptLink.classList.remove('opacity-50', 'pointer-events-none');
+      } else {
+        receiptLink.removeAttribute('href');
+        receiptLink.classList.add('opacity-50', 'pointer-events-none');
+      }
+
+      // Fill office action inputs
+      document.getElementById('modal-action-studentCodeNo').value = app.studentCodeNo || '';
+      document.getElementById('modal-action-dateOfAdmission').value = app.dateOfAdmission || new Date().toLocaleDateString('en-GB');
+      document.getElementById('modal-action-feeReceiptNo').value = app.feeReceiptNo || '';
+      document.getElementById('modal-action-batchNo').value = app.batchNo || '';
+      document.getElementById('modal-action-batchDay').value = app.batchDay || '';
+      document.getElementById('modal-action-batchTime').value = app.batchTime || '';
+      document.getElementById('modal-action-ciName').value = app.ciName || '';
+
+      document.getElementById('detail-modal').classList.remove('hidden');
+    };
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+      window.selectedAppForAudit = null;
+    }
+
+    // Save action updates back to DB (RULE 3)
+    window.handleAdminFormSave = async function(e) {
+      e.preventDefault();
+      if (!window.selectedAppForAudit) return;
+
+      const officePayload = {
+        studentCodeNo: document.getElementById('modal-action-studentCodeNo').value,
+        dateOfAdmission: document.getElementById('modal-action-dateOfAdmission').value,
+        feeReceiptNo: document.getElementById('modal-action-feeReceiptNo').value,
+        batchNo: document.getElementById('modal-action-batchNo').value,
+        batchDay: document.getElementById('modal-action-batchDay').value,
+        batchTime: document.getElementById('modal-action-batchTime').value,
+        ciName: document.getElementById('modal-action-ciName').value
+      };
+
+      const success = await window.approveApplication(window.selectedAppForAudit.appId, officePayload);
+      if (success) {
+        closeDetailModal();
+      }
+    };
+
+    // Compliance to Modal rule: Custom confirmation modal (replacing browser confirm popup)
+    window.handleAdminFormDelete = async function() {
+      if (!window.selectedAppForAudit) return;
+      
+      window.showConfirm(
+        "Permanent Delete", 
+        `Are you absolutely sure you want to permanently delete student registration ${window.selectedAppForAudit.studentName.toUpperCase()}? This action is irreversible.`, 
+        async () => {
+          const success = await window.deleteApplication(window.selectedAppForAudit.appId);
+          if (success) {
+            closeDetailModal();
+          }
+        }
+      );
+    }
+
+    // Helper Dialog function wrappers to replace alert/confirm popup
+    window.showAlert = function(title, message, type = "success") {
+      const modal = document.getElementById('custom-alert-modal');
+      const icon = document.getElementById('alert-icon');
+      const titleEl = document.getElementById('alert-title');
+      const msgEl = document.getElementById('alert-message');
+      const actions = document.getElementById('alert-actions');
+
+      titleEl.innerText = title;
+      msgEl.innerText = message;
+
+      if (type === "success") {
+        icon.className = "w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xl mx-auto mb-4";
+        icon.innerHTML = '<i class="fas fa-check"></i>';
+      } else if (type === "error") {
+        icon.className = "w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center text-xl mx-auto mb-4";
+        icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+      } else {
+        icon.className = "w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center text-xl mx-auto mb-4";
+        icon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+      }
+
+      actions.innerHTML = `
+        <button onclick="closeAlert()" class="w-full py-2.5 bg-slate-950 hover:bg-slate-900 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition">Ok</button>
+      `;
+
+      modal.classList.remove('hidden');
+    };
+
+    window.showConfirm = function(title, message, onConfirm) {
+      const modal = document.getElementById('custom-alert-modal');
+      const icon = document.getElementById('alert-icon');
+      const titleEl = document.getElementById('alert-title');
+      const msgEl = document.getElementById('alert-message');
+      const actions = document.getElementById('alert-actions');
+
+      titleEl.innerText = title;
+      msgEl.innerText = message;
+
+      icon.className = "w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center text-xl mx-auto mb-4";
+      icon.innerHTML = '<i class="fas fa-trash-alt"></i>';
+
+      actions.innerHTML = `
+        <button onclick="closeAlert()" class="flex-1 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs uppercase tracking-wider transition">Cancel</button>
+        <button id="confirm-yes-btn" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition">Confirm</button>
+      `;
+
+      document.getElementById('confirm-yes-btn').onclick = () => {
+        onConfirm();
+        closeAlert();
+      };
+
+      modal.classList.remove('hidden');
+    };
+
+    window.closeAlert = function() {
+      document.getElementById('custom-alert-modal').classList.add('hidden');
+    };
+  </script>
+
+  <!-- CSS Animation helpers -->
+  <style>
+    @keyframes blob {
+      0% { transform: translate(0px, 0px) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+      100% { transform: translate(0px, 0px) scale(1); }
+    }
+    .animate-blob {
+      animation: blob 7s infinite;
+    }
+    .animation-delay-2000 {
+      animation-delay: 2s;
+    }
+    @keyframes modalEnter {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .animate-modalEnter {
+      animation: modalEnter 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</body>
+</html>
