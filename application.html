@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BrainDEE Academy - Student Application Portal</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts for standard and serif layouts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    /* Styling adjustments for screen vs. physical printing */
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .font-mono-custom {
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .font-serif-custom {
+      font-family: 'Instrument Serif', serif;
+    }
+
+    /* Strict A4 Print Blueprint dimensions for screen layout simulation */
+    .print-container {
+      width: 210mm;
+      height: 297mm;
+      box-sizing: border-box;
+    }
+
+    /* Print media query overrides */
+    @media print {
+      @page {
+        size: A4;
+        margin: 0 !important;
+      }
+      
+      html, body {
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        overflow: hidden;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      /* Fits perfectly inside single page constraint by resetting viewport dimensions */
+      .print-container {
+        width: 210mm !important;
+        height: 297mm !important;
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        padding: 8mm 12mm 8mm 12mm !important;
+        margin: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        box-sizing: border-box !important;
+        background: white !important;
+        page-break-inside: avoid !important;
+        page-break-after: avoid !important;
+        page-break-before: avoid !important;
+      }
+
+      /* Force background color generation on physical devices */
+      .bg-slate-50, .bg-slate-50\/50 {
+        background-color: #f8fafc !important;
+      }
+      .bg-slate-800 {
+        background-color: #1e293b !important;
+      }
+      .bg-slate-900 {
+        background-color: #0f172a !important;
+      }
+      .bg-amber-100\/70 {
+        background-color: #fef3c7 !important;
+      }
+      .text-white {
+        color: #ffffff !important;
+      }
+      .border-amber-600 {
+        border-color: #d97706 !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-100 text-slate-800 print:bg-white print:text-black">
+
+  <!-- FIREBASE CONFIG & STORAGE ENGINE SDKS (Integrated Securely) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+    // Standard fallback setup containing original credential reference & system overrides
+    let firebaseConfig = {
+      apiKey: "AIzaSyAg_pyfnqS3oPZdDBQ3HxnGPmWA00T3Xr4",
+      authDomain: "braindee-b9f71.firebaseapp.com",
+      projectId: "braindee-b9f71",
+      storageBucket: "braindee-b9f71.firebasestorage.app",
+      messagingSenderId: "787718214409",
+      appId: "1:787718214409:web:1ce30ca4794df2a8ba39d8",
+      measurementId: "G-7SDS1P928E"
+    };
+
+    if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+      try {
+        firebaseConfig = JSON.parse(__firebase_config);
+      } catch (e) {
+        console.warn("Using default internal Firebase credentials.", e);
+      }
+    }
+
+    // Initialize Firebase Services
+    const app = initializeApp(firebaseConfig);
+    const storage = getStorage(app);
+    const auth = getAuth(app);
+
+    // Dynamic initial environment token auth attempt prior to anonymous setup
+    const initialToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+    async function authorizeSession() {
+      if (initialToken) {
+        try {
+          await signInWithCustomToken(auth, initialToken);
+          console.log("Custom cloud authentication established.");
+          window.isFirebaseAuthorized = true;
+          return;
+        } catch (err) {
+          console.warn("Custom token auth failed, trying anonymous fallback.", err);
+        }
+      }
+
+      try {
+        await signInAnonymously(auth);
+        console.log("Silent cloud synchronization authorized.");
+        window.isFirebaseAuthorized = true;
+      } catch (err) {
+        console.warn("Firebase Auth failed. Please check rules configurations.", err);
+        window.isFirebaseAuthorized = false;
+        window.firebaseAuthError = err.message;
+      }
+    }
+
+    authorizeSession();
+
+    // Bind modern Cloud SDK functions to standard window object
+    window.firebaseStorage = storage;
+    window.uploadFileToFirebase = async function(file, path) {
+      if (!storage) throw new Error("Firebase cloud engine offline.");
+      const storageRef = ref(storage, path);
+      const snapshot = await uploadBytes(storageRef, file);
+      return await getDownloadURL(snapshot.ref);
+    };
+  </script>
+
+  <!-- HEADER BAR (Hidden in Print) -->
+  <header class="no-print bg-slate-900 text-white shadow-md border-b-4 border-amber-500 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      <!-- Brand/Logo Area (Using white background container so dark logo details pop cleanly) -->
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 bg-white rounded-full border-2 border-amber-400 p-0.5 flex items-center justify-center shadow-inner overflow-hidden">
+          <img 
+            id="online-header-logo" 
+            src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" 
+            alt="BrainDEE Logo" 
+            class="w-full h-full object-contain"
+            onerror="this.style.display='none'; document.getElementById('online-logo-fallback').classList.remove('hidden');"
+          />
+          <!-- High Fidelity Hand-crafted SVG Fallback -->
+          <svg id="online-logo-fallback" viewBox="0 0 100 100" class="hidden w-full h-full">
+            <path d="M50,15 L80,25 L80,55 C80,75 50,90 50,90 C50,90 20,75 20,55 L20,25 Z" fill="#111" stroke="#D4AF37" strokeWidth="4" />
+            <path d="M38,35 H52 C60,35 64,38 64,43 C64,47 61,50 54,50 H38 Z" fill="none" stroke="#FFF" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M38,50 H54 C62,50 66,54 66,59 C66,65 61,68 52,68 H38 Z" fill="none" stroke="#D4AF37" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+            <line x1="38" y1="35" x2="38" y2="68" stroke="#FFF" strokeWidth="5" strokeLinecap="round" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-xl font-black tracking-wider text-amber-400 uppercase font-sans">BrainDEE ACADEMY</h1>
+          <p class="text-xs text-slate-300 italic font-medium">Creating Mathamagicians</p>
+        </div>
+      </div>
+
+      <!-- Action Tabs & Print Control -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button
+          id="tab-online-btn"
+          onclick="switchTab('online')"
+          class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150 flex items-center gap-2 bg-amber-500 text-slate-950 shadow-md"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+          Fill Online
+        </button>
+        <button
+          id="tab-print-btn"
+          onclick="switchTab('print')"
+          class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150 flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          A4 Print Preview
+        </button>
+
+        <div class="h-6 w-[1px] bg-slate-700 mx-2 hidden md:block"></div>
+
+        <button
+          onclick="triggerPrint()"
+          class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-lg text-sm transition-all shadow-md flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
+          Print to A4 PDF
+        </button>
+        
+        <button
+          onclick="clearFormFields()"
+          class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-2 rounded-lg text-sm transition"
+          title="Clear all fields"
+        >
+          Reset
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ADMIN CONTROLS BANNER (Hidden in Print) -->
+  <section class="no-print bg-slate-800 text-slate-300 py-3 border-b border-slate-700 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs md:text-sm">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+        <span><strong>Live Synchronization Active:</strong> Changes made anywhere instantly update the A4 Print Sheet!</span>
+      </div>
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <label class="whitespace-nowrap text-slate-400 font-medium">WhatsApp Admin Phone:</label>
+        <input
+          type="text"
+          id="admin-phone-input"
+          value="918688303033"
+          oninput="state.adminPhone = this.value"
+          class="bg-slate-900 border border-slate-600 rounded px-2.5 py-1 text-white focus:outline-none focus:border-amber-500 font-mono w-full sm:w-44 text-center"
+          placeholder="e.g., 918688303033"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE WRAPPER -->
+  <main class="max-w-7xl mx-auto px-4 py-8 print:p-0 print:m-0">
+    
+    <!-- VIEW 1: INTERACTIVE ONLINE FORM -->
+    <div id="online-view" class="no-print bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden max-w-4xl mx-auto transition-all duration-300">
+      
+      <!-- Top Interactive Banner -->
+      <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-6 text-white border-b border-amber-500">
+        <h2 class="text-2xl font-bold tracking-wide">BrainDEE Academy Admission Portal</h2>
+        <p class="text-sm text-slate-300 mt-1">Fill out the digital registration form below. Submit to generate a record and instantly alert the administration via WhatsApp.</p>
+      </div>
+
+      <!-- Form Fields -->
+      <form id="admission-form" onsubmit="handleOnlineSubmit(event)" class="p-8 space-y-8">
+        
+        <!-- Franchise & Office references -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Location</label>
+            <input
+              type="text"
+              id="form-location"
+              oninput="updateState('location', this.value)"
+              class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+              placeholder="e.g. Hayat Nagar"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Date</label>
+            <input
+              type="text"
+              id="form-date"
+              class="w-full px-3 py-2 border rounded-lg bg-slate-100 text-slate-500 cursor-not-allowed outline-none text-sm font-mono font-bold"
+              readonly
+            />
+          </div>
+        </div>
+
+        <!-- COURSE LEVEL SELECT (Interactive Selection) -->
+        <div>
+          <h3 class="text-md font-bold text-slate-800 border-b pb-2 mb-4 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 bg-amber-500 text-slate-950 rounded-full text-xs font-black">1</span>
+            Select Course Level
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="course-level-grid">
+            <!-- Level cards generated by JS -->
+          </div>
+        </div>
+
+        <!-- STUDENT PERSONAL INFORMATION -->
+        <div>
+          <h3 class="text-md font-bold text-slate-800 border-b pb-2 mb-4 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 bg-amber-500 text-slate-950 rounded-full text-xs font-black">2</span>
+            Student Information
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            
+            <!-- Student Name -->
+            <div class="md:col-span-8">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Name of the Student (BLOCK Letters)</label>
+              <input
+                type="text"
+                id="form-studentName"
+                oninput="updateState('studentName', this.value.toUpperCase())"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm uppercase font-mono tracking-wide"
+                placeholder="e.g. LODI MAITHRI"
+                required
+              />
+              <!-- Simulated letters display preview -->
+              <div class="flex flex-wrap gap-1 mt-2 p-2 bg-slate-50 rounded border border-dashed border-slate-200">
+                <span class="text-xs text-slate-400 w-full mb-1">A4 Sheet Grid Preview:</span>
+                <div id="grid-boxes-preview" class="flex flex-wrap gap-1">
+                  <!-- Name letter boxes synced dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Student Photo Upload Space -->
+            <div class="md:col-span-4">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Student Passport Photo</label>
+              <div class="border-2 border-dashed border-slate-300 hover:border-amber-500 rounded-lg p-3 bg-slate-50 flex flex-col items-center justify-center text-center transition cursor-pointer relative group min-h-[140px]">
+                <input 
+                  type="file" 
+                  id="form-studentPhoto" 
+                  accept="image/*" 
+                  onchange="handlePhotoUpload(event)"
+                  class="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                />
+                
+                <!-- If photo is not uploaded -->
+                <div id="photo-upload-placeholder" class="space-y-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-8 w-8 text-slate-400 group-hover:text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <p class="text-xs font-medium text-slate-600">Click or Drag Image to Upload</p>
+                  <p class="text-[10px] text-slate-400">JPG, PNG up to 2MB (Passport Size)</p>
+                </div>
+
+                <!-- If photo is uploaded -->
+                <div id="photo-upload-preview" class="hidden flex flex-col items-center gap-1.5 z-20">
+                  <img id="form-photo-thumbnail" class="w-16 h-20 object-cover rounded shadow border border-slate-300" src="" alt="Thumbnail" />
+                  <button 
+                    type="button"
+                    onclick="removePhoto(event)"
+                    class="text-[10px] text-rose-600 hover:text-rose-700 hover:underline font-bold"
+                  >
+                    Remove Photo
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Date of Birth -->
+            <div class="md:col-span-4">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Date of Birth</label>
+              <input
+                type="date"
+                id="form-dob"
+                oninput="updateState('dob', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm font-mono"
+                required
+              />
+            </div>
+
+            <!-- Age -->
+            <div class="md:col-span-3">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Calculated Age</label>
+              <input
+                type="text"
+                id="form-age"
+                class="w-full px-3 py-2 border rounded-lg bg-slate-50 font-bold text-slate-700 text-sm"
+                placeholder="Auto computed"
+                readonly
+              />
+            </div>
+
+            <!-- Gender -->
+            <div class="md:col-span-3">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Sex</label>
+              <select
+                id="form-gender"
+                onchange="updateState('gender', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm bg-white"
+                required
+              >
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+
+            <!-- Mother Tongue (Dynamic Selection with "Other's" specify support) -->
+            <div class="md:col-span-6">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Mother Tongue</label>
+              <select
+                id="form-motherTongue"
+                onchange="handleMotherTongueChange(this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm bg-white"
+                required
+              >
+                <option value="">Select Mother Tongue</option>
+                <option value="Assamese">Assamese</option>
+                <option value="Bengali">Bengali</option>
+                <option value="Bodo">Bodo</option>
+                <option value="Dogri">Dogri</option>
+                <option value="Gujarati">Gujarati</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Kannada">Kannada</option>
+                <option value="Kashmiri">Kashmiri</option>
+                <option value="Konkani">Konkani</option>
+                <option value="Maithili">Maithili</option>
+                <option value="Malayalam">Malayalam</option>
+                <option value="Manipuri (Meitei)">Manipuri (Meitei)</option>
+                <option value="Marathi">Marathi</option>
+                <option value="Nepali">Nepali</option>
+                <option value="Odia">Odia</option>
+                <option value="Punjabi">Punjabi</option>
+                <option value="Sanskrit">Sanskrit</option>
+                <option value="Santali">Santali</option>
+                <option value="Sindhi">Sindhi</option>
+                <option value="Tamil">Tamil</option>
+                <option value="Telugu">Telugu</option>
+                <option value="Urdu">Urdu</option>
+                <option value="Other's">Other's</option>
+              </select>
+              
+              <!-- Custom other language specification text field -->
+              <div id="other-mother-tongue-wrapper" class="hidden mt-2">
+                <input
+                  type="text"
+                  id="form-motherTongue-other"
+                  oninput="updateState('motherTongue', this.value)"
+                  class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                  placeholder="Please specify mother tongue"
+                />
+              </div>
+            </div>
+
+            <!-- Class Studying (Modern Scroll Selection UKG to Class 10) -->
+            <div class="md:col-span-3">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Class Studying</label>
+              <select
+                id="form-classStudying"
+                onchange="updateState('classStudying', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm bg-white"
+                required
+              >
+                <option value="">Select Class</option>
+                <option value="UKG">UKG</option>
+                <option value="Class 1">Class 1</option>
+                <option value="Class 2">Class 2</option>
+                <option value="Class 3">Class 3</option>
+                <option value="Class 4">Class 4</option>
+                <option value="Class 5">Class 5</option>
+                <option value="Class 6">Class 6</option>
+                <option value="Class 7">Class 7</option>
+                <option value="Class 8">Class 8</option>
+                <option value="Class 9">Class 9</option>
+                <option value="Class 10">Class 10</option>
+              </select>
+            </div>
+
+            <!-- Mode of Classes Dropdown -->
+            <div class="md:col-span-3">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Mode of Classes</label>
+              <select
+                id="form-classMode"
+                onchange="handleClassModeChange(this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm bg-white"
+                required
+              >
+                <option value="">Select Mode</option>
+                <option value="Offline">Offline</option>
+                <option value="Online">Online</option>
+              </select>
+            </div>
+
+            <!-- School / College Name -->
+            <div class="md:col-span-6">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Name of the School / College</label>
+              <input
+                type="text"
+                id="form-schoolName"
+                oninput="updateState('schoolName', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                placeholder="e.g. Pi the play school"
+              />
+            </div>
+
+            <!-- Course Instructor (C.I.) Name (Takes up a balanced space in Student Info now) -->
+            <div class="md:col-span-6">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Course Instructor (C.I.) Name</label>
+              <input
+                type="text"
+                id="form-ciName"
+                oninput="updateState('ciName', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                placeholder="e.g. L. Swetha"
+              />
+            </div>
+
+          </div>
+        </div>
+
+        <!-- FAMILY & CONTACT DETAILS -->
+        <div>
+          <h3 class="text-md font-bold text-slate-800 border-b pb-2 mb-4 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 bg-amber-500 text-slate-950 rounded-full text-xs font-black">3</span>
+            Family & Contact Details
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+            <!-- Father Details -->
+            <div class="md:col-span-6">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Father's Name</label>
+              <input
+                type="text"
+                id="form-fatherName"
+                oninput="updateState('fatherName', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                placeholder="e.g. RAJASHEKAR"
+                required
+              />
+            </div>
+            <div class="md:col-span-3">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Father's Mobile Number</label>
+              <input
+                type="tel"
+                id="form-fatherPhone"
+                oninput="updateState('fatherPhone', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm font-mono"
+                placeholder="e.g. 9876543210"
+              />
+            </div>
+            <div class="md:col-span-3">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Father's Occupation</label>
+              <input
+                type="text"
+                id="form-fatherOccup"
+                oninput="updateState('fatherOccup', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                placeholder="e.g. RMC marketing"
+              />
+            </div>
+
+            <!-- Mother Details -->
+            <div class="md:col-span-6">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Mother's Name</label>
+              <input
+                type="text"
+                id="form-motherName"
+                oninput="updateState('motherName', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                placeholder="e.g. SWETHA"
+              />
+            </div>
+            <div class="md:col-span-3">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Mother's Mobile Number</label>
+              <input
+                type="tel"
+                id="form-motherPhone"
+                oninput="updateState('motherPhone', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm font-mono"
+                placeholder="e.g. 9876543210"
+              />
+            </div>
+            <div class="md:col-span-3">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Mother's Occupation</label>
+              <input
+                type="text"
+                id="form-motherOccup"
+                oninput="updateState('motherOccup', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                placeholder="e.g. Home maker"
+              />
+            </div>
+
+            <!-- Contact Number -->
+            <div class="md:col-span-6">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Telephone / Cell No. (WhatsApp Preferred)</label>
+              <input
+                type="tel"
+                id="form-phone"
+                oninput="updateState('phone', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm font-mono"
+                placeholder="e.g. 6301095450"
+                required
+              />
+            </div>
+
+            <!-- Email -->
+            <div class="md:col-span-6">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Email ID</label>
+              <input
+                type="email"
+                id="form-email"
+                oninput="updateState('email', this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                placeholder="e.g. student@domain.com"
+              />
+            </div>
+
+            <!-- Residential Address -->
+            <div class="md:col-span-12">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Residential Address</label>
+              <textarea
+                id="form-address"
+                oninput="updateState('address', this.value)"
+                rows="3"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm"
+                placeholder="e.g. Shobodaya Colony, Hayat nagar near mother dairy."
+              ></textarea>
+            </div>
+
+            <!-- Parent Proof of Identity Dropdowns and verification -->
+            <div class="md:col-span-12 border-t border-slate-200 pt-5 mt-2">
+              <h4 class="text-sm font-bold text-slate-800 mb-3">Parent / Guardian Identity Verification</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label class="block text-sm font-semibold text-slate-700 mb-1">Select Identity Document</label>
+                  <select
+                    id="form-parentIdType"
+                    onchange="updateState('parentIdType', this.value)"
+                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm bg-white"
+                    required
+                  >
+                    <option value="">Select Document Type</option>
+                    <option value="Aadhaar Card">Aadhaar Card – Unique identity card issued by UIDAI</option>
+                    <option value="PAN Card">PAN Card – Permanent Number card</option>
+                    <option value="Passport">Passport – Issued by Government of India</option>
+                    <option value="Voter ID">Voter ID (EPIC Card) – Election Commission ID</option>
+                    <option value="Driving Licence">Driving Licence – Issued by RTO</option>
+                    <option value="Ration Card">Ration Card (accepted in some cases)</option>
+                    <option value="Government Employee ID">Government Employee ID Card</option>
+                    <option value="NREGA Job Card">NREGA Job Card</option>
+                    <option value="Pensioner Photo ID">Pensioner Photo ID Card</option>
+                    <option value="CGHS / ECHS Card">CGHS / ECHS Card (for eligible persons)</option>
+                    <option value="Disability ID Card">Disability ID Card / UDID Card</option>
+                    <option value="Armed Forces Identity Card">Armed Forces Identity Card</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-slate-700 mb-1">Document ID Number</label>
+                  <input
+                    type="text"
+                    id="form-parentIdNumber"
+                    oninput="updateState('parentIdNumber', this.value)"
+                    class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm uppercase font-mono tracking-wide"
+                    placeholder="e.g. Document ID Number"
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-slate-700 mb-1">Upload ID Document Proof (Photo/PDF)</label>
+                  <div class="border-2 border-dashed border-slate-300 hover:border-amber-500 rounded-lg p-2 bg-white flex flex-col items-center justify-center text-center transition cursor-pointer relative group min-h-[100px]">
+                    <input 
+                      type="file" 
+                      id="form-parentIdProof" 
+                      accept="image/*,application/pdf" 
+                      onchange="handleParentIdProofUpload(event)"
+                      class="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                    />
+                    
+                    <!-- Placeholder -->
+                    <div id="parent-id-upload-placeholder" class="space-y-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-6 w-6 text-slate-400 group-hover:text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                      <p class="text-xs font-medium text-slate-600">Click to Upload Proof</p>
+                      <p class="text-[9px] text-slate-400">JPG, PNG, PDF up to 2MB</p>
+                    </div>
+
+                    <!-- Preview -->
+                    <div id="parent-id-upload-preview" class="hidden flex flex-col items-center gap-1 z-20">
+                      <span id="parent-id-file-badge" class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold max-w-[150px] truncate">Document Attached</span>
+                      <button 
+                        type="button"
+                        onclick="removeParentIdProof(event)"
+                        class="text-[9px] text-rose-600 hover:text-rose-700 hover:underline font-bold"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- NEW OPTION: PAYMENT DETAILS (ONLINE MODE ONLY) -->
+        <div>
+          <h3 class="text-md font-bold text-slate-800 border-b pb-2 mb-4 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 bg-amber-500 text-slate-950 rounded-full text-xs font-black">4</span>
+            Payment Details
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6 bg-slate-50 p-6 rounded-xl border border-slate-200">
+            
+            <!-- Payment Method Dropdown (Cash / Online Payment) -->
+            <div class="md:col-span-12">
+              <label class="block text-sm font-semibold text-slate-700 mb-1">Payment Method</label>
+              <select
+                id="form-paymentMethod"
+                onchange="handlePaymentMethodChange(this.value)"
+                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm bg-white"
+                required
+              >
+                <option value="">Select Payment Method</option>
+                <option value="Cash">Cash</option>
+                <option value="Online Payment">Online Payment</option>
+              </select>
+            </div>
+
+            <!-- Conditional Wrapper for Online Payment Fields (Hides completely for Cash) -->
+            <div id="online-payment-fields" class="hidden md:col-span-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              <!-- Payment UTR Input -->
+              <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Payment Transaction Number (UTR)</label>
+                <input
+                  type="text"
+                  id="form-utrNumber"
+                  oninput="updateState('utrNumber', this.value)"
+                  class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-amber-500 outline-none text-sm font-mono uppercase tracking-wide"
+                  placeholder="e.g. 230723145678 (12-digit UTR)"
+                />
+                <p class="text-[10px] text-slate-500 mt-1">Please enter the 12-digit UTR number from your payment application receipt (GPay, PhonePe, Paytm, Bank Transfer, etc.)</p>
+              </div>
+
+              <!-- Payment Proof Upload Box -->
+              <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">Upload Payment Receipt Proof Screenshot</label>
+                <div class="border-2 border-dashed border-slate-300 hover:border-amber-500 rounded-lg p-3 bg-white flex flex-col items-center justify-center text-center transition cursor-pointer relative group min-h-[140px]">
+                  <input 
+                    type="file" 
+                    id="form-paymentProof" 
+                    accept="image/*" 
+                    onchange="handlePaymentProofUpload(event)"
+                    class="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10"
+                  />
+                  
+                  <!-- If proof is not uploaded -->
+                  <div id="payment-upload-placeholder" class="space-y-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-8 w-8 text-slate-400 group-hover:text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <p class="text-xs font-medium text-slate-600">Click or Drag Screenshot to Upload</p>
+                    <p class="text-[10px] text-slate-400">JPG, PNG up to 2MB</p>
+                  </div>
+
+                  <!-- If proof is uploaded -->
+                  <div id="payment-upload-preview" class="hidden flex flex-col items-center gap-1.5 z-20">
+                    <img id="form-payment-thumbnail" class="w-20 h-20 object-cover rounded shadow border border-slate-300" src="" alt="Proof Thumbnail" />
+                    <button 
+                      type="button"
+                      onclick="removePaymentProof(event)"
+                      class="text-[10px] text-rose-600 hover:text-rose-700 hover:underline font-bold"
+                    >
+                      Remove Payment Proof
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- OFFICE ADMINISTRATIVE INFO -->
+        <div>
+          <h3 class="text-md font-bold text-slate-800 border-b pb-2 mb-4 flex items-center gap-2">
+            <span class="flex items-center justify-center w-6 h-6 bg-slate-800 text-white rounded-full text-xs font-black">5</span>
+            Office Use Fields
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Student Code No.</label>
+              <input
+                type="text"
+                id="form-studentCodeNo"
+                class="w-full px-3 py-1.5 border rounded-lg text-xs font-mono font-bold uppercase bg-slate-100 text-slate-500 cursor-not-allowed"
+                placeholder="Select Mode of Classes"
+                readonly
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Date of Admission</label>
+              <input
+                type="text"
+                id="form-dateOfAdmission"
+                class="w-full px-3 py-1.5 border rounded-lg text-xs font-mono font-bold bg-slate-100 text-slate-500 cursor-not-allowed"
+                readonly
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Fee Receipt No.</label>
+              <input
+                type="text"
+                id="form-feeReceiptNo"
+                oninput="updateState('feeReceiptNo', this.value)"
+                class="w-full px-3 py-1.5 border rounded-lg text-xs"
+                placeholder="e.g. REC-9082"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTION ROW -->
+        <div class="pt-4 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
+          <button
+            type="button"
+            onclick="switchTab('print')"
+            class="text-amber-600 hover:text-amber-700 font-semibold text-sm flex items-center gap-1.5"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            Preview Filled physical A4 sheet
+          </button>
+          <button
+            type="submit"
+            class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-8 py-3 rounded-xl transition shadow-lg flex items-center justify-center gap-2 text-md"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Submit Application Online
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- VIEW 2: A4 PAPER PRINT LAYOUT -->
+    <div id="print-view-container" class="hidden print:block mx-auto">
+      
+      <!-- Guide text inside screen mode, hidden in physical print -->
+      <div class="no-print max-w-4xl mx-auto bg-amber-50 text-amber-900 p-4 rounded-xl border border-amber-200 mb-6 text-sm flex items-start gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <div>
+          <p class="font-bold">A4 Page Simulation Guide</p>
+          <p class="mt-1">Below is a strict 1-to-1 blueprint mimicking your original paper admission slip. It perfectly renders the character grids, photo frame, parent signature box, and the "For Franchisee Use Only" bottom section.</p>
+          <p class="mt-2 font-semibold text-xs">Tip: Click "Print to A4 PDF" inside the header menu. It is styled to automatically fit inside a clean single sheet of A4!</p>
+        </div>
+      </div>
+
+      <!-- THE PRINT SHEET CONTAINER (Exact 210mm x 297mm bounds) -->
+      <div id="print-sheet" class="print-container mx-auto bg-white border border-slate-300 print:border-none shadow-2xl print:shadow-none p-6 text-slate-900 text-xs font-serif leading-relaxed relative flex flex-col justify-between overflow-hidden">
+        
+        <div>
+          <!-- 1. BRANDING HEADER SECTION -->
+          <div class="flex items-center justify-between border-b-2 border-slate-800 pb-2 mb-2.5">
+            
+            <!-- Full Width Left Side: Reconstructed BrainDEE Logo & Description (Stretched to span full header bar, right box removed) -->
+            <div class="flex items-center gap-3 w-full">
+              <div class="w-14 h-14 bg-white rounded-lg border-2 border-amber-500 p-0.5 flex-shrink-0 flex items-center justify-center overflow-hidden">
+                <img 
+                  id="print-sheet-logo" 
+                  src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" 
+                  alt="BrainDEE Logo" 
+                  class="w-full h-full object-contain"
+                  onerror="this.style.display='none'; document.getElementById('print-logo-fallback').classList.remove('hidden');"
+                />
+                <svg id="print-logo-fallback" viewBox="0 0 100 100" class="hidden w-full h-full">
+                  <path d="M50,15 L80,25 L80,55 C80,75 50,90 50,90 C50,90 20,75 20,55 L20,25 Z" fill="#0c0a09" stroke="#d97706" strokeWidth="4" />
+                  <path d="M38,35 H52 C60,35 64,38 64,43 C64,47 61,50 54,50 H38 Z" fill="none" stroke="#fff" strokeWidth="4" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M38,50 H54 C62,50 66,54 66,59 C66,65 61,68 52,68 H38 Z" fill="none" stroke="#d97706" strokeWidth="4" stroke-linecap="round" stroke-linejoin="round" />
+                  <line x1="38" y1="35" x2="38" y2="68" stroke="#fff" stroke-width="5" stroke-linecap="round" />
+                </svg>
+              </div>
+              <div class="flex-grow">
+                <h2 class="text-[20px] font-black tracking-wider text-slate-900 leading-none uppercase font-sans">
+                  BrainDEE ACADEMY
+                </h2>
+                <p class="text-[10px] font-bold text-amber-700 italic tracking-wide leading-tight mt-0.5 font-sans">
+                  Creating Mathamagicians
+                </p>
+                <p class="text-[7.5px] text-slate-500 leading-tight font-sans mt-1">
+                  Regd. Off: Flat no:403, Sai Sreeja’s Devi Heights, Hill Crest Society Rd, Mithila Nagar, Aditya Hills, Pragathi Nagar, Hyderabad, Telangana – 500090<br/>
+                  Email: Braindeeabacus@gmail.com | Phone: 9952705627
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 2. SUB HEADER (Office Ref Code Box) -->
+          <div class="grid grid-cols-12 border border-slate-800 mb-2.5 text-[10px] font-sans">
+            
+            <!-- Left block -->
+            <div class="col-span-6 border-r border-slate-800 p-2 flex flex-col justify-center">
+              <div class="flex items-center gap-1">
+                <span class="font-bold text-[9px] text-slate-700 uppercase">Location:</span>
+                <span id="print-location" class="border-b border-slate-300 flex-grow px-1 font-semibold text-slate-900 text-xs min-h-[18px]"></span>
+              </div>
+            </div>
+
+            <!-- Right block -->
+            <div class="col-span-6 grid grid-rows-2 text-[9px]">
+              <div class="grid grid-cols-2 border-b border-slate-800">
+                <div class="px-2 py-1.5 border-r border-slate-800 font-bold text-slate-600">Office Ref. No.</div>
+                <div class="px-2 py-1.5 font-mono text-right font-bold text-slate-800">MF-BD/HYD/2026</div>
+              </div>
+              <div class="grid grid-cols-2">
+                <div class="col-span-1 px-2 py-1.5 border-r border-slate-800 font-bold text-slate-600">Date</div>
+                <div id="print-date" class="col-span-1 font-mono text-center font-semibold text-slate-950 min-h-[18px]"></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- 3. APPLICATION LEVEL TITLE & COURSE LEVEL OPTIONS -->
+          <div class="border border-slate-800 mb-2.5 overflow-hidden font-sans">
+            <div class="bg-slate-800 text-white text-center font-black py-1.5 tracking-[0.2em] text-[11px] uppercase">
+              STUDENT APPLICATION FORM
+            </div>
+            
+            <!-- Dynamic Select Level Checkboxes on printable sheet -->
+            <div class="p-2 bg-slate-50 grid grid-cols-4 gap-2 text-[8px] leading-tight border-t border-slate-800" id="print-level-selection-grid">
+              <!-- Grid items automatically updated via JS state changes -->
+            </div>
+          </div>
+
+          <!-- 4. DETAILS GRID -->
+          <div class="border border-slate-800 mb-2.5 grid grid-cols-12 text-[10px]">
+            
+            <!-- Student Name Block (Spans full 12 columns for maximum writing space!) -->
+            <div class="col-span-12 border-b border-slate-800 p-2 bg-slate-50/30">
+              <span class="font-bold text-[9px] text-slate-700 block mb-1.5 uppercase tracking-wider">
+                Name of the Student (in block letters only)
+              </span>
+              <div class="flex gap-0.5 justify-start" id="print-name-char-grid">
+                <!-- 28 Character cells generated by JS -->
+              </div>
+            </div>
+
+            <!-- DOB, Age, Sex, Mother Tongue, Parents & Photo Row (Spans full 12 columns) -->
+            <div class="col-span-12 grid grid-cols-12 border-b border-slate-800">
+              
+              <!-- Left side metadata: Takes up 9 columns to fit beautifully next to the 3-column passport photo -->
+              <div class="col-span-9 border-r border-slate-800 flex flex-col">
+                
+                <!-- DOB, Age & Sex Block -->
+                <div class="grid grid-cols-12 border-b border-slate-800 text-[9px] py-1.5 items-center">
+                  <!-- DOB -->
+                  <div class="col-span-4 border-r border-slate-800 px-2 flex items-center gap-1">
+                    <span class="font-bold text-slate-700">Date of Birth:</span>
+                    <span id="print-dob" class="font-mono font-bold text-[10.5px] text-slate-900 border-b border-slate-300 flex-grow min-h-[18px]"></span>
+                  </div>
+
+                  <!-- Age -->
+                  <div class="col-span-3 border-r border-slate-800 px-2 flex items-center gap-1">
+                    <span class="font-bold text-slate-700">Age:</span>
+                    <span id="print-age" class="font-mono font-bold text-xs text-slate-900 border-b border-slate-300 px-2 flex-grow text-center min-h-[18px]"></span>
+                  </div>
+
+                  <!-- Gender checkboxes -->
+                  <div class="col-span-5 px-2 flex items-center justify-around">
+                    <span class="font-bold text-slate-700">Sex:</span>
+                    <div class="flex items-center gap-1.5">
+                      <div id="print-gender-male-box" class="w-3 h-3 border border-slate-800 rounded-sm flex items-center justify-center font-bold text-[8px]">
+                        <!-- Checkmark if Male -->
+                      </div>
+                      <span class="font-semibold text-slate-700">Male</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                      <div id="print-gender-female-box" class="w-3 h-3 border border-slate-800 rounded-sm flex items-center justify-center font-bold text-[8px]">
+                        <!-- Checkmark if Female -->
+                      </div>
+                      <span class="font-semibold text-slate-700">Female</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mother Tongue & Email Block -->
+                <div class="grid grid-cols-12 border-b border-slate-800 text-[9px] py-1.5 items-center">
+                  <div class="col-span-5 border-r border-slate-800 px-2 flex items-center gap-1">
+                    <span class="font-bold text-slate-700">Mother Tongue:</span>
+                    <span id="print-motherTongue" class="font-bold text-slate-900 uppercase border-b border-slate-300 flex-grow min-h-[18px]"></span>
+                  </div>
+                  <div class="col-span-7 px-2 flex items-center gap-1">
+                    <span class="font-bold text-slate-700">Email ID:</span>
+                    <span id="print-email" class="font-semibold text-slate-900 font-mono text-[8.5px] border-b border-slate-300 flex-grow min-h-[18px]"></span>
+                  </div>
+                </div>
+
+                <!-- Father's Name Row (Spans full 9 cols of left container for maximum space) -->
+                <div class="border-b border-slate-800 p-1.5 flex items-center gap-1 text-[9px]">
+                  <span class="font-bold text-slate-700 min-w-[80px]">Father's Name:</span>
+                  <span id="print-fatherName" class="font-bold text-slate-900 uppercase border-b border-slate-300 flex-grow min-h-[18px]"></span>
+                </div>
+
+                <!-- Father's Mobile & Occupation -->
+                <div class="grid grid-cols-12 border-b border-slate-800 text-[9px]">
+                  <div class="col-span-6 border-r border-slate-800 p-1.5 flex items-center gap-1">
+                    <span class="font-bold text-slate-700">Father's Mobile:</span>
+                    <span id="print-fatherPhone" class="font-mono font-semibold text-slate-900 border-b border-slate-300 flex-grow min-h-[18px]"></span>
+                  </div>
+                  <div class="col-span-6 p-1.5 flex items-center gap-1">
+                    <span class="font-bold text-slate-700">Father's Occupation:</span>
+                    <span id="print-fatherOccup" class="font-semibold text-slate-900 uppercase border-b border-slate-300 flex-grow min-h-[18px]"></span>
+                  </div>
+                </div>
+
+                <!-- Mother's Name Row (Spans full 9 cols) -->
+                <div class="border-b border-slate-800 p-1.5 flex items-center gap-1 text-[9px]">
+                  <span class="font-bold text-slate-700 min-w-[80px]">Mother's Name:</span>
+                  <span id="print-motherName" class="font-bold text-slate-900 uppercase border-b border-slate-300 flex-grow min-h-[18px]"></span>
+                </div>
+
+                <!-- Mother's Mobile & Occupation -->
+                <div class="grid grid-cols-12 text-[9px]">
+                  <div class="col-span-6 border-r border-slate-800 p-1.5 flex items-center gap-1">
+                    <span class="font-bold text-slate-700">Mother's Mobile:</span>
+                    <span id="print-motherPhone" class="font-mono font-semibold text-slate-900 border-b border-slate-300 flex-grow min-h-[18px]"></span>
+                  </div>
+                  <div class="col-span-6 p-1.5 flex items-center gap-1">
+                    <span class="font-bold text-slate-700">Mother's Occupation:</span>
+                    <span id="print-motherOccup" class="font-semibold text-slate-900 uppercase border-b border-slate-300 flex-grow min-h-[18px]"></span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Right Container: Student Passport photo area (3/12 cols) spanning adjacent to left metadata block -->
+              <div class="col-span-3 p-1.5 flex flex-col items-center justify-center text-center bg-slate-50 relative min-h-[155px]">
+                
+                <!-- Blank physical fallback frame -->
+                <div id="print-photo-placeholder" class="w-[90px] h-[110px] border border-slate-300 rounded-sm flex flex-col items-center justify-center bg-white p-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-300 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span class="text-[7px] font-bold text-slate-400 uppercase tracking-wider leading-tight">Affix Photo</span>
+                  <span class="text-[6px] text-slate-300">Passport Size</span>
+                </div>
+
+                <!-- Live dynamic printed photo container -->
+                <div id="print-photo-frame" class="hidden w-[90px] h-[110px] border border-slate-800 rounded-sm bg-white overflow-hidden shadow-sm">
+                  <img id="print-photo-img" class="w-full h-full object-cover" src="" alt="Student Photo" />
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Address Details (Spans full width) -->
+            <div class="col-span-12 border-b border-slate-800 p-1.5 flex items-start gap-1">
+              <span class="font-bold text-slate-700 min-w-[120px]">Residential Address:</span>
+              <span id="print-address" class="text-slate-900 uppercase leading-relaxed font-semibold text-[9.5px] border-b border-slate-300 flex-grow min-h-[18px]"></span>
+            </div>
+
+            <!-- Contact / Class Info / Mode (3 Columns beautifully balanced) -->
+            <div class="col-span-12 border-b border-slate-800 grid grid-cols-12 text-[9px]">
+              <div class="col-span-6 border-r border-slate-800 p-1.5 flex items-center gap-1">
+                <span class="font-bold text-slate-700">Telephone/Cell No:</span>
+                <span id="print-phone" class="font-mono text-[11px] font-bold text-slate-950 tracking-wider border-b border-slate-300 flex-grow min-h-[18px]"></span>
+              </div>
+              <div class="col-span-3 border-r border-slate-800 p-1.5 flex items-center gap-1">
+                <span class="font-bold text-slate-700 text-[8px] uppercase">Class:</span>
+                <span id="print-classStudying" class="font-semibold text-slate-900 uppercase border-b border-slate-300 px-2 flex-grow min-h-[18px]"></span>
+              </div>
+              <div class="col-span-3 p-1.5 flex items-center gap-1">
+                <span class="font-bold text-slate-700 text-[8px] uppercase">Mode:</span>
+                <span id="print-classMode" class="font-semibold text-slate-900 uppercase border-b border-slate-300 px-2 flex-grow min-h-[18px]"></span>
+              </div>
+            </div>
+
+            <!-- School / College Info Row (Spans full width same as Residential Address) -->
+            <div class="col-span-12 border-b border-slate-800 p-1.5 flex items-center gap-1 text-[9px]">
+              <span class="font-bold text-slate-700 min-w-[120px]" id="print-schoolName-label">Name of School / College:</span>
+              <span id="print-schoolName" class="font-semibold text-slate-900 uppercase border-b border-slate-300 flex-grow min-h-[18px]"></span>
+            </div>
+
+            <!-- Course Instructor Info Row -->
+            <div class="col-span-12 border-b border-slate-800 p-1.5 flex items-center gap-1 text-[9px]">
+              <span class="font-bold text-slate-700 min-w-[120px]">Course Instructor (C.I.):</span>
+              <span id="print-ciName" class="font-semibold text-slate-900 uppercase border-b border-slate-300 flex-grow min-h-[18px]"></span>
+            </div>
+
+            <!-- Parent ID Verification Row (Space for ID compliance) -->
+            <div class="col-span-12 p-1.5 flex items-center gap-2 text-[9px]">
+              <span class="font-bold text-slate-700 whitespace-nowrap">Parent Identity Proof:</span>
+              <span id="print-parentIdType" class="font-semibold text-slate-900 border-b border-slate-300 px-1 min-w-[120px] text-center min-h-[18px] uppercase"></span>
+              <span class="font-bold text-slate-700 whitespace-nowrap">ID Number:</span>
+              <span id="print-parentIdNumber" class="font-mono font-semibold text-slate-900 border-b border-slate-300 px-1 flex-grow min-h-[18px] uppercase"></span>
+            </div>
+
+          </div>
+
+          <!-- 5. PARENT SIGNATURE SECTION -->
+          <div class="flex justify-between items-end mt-4 mb-2 font-sans text-[9px]">
+            <div class="text-slate-500 italic max-w-sm">
+              Note: Form must be completed fully. Admission criteria depends on age rules defined.
+            </div>
+            <div class="text-center w-52 pt-[1cm] relative">
+              <span id="print-parent-sig-mock" class="absolute bottom-4 left-0 right-0 mx-auto font-serif-custom text-[18px] italic text-slate-700 font-bold tracking-wide">
+                <!-- Mock Parent Signature Text -->
+              </span>
+              <span class="font-bold text-slate-800 text-[10px] uppercase tracking-wider block">SIGNATURE OF THE PARENT</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 6. FOR FRANCHISEE USE ONLY SECTION -->
+        <div class="border border-slate-800 bg-slate-50/50 rounded-sm font-sans mt-2.5">
+          
+          <div class="bg-slate-800 text-white text-center font-bold py-1 tracking-wider text-[9px] uppercase">
+            For Franchisee Use Only
+          </div>
+          
+          <div class="p-2 grid grid-cols-12 gap-y-1.5 gap-x-2 text-[8.5px] text-slate-700">
+            
+            <div class="col-span-4 flex items-center gap-1.5">
+              <span class="font-bold text-slate-600 whitespace-nowrap">Student Code No.</span>
+              <span id="print-studentCodeNo" class="border-b border-slate-300 font-mono font-bold text-slate-900 flex-grow px-1"></span>
+            </div>
+
+            <div class="col-span-4 flex items-center gap-1.5">
+              <span class="font-bold text-slate-600 whitespace-nowrap">Date of Admission</span>
+              <span id="print-dateOfAdmission" class="border-b border-slate-300 font-mono font-bold text-slate-900 flex-grow px-1 text-center"></span>
+            </div>
+
+            <div class="col-span-4 flex items-center gap-1.5">
+              <span class="font-bold text-slate-600 whitespace-nowrap">Fee Receipt No.</span>
+              <span id="print-feeReceiptNo" class="border-b border-slate-300 font-mono font-bold text-slate-900 flex-grow px-1"></span>
+            </div>
+
+            <!-- Integrated cloud payment tracking details inside Franchise drawer -->
+            <div class="col-span-12 flex items-center gap-1.5">
+              <span class="font-bold text-slate-600 whitespace-nowrap text-amber-700">UTR / Txn No:</span>
+              <span id="print-utrNumber" class="border-b border-slate-300 font-mono font-bold text-slate-900 flex-grow px-1"></span>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER BAR -->
+  <footer class="no-print bg-slate-900 text-slate-400 text-center py-6 border-t border-slate-800 text-xs">
+    <div class="max-w-7xl mx-auto px-4">
+      <p>© 2026 BrainDEE Academy - Master Franchise of Mental Arithmetic systems. All rights reserved.</p>
+      <p class="mt-1 text-slate-500">Optimized for Google Chrome & Safari PDF Printing. Make sure to toggle "Background Graphics" in the print settings for rich gold shield rendering.</p>
+    </div>
+  </footer>
+
+  <!-- DYNAMIC SECURE SEQUENTIAL CLOUD UPLOADING LOADER SCREEN -->
+  <div id="upload-loader" class="hidden fixed inset-0 z-[200] flex flex-col items-center justify-center bg-slate-950/90 backdrop-blur-md text-white">
+    <div class="relative w-24 h-24 mb-6">
+      <div class="absolute inset-0 rounded-full border-4 border-amber-500/20 animate-ping"></div>
+      <div class="absolute inset-0 rounded-full border-4 border-t-amber-500 border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
+      <div class="absolute inset-2 bg-slate-900 rounded-full flex items-center justify-center p-1.5">
+        <svg viewBox="0 0 100 100" class="w-10 h-10">
+          <path d="M50,15 L80,25 L80,55 C80,75 50,90 50,90 C50,90 20,75 20,55 L20,25 Z" fill="#000" stroke="#d97706" stroke-width="4" />
+          <path d="M38,35 H52 C60,35 64,38 64,43 C64,47 61,50 54,50 H38 Z" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M38,50 H54 C62,50 66,54 66,59 C66,65 61,68 52,68 H38 Z" fill="none" stroke="#d97706" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+          <line x1="38" y1="35" x2="38" y2="68" stroke="#fff" stroke-width="5" stroke-linecap="round" />
+        </svg>
+      </div>
+    </div>
+    <h4 class="text-xl font-bold tracking-wider text-amber-400">BrainDEE Secure Cloud Node</h4>
+    <p id="loader-text" class="text-sm text-slate-300 mt-2 font-mono">Initializing upload sequence...</p>
+    <div class="w-64 bg-slate-800 rounded-full h-1.5 mt-4 overflow-hidden border border-slate-700">
+      <div id="loader-bar" class="bg-amber-500 h-full w-12 rounded-full animate-pulse transition-all duration-300" style="width: 15%"></div>
+    </div>
+  </div>
+
+  <!-- SUCCESS POPUP MODAL -->
+  <div id="success-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-t-4 border-emerald-500 relative transform transition-all">
+      
+      <!-- Close Button -->
+      <button
+        onclick="closeModal()"
+        class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Icon -->
+      <div class="mx-auto w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+
+      <!-- Content -->
+      <h3 class="text-xl font-bold text-slate-900 text-center">Application Saved Successfully!</h3>
+      <p class="text-sm text-slate-500 text-center mt-2 leading-relaxed">
+        We have generated a digital record for <strong id="modal-student-name">Student</strong> and created Registration ID: <span id="modal-app-id" class="font-mono font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">-</span>.
+      </p>
+
+      <div class="mt-4 p-3 bg-amber-50 rounded-lg text-xs text-amber-900 leading-normal border border-amber-100">
+        <strong>WhatsApp Action Required:</strong> Trigger instant messaging to report this student's registration directly to the Master Franchise admin.
+      </div>
+
+      <!-- Dynamic Buttons -->
+      <div class="mt-6 flex flex-col gap-2">
+        <button
+          onclick="triggerWhatsAppNotification()"
+          class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 text-sm shadow transition"
+        >
+          <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12.012 2c-5.506 0-9.988 4.482-9.988 9.988 0 1.758.459 3.473 1.332 4.982L2 22l5.18-1.359c1.465.8 3.109 1.22 4.821 1.22h.005c5.506 0 10.012-4.482 10.012-9.988C22 4.482 17.518 2 12.012 2zm6.052 14.161c-.248.696-1.442 1.29-1.992 1.359-.514.064-1.18.092-1.895-.142-.429-.142-.988-.344-1.696-.651-3.003-1.303-4.945-4.359-5.097-4.56-.147-.202-1.206-1.606-1.206-3.064 0-1.459.761-2.174 1.032-2.472.243-.271.651-.413.982-.413h.349c.248 0 .477.014.683.472.257.573.88 2.147.954 2.303.078.156.128.344.023.555-.101.211-.151.344-.303.523-.151.179-.321.399-.459.537-.156.156-.321.326-.138.642.183.312.812 1.339 1.743 2.17.1.1.1.1.2.2.821.729 1.505.954 1.83.954s.596-.33.784-.541c.183-.211.784-1.119.991-1.495.206-.376.413-.312.693-.206.275.11 1.748.826 2.05 1.005.3.179.5.266.573.394.073.128.073.743-.174 1.439z"/>
+          </svg>
+          Send via WhatsApp Now
+        </button>
+        <button
+          onclick="closeModalAndGoPrint()"
+          class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold py-2 rounded-xl text-sm transition"
+        >
+          Go to Printable Page
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CUSTOM MODAL ALERT (Replacement for window.alert) -->
+  <div id="custom-alert-modal" class="hidden fixed inset-0 z-[250] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border-t-4 border-rose-500 relative">
+      <h3 id="alert-title" class="text-lg font-bold text-slate-950">Notice</h3>
+      <p id="alert-message" class="text-sm text-slate-600 mt-2 leading-relaxed"></p>
+      <div class="mt-6 flex justify-end">
+        <button onclick="closeCustomAlert()" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2 px-6 rounded-lg text-sm transition">Ok</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE SCRIPT LOGIC -->
+  <script>
+    
+    // Custom Alert Handlers to avoid standard window.alert blocks
+    window.showAlert = function(title, message) {
+      document.getElementById('alert-title').innerText = title;
+      document.getElementById('alert-message').innerText = message;
+      document.getElementById('custom-alert-modal').classList.remove('hidden');
+    }
+    
+    window.closeCustomAlert = function() {
+      document.getElementById('custom-alert-modal').classList.add('hidden');
+    }
+
+    // Date formatting helper DD/MM/YYYY
+    function getFormattedToday() {
+      const today = new Date();
+      const dd = String(today.getDate()).padStart(2, '0');
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const yyyy = today.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    }
+
+    // State management mirroring structure - Completely Empty on Load!
+    const state = {
+      formData: {
+        location: '',
+        date: '',
+        studentName: '',
+        dob: '',
+        age: '',
+        gender: '',
+        motherTongue: '',
+        fatherName: '',
+        fatherPhone: '',
+        fatherOccup: '',
+        motherName: '',
+        motherPhone: '',
+        motherOccup: '',
+        email: '',
+        address: '',
+        phone: '',
+        classStudying: '',
+        classMode: '',
+        schoolName: '',
+        selectedLevel: '',
+        paymentMethod: '',
+        utrNumber: '',
+        studentCodeNo: '',
+        dateOfAdmission: '',
+        feeReceiptNo: '',
+        ciName: '',
+        studentPhoto: '',
+        paymentProof: '',
+        parentIdType: '',
+        parentIdNumber: '',
+        parentIdProof: ''
+      },
+      files: {
+        studentPhotoFile: null,
+        paymentProofFile: null,
+        parentIdProofFile: null
+      },
+      downloadUrls: {
+        studentPhotoUrl: '',
+        paymentProofUrl: '',
+        parentIdProofUrl: ''
+      },
+      activeTab: 'online',
+      adminPhone: '918688303033',
+      generatedAppId: ''
+    };
+
+    // Course Level Definition matching specifications
+    const courseLevels = [
+      { id: 'j1', name: 'Junior Level 1 (5 years)', desc: 'Fundamental concepts, introduction to arithmetic principles.' },
+      { id: 'j2', name: 'Junior Level 2 (5 years+)', desc: 'Extended math fundamentals and quick calculations.' },
+      { id: 's1', name: 'Senior Level 1 (8 years+)', desc: 'Advanced mental calculation, high speed focus.' },
+      { id: 's2', name: 'Senior Level 2 and above (has to complete level 1)', desc: 'Elite math proficiency & supreme abacus dexterity.' },
+    ];
+
+    // Initialize local counters derived from the user's uploaded WhatsApp screenshot sequence
+    if (!localStorage.getItem('bd_online_counter')) {
+      localStorage.setItem('bd_online_counter', '396');
+    }
+    if (!localStorage.getItem('bd_offline_counter')) {
+      localStorage.setItem('bd_offline_counter', '234');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Auto-populate the date fields with current date (Non-editable)
+      const todayStr = getFormattedToday();
+      state.formData.date = todayStr;
+      state.formData.dateOfAdmission = todayStr;
+
+      // Setup initial input values in the form
+      Object.keys(state.formData).forEach(key => {
+        const el = document.getElementById(`form-${key}`);
+        if (el && key !== 'studentPhoto' && key !== 'paymentProof' && key !== 'parentIdProof') {
+          el.value = state.formData[key];
+        }
+      });
+
+      // Set admin phone field initial
+      document.getElementById('admin-phone-input').value = state.adminPhone;
+
+      // Populate elements
+      renderCourseLevelSelection();
+      calculateAgeFromDob();
+      handlePaymentMethodChange(state.formData.paymentMethod);
+      syncFormToPrint();
+    });
+
+    // Swapping interactive view tabs
+    function switchTab(tabName) {
+      state.activeTab = tabName;
+      const onlineBtn = document.getElementById('tab-online-btn');
+      const printBtn = document.getElementById('tab-print-btn');
+      const onlineView = document.getElementById('online-view');
+      const printViewContainer = document.getElementById('print-view-container');
+
+      if (tabName === 'online') {
+        onlineBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150 flex items-center gap-2 bg-amber-500 text-slate-950 shadow-md";
+        printBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150 flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700";
+        onlineView.classList.remove('hidden');
+        printViewContainer.classList.add('hidden');
+      } else {
+        printBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150 flex items-center gap-2 bg-amber-500 text-slate-950 shadow-md";
+        onlineBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-150 flex items-center gap-2 bg-slate-800 text-slate-300 hover:bg-slate-700";
+        onlineView.classList.add('hidden');
+        printViewContainer.classList.remove('hidden');
+      }
+    }
+
+    // Dynamic Course Level renderer for interactive screen
+    function renderCourseLevelSelection() {
+      const container = document.getElementById('course-level-grid');
+      container.innerHTML = '';
+
+      courseLevels.forEach(level => {
+        const isSelected = state.formData.selectedLevel === level.name;
+        const card = document.createElement('div');
+        card.className = `cursor-pointer p-4 rounded-xl border-2 transition-all duration-250 flex flex-col justify-between ${
+          isSelected ? 'border-amber-500 bg-amber-50/50 shadow-sm' : 'border-slate-200 hover:border-slate-300 bg-white'
+        }`;
+        card.onclick = () => {
+          updateState('selectedLevel', level.name);
+          renderCourseLevelSelection();
+        };
+
+        const isJunior = level.id.startsWith('j');
+        const badgeColor = isJunior ? 'bg-sky-100 text-sky-800' : 'bg-indigo-100 text-indigo-800';
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${badgeColor}">
+                ${isJunior ? 'Junior' : 'Senior'}
+              </span>
+              <input
+                type="radio"
+                name="course-level"
+                class="text-amber-500 focus:ring-amber-500"
+                ${isSelected ? 'checked' : ''}
+                readOnly
+              />
+            </div>
+            <h4 class="font-bold text-sm text-slate-900 leading-snug">${level.name}</h4>
+            <p class="text-xs text-slate-500 mt-1 leading-relaxed">${level.desc}</p>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Live calculation of Age based on DOB input
+    function calculateAgeFromDob() {
+      const dobStr = state.formData.dob;
+      if (dobStr) {
+        const birthDate = new Date(dobStr);
+        const today = new Date();
+        let calculatedAge = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+          calculatedAge--;
+        }
+        const finalAge = calculatedAge > 0 ? calculatedAge.toString() : '0';
+        state.formData.age = finalAge;
+        document.getElementById('form-age').value = finalAge;
+      } else {
+        state.formData.age = '';
+        document.getElementById('form-age').value = '';
+      }
+    }
+
+    // Handles dynamic calculation of the student code based on online/offline classes mode
+    function handleClassModeChange(val) {
+      updateState('classMode', val);
+      
+      const codeInput = document.getElementById('form-studentCodeNo');
+      if (val === 'Online') {
+        const onlineSeq = localStorage.getItem('bd_online_counter') || '396';
+        const codeValue = `BD-OL-A${onlineSeq}`;
+        updateState('studentCodeNo', codeValue);
+        if (codeInput) codeInput.value = codeValue;
+      } else if (val === 'Offline') {
+        const offlineSeq = localStorage.getItem('bd_offline_counter') || '234';
+        const codeValue = `BD-OF-C${offlineSeq}`;
+        updateState('studentCodeNo', codeValue);
+        if (codeInput) codeInput.value = codeValue;
+      } else {
+        updateState('studentCodeNo', '');
+        if (codeInput) codeInput.value = '';
+      }
+    }
+
+    // Handles single value updates
+    function updateState(key, value) {
+      // Don't let users alter non-editable automated values directly via malicious events
+      if (key === 'date' || key === 'dateOfAdmission' || key === 'studentCodeNo') return;
+      state.formData[key] = value;
+      if (key === 'dob') {
+        calculateAgeFromDob();
+      }
+      syncFormToPrint();
+    }
+
+    // Handle payment method change layout toggles with conditional Fee Receipt applicability rules
+    function handlePaymentMethodChange(val) {
+      updateState('paymentMethod', val);
+      const onlineFields = document.getElementById('online-payment-fields');
+      const utrInput = document.getElementById('form-utrNumber');
+      const feeReceiptInput = document.getElementById('form-feeReceiptNo');
+      
+      if (val === 'Online Payment') {
+        onlineFields.classList.remove('hidden');
+        utrInput.setAttribute('required', 'required');
+
+        if (feeReceiptInput) {
+          feeReceiptInput.removeAttribute('disabled');
+          feeReceiptInput.removeAttribute('readonly');
+          feeReceiptInput.classList.remove('bg-slate-100', 'text-slate-500', 'cursor-not-allowed');
+          feeReceiptInput.placeholder = "e.g. REC-9082";
+          if (state.formData.feeReceiptNo === 'N/A (CASH)' || state.formData.feeReceiptNo === 'Select Payment Method') {
+            state.formData.feeReceiptNo = '';
+            feeReceiptInput.value = '';
+          }
+        }
+      } else {
+        onlineFields.classList.add('hidden');
+        utrInput.removeAttribute('required');
+        
+        // Reset sub-fields
+        state.formData.utrNumber = '';
+        if (state.files.paymentProofFile) {
+          removePaymentProof({ preventDefault: () => {}, stopPropagation: () => {} });
+        }
+
+        if (feeReceiptInput) {
+          feeReceiptInput.setAttribute('disabled', 'disabled');
+          feeReceiptInput.setAttribute('readonly', 'readonly');
+          feeReceiptInput.classList.add('bg-slate-100', 'text-slate-500', 'cursor-not-allowed');
+
+          if (val === 'Cash') {
+            state.formData.feeReceiptNo = 'N/A (CASH)';
+            feeReceiptInput.value = 'N/A (CASH)';
+            feeReceiptInput.placeholder = "Not applicable for Cash";
+          } else {
+            state.formData.feeReceiptNo = 'Select Payment Method';
+            feeReceiptInput.value = 'Select Payment Method';
+            feeReceiptInput.placeholder = "Select Payment Method first";
+          }
+        }
+      }
+      syncFormToPrint();
+    }
+
+    // Custom Mother Tongue dropdown specify controller
+    function handleMotherTongueChange(val) {
+      const otherWrapper = document.getElementById('other-mother-tongue-wrapper');
+      const otherInput = document.getElementById('form-motherTongue-other');
+      
+      if (val === "Other's") {
+        otherWrapper.classList.remove('hidden');
+        otherInput.value = '';
+        updateState('motherTongue', '');
+      } else {
+        otherWrapper.classList.add('hidden');
+        otherInput.value = '';
+        updateState('motherTongue', val);
+      }
+    }
+
+    // Photo input FileReader logic
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (file.size > 2 * 1024 * 1024) {
+          window.showAlert('Limit Exceeded', 'Photo size exceeds 2MB limit. Please upload a smaller passport photo.');
+          return;
+        }
+        state.files.studentPhotoFile = file; // Save raw file object for Firebase Storage
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const base64Data = e.target.result;
+          state.formData.studentPhoto = base64Data;
+          
+          // Update Form UI preview elements
+          document.getElementById('photo-upload-placeholder').classList.add('hidden');
+          const preview = document.getElementById('photo-upload-preview');
+          preview.classList.remove('hidden');
+          document.getElementById('form-photo-thumbnail').src = base64Data;
+          
+          syncFormToPrint();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Removes student photo and resets DOM view
+    function removePhoto(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      state.files.studentPhotoFile = null;
+      state.formData.studentPhoto = '';
+      
+      document.getElementById('form-studentPhoto').value = '';
+      document.getElementById('photo-upload-placeholder').classList.remove('hidden');
+      document.getElementById('photo-upload-preview').classList.add('hidden');
+      document.getElementById('form-photo-thumbnail').src = '';
+      
+      syncFormToPrint();
+    }
+
+    // Parent ID document FileReader upload handlers
+    function handleParentIdProofUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (file.size > 2 * 1024 * 1024) {
+          window.showAlert('Limit Exceeded', 'Document proof exceeds 2MB limit. Please upload a smaller copy.');
+          return;
+        }
+        state.files.parentIdProofFile = file;
+        const placeholder = document.getElementById('parent-id-upload-placeholder');
+        const preview = document.getElementById('parent-id-upload-preview');
+        const badge = document.getElementById('parent-id-file-badge');
+
+        placeholder.classList.add('hidden');
+        preview.classList.remove('hidden');
+        badge.innerText = file.name;
+
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            state.formData.parentIdProof = e.target.result;
+            syncFormToPrint();
+          };
+          reader.readAsDataURL(file);
+        } else {
+          state.formData.parentIdProof = '[PDF attached]';
+          syncFormToPrint();
+        }
+      }
+    }
+
+    // Removes parent verification ID proof and resets form DOM
+    function removeParentIdProof(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      state.files.parentIdProofFile = null;
+      state.formData.parentIdProof = '';
+
+      document.getElementById('form-parentIdProof').value = '';
+      document.getElementById('parent-id-upload-placeholder').classList.remove('hidden');
+      document.getElementById('parent-id-upload-preview').classList.add('hidden');
+      document.getElementById('parent-id-file-badge').innerText = '';
+
+      syncFormToPrint();
+    }
+
+    // Payment Proof input FileReader logic
+    function handlePaymentProofUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        if (file.size > 2 * 1024 * 1024) {
+          window.showAlert('Limit Exceeded', 'Receipt screenshot exceeds 2MB limit. Please upload a smaller receipt proof.');
+          return;
+        }
+        state.files.paymentProofFile = file; // Save raw file object for Firebase Storage
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const base64Data = e.target.result;
+          state.formData.paymentProof = base64Data;
+          
+          // Update Form UI preview elements
+          document.getElementById('payment-upload-placeholder').classList.add('hidden');
+          const preview = document.getElementById('payment-upload-preview');
+          preview.classList.remove('hidden');
+          document.getElementById('form-payment-thumbnail').src = base64Data;
+          
+          syncFormToPrint();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Removes transaction payment proof and resets DOM view
+    function removePaymentProof(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      state.files.paymentProofFile = null;
+      state.formData.paymentProof = '';
+      
+      document.getElementById('form-paymentProof').value = '';
+      document.getElementById('payment-upload-placeholder').classList.remove('hidden');
+      document.getElementById('payment-upload-preview').classList.add('hidden');
+      document.getElementById('form-payment-thumbnail').src = '';
+      
+      syncFormToPrint();
+    }
+
+    // Resets form state
+    function clearFormFields() {
+      // Setup current non-editable date values to preserve during cleanup
+      const todayStr = getFormattedToday();
+
+      Object.keys(state.formData).forEach(key => {
+        if (key !== 'date' && key !== 'dateOfAdmission') {
+          state.formData[key] = '';
+          const el = document.getElementById(`form-${key}`);
+          if (el && key !== 'studentPhoto' && key !== 'paymentProof' && key !== 'parentIdProof') el.value = '';
+        }
+      });
+      state.formData.selectedLevel = '';
+
+      // Re-apply and bind non-editable elements safely
+      state.formData.date = todayStr;
+      state.formData.dateOfAdmission = todayStr;
+      document.getElementById('form-date').value = todayStr;
+      document.getElementById('form-dateOfAdmission').value = todayStr;
+      document.getElementById('form-studentCodeNo').value = '';
+      
+      // Reset upload previews
+      document.getElementById('form-studentPhoto').value = '';
+      document.getElementById('photo-upload-placeholder').classList.remove('hidden');
+      document.getElementById('photo-upload-preview').classList.add('hidden');
+      document.getElementById('form-photo-thumbnail').src = '';
+
+      document.getElementById('form-paymentProof').value = '';
+      document.getElementById('payment-upload-placeholder').classList.remove('hidden');
+      document.getElementById('payment-upload-preview').classList.add('hidden');
+      document.getElementById('form-payment-thumbnail').src = '';
+
+      document.getElementById('form-parentIdProof').value = '';
+      document.getElementById('parent-id-upload-placeholder').classList.remove('hidden');
+      document.getElementById('parent-id-upload-preview').classList.add('hidden');
+
+      // Reset payment method conditional fields and Fee Receipt locking state
+      document.getElementById('form-paymentMethod').value = '';
+      handlePaymentMethodChange('');
+
+      // Reset file and download references
+      state.files.studentPhotoFile = null;
+      state.files.paymentProofFile = null;
+      state.files.parentIdProofFile = null;
+      state.downloadUrls.studentPhotoUrl = '';
+      state.downloadUrls.paymentProofUrl = '';
+      state.downloadUrls.parentIdProofUrl = '';
+
+      // Reset Mother Tongue Custom wrapper
+      document.getElementById('other-mother-tongue-wrapper').classList.add('hidden');
+      document.getElementById('form-motherTongue-other').value = '';
+
+      calculateAgeFromDob();
+      renderCourseLevelSelection();
+      syncFormToPrint();
+    }
+
+    // Updates physical view to match state values in real time
+    function syncFormToPrint() {
+      // Standard strings with clean hand-writing underline fallbacks (Uses CSS bottom borders for print reliability)
+      const printableFields = [
+        'location', 'date', 'motherTongue', 'email', 
+        'fatherName', 'fatherPhone', 'fatherOccup', 'motherName', 'motherPhone', 'motherOccup',
+        'address', 'phone', 'classStudying', 'classMode', 'schoolName', 'studentCodeNo',
+        'dateOfAdmission', 'feeReceiptNo', 'ciName',
+        'parentIdType', 'parentIdNumber'
+      ];
+
+      printableFields.forEach(field => {
+        const printEl = document.getElementById(`print-${field}`);
+        if (printEl) {
+          printEl.innerText = state.formData[field] || '';
+        }
+      });
+
+      // Synchronize UTR on paper form based on selection mode
+      const printUtr = document.getElementById('print-utrNumber');
+      if (printUtr) {
+        if (state.formData.paymentMethod === 'Cash') {
+          printUtr.innerText = 'CASH';
+        } else {
+          printUtr.innerText = state.formData.utrNumber || '';
+        }
+      }
+
+      // DOB Formatting
+      const dobPrint = document.getElementById('print-dob');
+      if (dobPrint) {
+        if (state.formData.dob) {
+          const [year, month, day] = state.formData.dob.split('-');
+          dobPrint.innerText = `${day}/${month}/${year}`;
+        } else {
+          dobPrint.innerText = '';
+        }
+      }
+
+      // Age format
+      const agePrint = document.getElementById('print-age');
+      if (agePrint) {
+        agePrint.innerText = state.formData.age || '';
+      }
+
+      // Live Print Photo Renderer
+      const printPlaceholder = document.getElementById('print-photo-placeholder');
+      const printFrame = document.getElementById('print-photo-frame');
+      const printImg = document.getElementById('print-photo-img');
+
+      if (state.formData.studentPhoto) {
+        printPlaceholder.classList.add('hidden');
+        printFrame.classList.remove('hidden');
+        printImg.src = state.formData.studentPhoto;
+      } else {
+        printPlaceholder.classList.remove('hidden');
+        printFrame.classList.add('hidden');
+        printImg.src = '';
+      }
+
+      // Sex checkmarks
+      const maleBox = document.getElementById('print-gender-male-box');
+      const femaleBox = document.getElementById('print-gender-female-box');
+      if (maleBox && femaleBox) {
+        if (state.formData.gender === 'Male') {
+          maleBox.className = "w-3 h-3 border border-slate-800 rounded-sm flex items-center justify-center font-bold text-[8px] bg-slate-800 text-white";
+          maleBox.innerText = '✓';
+          femaleBox.className = "w-3 h-3 border border-slate-800 rounded-sm flex items-center justify-center font-bold text-[8px]";
+          femaleBox.innerText = '';
+        } else if (state.formData.gender === 'Female') {
+          femaleBox.className = "w-3 h-3 border border-slate-800 rounded-sm flex items-center justify-center font-bold text-[8px] bg-slate-800 text-white";
+          femaleBox.innerText = '✓';
+          maleBox.className = "w-3 h-3 border border-slate-800 rounded-sm flex items-center justify-center font-bold text-[8px]";
+          maleBox.innerText = '';
+        } else {
+          maleBox.className = "w-3 h-3 border border-slate-800 rounded-sm flex items-center justify-center font-bold text-[8px]";
+          maleBox.innerText = '';
+          femaleBox.className = "w-3 h-3 border border-slate-800 rounded-sm flex items-center justify-center font-bold text-[8px]";
+          femaleBox.innerText = '';
+        }
+      }
+
+      // Interactive name letters box grid (Expanded to 28 slots for generous writing space)
+      const lettersContainer = document.getElementById('print-name-char-grid');
+      const previewContainer = document.getElementById('grid-boxes-preview');
+      
+      const cleanedName = state.formData.studentName.toUpperCase().replace(/[^A-Z\s]/g, '');
+      
+      if (lettersContainer) {
+        lettersContainer.innerHTML = '';
+        for (let i = 0; i < 28; i++) {
+          const char = cleanedName[i] || '';
+          const cell = document.createElement('div');
+          cell.className = "w-[22px] h-[26px] border border-slate-800 flex items-center justify-center text-[11px] font-bold font-mono bg-white text-slate-900 shadow-sm";
+          cell.innerText = char;
+          lettersContainer.appendChild(cell);
+        }
+      }
+
+      if (previewContainer) {
+        previewContainer.innerHTML = '';
+        for (let i = 0; i < 28; i++) {
+          const char = cleanedName[i] || '';
+          const cell = document.createElement('div');
+          cell.className = "w-5 h-5 flex items-center justify-center bg-white border border-slate-300 text-[10px] font-bold font-mono text-slate-700";
+          cell.innerText = char;
+          previewContainer.appendChild(cell);
+        }
+      }
+
+      // Selected Level on print selection layout
+      const printGrid = document.getElementById('print-level-selection-grid');
+      if (printGrid) {
+        printGrid.innerHTML = '';
+        const levelOptions = [
+          { l: 'Junior Level 1 (5 years)', label: 'JUNIOR LEVEL 1', age: 'Age: 5 Years' },
+          { l: 'Junior Level 2 (5 years+)', label: 'JUNIOR LEVEL 2', age: 'Age: 5+ Years' },
+          { l: 'Senior Level 1 (8 years+)', label: 'SENIOR LEVEL 1', age: 'Age: 8+ Years' },
+          { l: 'Senior Level 2 and above (has to complete level 1)', label: 'SENIOR LEVEL 2+', age: 'Prerequisite Required' },
+        ];
+
+        levelOptions.forEach(item => {
+          const isChecked = state.formData.selectedLevel === item.l;
+          const box = document.createElement('div');
+          box.className = `p-1.5 border rounded flex items-start gap-1.5 ${isChecked ? 'bg-amber-100/70 border-amber-600' : 'bg-white border-slate-300'}`;
+          box.innerHTML = `
+            <div class="w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center font-bold text-[9px] ${
+              isChecked ? 'bg-slate-800 border-slate-900 text-white' : 'bg-white border-slate-400'
+            }">
+              ${isChecked ? '✓' : ''}
+            </div>
+            <div>
+              <span class="font-bold block text-slate-800 text-[8.5px]">${item.label}</span>
+              <span class="text-slate-500 block text-[7.5px]">${item.age}</span>
+            </div>
+          `;
+          printGrid.appendChild(box);
+        });
+      }
+
+      // Mock Signature update
+      const mockSig = document.getElementById('print-parent-sig-mock');
+      if (mockSig) {
+        if (state.formData.motherName) {
+          const cleanName = state.formData.motherName.trim();
+          mockSig.innerText = `${cleanName.charAt(0)}. ${cleanName}`;
+        } else {
+          mockSig.innerText = '';
+        }
+      }
+    }
+
+    // Handles online registration submit actions
+    // Generates application, triggers secure sequential uploads to Firebase Storage, then reveals final status modal
+    async function handleOnlineSubmit(e) {
+      e.preventDefault();
+      
+      const loader = document.getElementById('upload-loader');
+      const loaderText = document.getElementById('loader-text');
+      const loaderBar = document.getElementById('loader-bar');
+      
+      loader.classList.remove('hidden');
+      loaderText.innerText = "Establishing secure cloud connection...";
+      loaderBar.style.width = "10%";
+
+      const appNumber = `BDA-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      state.generatedAppId = appNumber;
+
+      try {
+        // Step 1: Upload Student Passport Photo (if attached)
+        if (state.files.studentPhotoFile) {
+          loaderText.innerText = "Synchronizing Student Photo to Cloud Storage...";
+          loaderBar.style.width = "35%";
+          const ext = state.files.studentPhotoFile.name.split('.').pop();
+          const path = `applications/${appNumber}/student_photo.${ext}`;
+          
+          state.downloadUrls.studentPhotoUrl = await window.uploadFileToFirebase(state.files.studentPhotoFile, path);
+        }
+
+        // Step 2: Upload Parent Verification ID Document (if attached)
+        if (state.files.parentIdProofFile) {
+          loaderText.innerText = "Uploading parent verification identity proof document...";
+          loaderBar.style.width = "65%";
+          const ext = state.files.parentIdProofFile.name.split('.').pop();
+          const path = `applications/${appNumber}/parent_id_proof.${ext}`;
+
+          state.downloadUrls.parentIdProofUrl = await window.uploadFileToFirebase(state.files.parentIdProofFile, path);
+        }
+
+        // Step 3: Upload Payment screenshot Receipt proof (only if Online Payment mode is active and file is attached)
+        if (state.formData.paymentMethod === 'Online Payment' && state.files.paymentProofFile) {
+          loaderText.innerText = "Uploading verified payment screenshot proof...";
+          loaderBar.style.width = "90%";
+          const ext = state.files.paymentProofFile.name.split('.').pop();
+          const path = `applications/${appNumber}/payment_proof.${ext}`;
+          
+          state.downloadUrls.paymentProofUrl = await window.uploadFileToFirebase(state.files.paymentProofFile, path);
+        }
+
+        loaderText.innerText = "Finalizing Secure Enrollment Sequence...";
+        loaderBar.style.width = "100%";
+
+        // Persist and increment state counters inside the local browser sandbox upon successful submission
+        if (state.formData.classMode === 'Online') {
+          let currentOnline = parseInt(localStorage.getItem('bd_online_counter') || '396', 10);
+          localStorage.setItem('bd_online_counter', (currentOnline + 1).toString());
+        } else if (state.formData.classMode === 'Offline') {
+          let currentOffline = parseInt(localStorage.getItem('bd_offline_counter') || '234', 10);
+          localStorage.setItem('bd_offline_counter', (currentOffline + 1).toString());
+        }
+
+        setTimeout(() => {
+          loader.classList.add('hidden');
+          // Launch final modal
+          document.getElementById('modal-student-name').innerText = state.formData.studentName || 'New Student';
+          document.getElementById('modal-app-id').innerText = appNumber;
+          document.getElementById('success-modal').classList.remove('hidden');
+        }, 500);
+
+      } catch (error) {
+        console.error("Firebase Storage Upload failed: ", error);
+        loader.classList.add('hidden');
+
+        // Check if Anonymous auth failed as well
+        let detailedError = error.message;
+        if (!window.isFirebaseAuthorized) {
+          detailedError += `\n\n[DIAGNOSIS]: Silent authentication is offline. (Error: ${window.firebaseAuthError}).\nMake sure to enable 'Anonymous' Sign-In Provider under 'Authentication' in your Firebase console!`;
+        } else {
+          detailedError += `\n\n[DIAGNOSIS]: Your Storage security rules are blocking uploads. Make sure you have clicked 'Publish' after changing your storage rules to public!`;
+        }
+
+        window.showAlert("Upload Failed", "Sequential upload failed. Error details:\n" + detailedError);
+      }
+    }
+
+    // Close Modal View
+    function closeModal() {
+      document.getElementById('success-modal').classList.add('hidden');
+    }
+
+    // Redirect to printable template view
+    function closeModalAndGoPrint() {
+      closeModal();
+      switchTab('print');
+      setTimeout(() => {
+        window.print();
+      }, 400);
+    }
+
+    // Triggers WhatsApp admission alert payload containing direct Storage verification hyperlinks
+    function triggerWhatsAppNotification() {
+      const appNo = state.generatedAppId || 'BDA-NEW';
+      
+      // Setup payment and Parent ID proof fields
+      const paymentMethodStr = `\n*Payment Method:* ${state.formData.paymentMethod || 'Not specified'}`;
+      const utrStr = (state.formData.paymentMethod === 'Online Payment' && state.formData.utrNumber) ? `\n*UTR / Txn No:* ${state.formData.utrNumber}` : '';
+      const receiptLinkStr = (state.formData.paymentMethod === 'Online Payment' && state.downloadUrls.paymentProofUrl) ? `\n*Receipt Proof:* ${state.downloadUrls.paymentProofUrl}` : '';
+      const photoLinkStr = state.downloadUrls.studentPhotoUrl ? `\n*Student Photo:* ${state.downloadUrls.studentPhotoUrl}` : '';
+      const parentIdStr = state.formData.parentIdType ? `\n*Parent Verification Document:* ${state.formData.parentIdType} - ID: ${state.formData.parentIdNumber}` : '';
+      const parentIdLinkStr = state.downloadUrls.parentIdProofUrl ? `\n*Parent ID Proof File:* ${state.downloadUrls.parentIdProofUrl}` : '';
+
+      const formattedMsg = `*🚀 NEW ADMISSION APPLICATION - BrainDEE ACADEMY*
+------------------------------------------
+*Application No:* ${appNo}
+*Location:* ${state.formData.location || 'Not specified'}
+*Student Code No:* ${state.formData.studentCodeNo || 'Not generated'}
+*Course Applied:* ${state.formData.selectedLevel || 'Not selected'}
+
+*STUDENT DETAILS:*
+*Name:* ${(state.formData.studentName || 'Not specified').toUpperCase()}
+*DOB:* ${state.formData.dob || 'Not specified'} (Age: ${state.formData.age || 'N/A'})
+*Gender:* ${state.formData.gender || 'Not specified'}
+*Mother Tongue:* ${state.formData.motherTongue || 'Not specified'}
+*School/College:* ${state.formData.schoolName || 'Not specified'}
+*Class Studying:* ${state.formData.classStudying || 'Not selected'}
+*Mode of Classes:* ${state.formData.classMode || 'Not selected'}
+*C.I. Name:* ${state.formData.ciName || 'Not specified'}
+${photoLinkStr}
+
+*PARENT DETAILS:*
+*Father:* ${state.formData.fatherName || 'Not specified'} (Mob: ${state.formData.fatherPhone || 'N/A'} - ${state.formData.fatherOccup || 'N/A'})
+*Mother:* ${state.formData.motherName || 'Not specified'} (Mob: ${state.formData.motherPhone || 'N/A'} - ${state.formData.motherOccup || 'N/A'})
+*Contact No:* ${state.formData.phone || 'Not specified'}
+*Email:* ${state.formData.email || 'Not specified'}
+*Address:* ${state.formData.address || 'Not specified'}
+
+*PARENT IDENTITY VERIFICATION:* ${parentIdStr} ${parentIdLinkStr}
+
+*PAYMENT VERIFICATION:* ${paymentMethodStr} ${utrStr} ${receiptLinkStr}
+------------------------------------------
+_Submitted via BrainDEE Digital Portal_`;
+
+      const encodedMessage = encodeURIComponent(formattedMsg);
+      const cleanPhone = state.adminPhone.replace(/[^0-9]/g, '');
+      const whatsappUrl = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedMessage}`;
+      
+      window.open(whatsappUrl, '_blank');
+    }
+
+    // Trigger Print Operation
+    function triggerPrint() {
+      window.print();
+    }
+  </script>
+</body>
+</html>
