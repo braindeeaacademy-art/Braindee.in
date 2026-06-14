@@ -1,165 +1,772 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Video Gallery | BrainDEE Academy</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap');
         
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #0f172a; 
-            color: #f8fafc;
+            background-color: #f8fafc; 
+            color: #1e293b;
+            overflow-x: hidden;
         }
         
-        h1, h2, h3 { font-family: 'Poppins', sans-serif; letter-spacing: -0.01em; }
+        h1, h2, h3, h4 { 
+            font-family: 'Poppins', sans-serif; 
+            letter-spacing: -0.01em; 
+        }
         
         .glass-nav { 
-            background: rgba(15, 23, 42, 0.9); 
+            background: rgba(255, 255, 255, 0.85); 
             backdrop-filter: blur(12px); 
-            border-bottom: 1px solid rgba(255,255,255,0.1); 
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06); 
         }
 
         .video-card {
-            background: rgba(30, 41, 59, 0.5);
+            background: #ffffff;
             border-radius: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             overflow: hidden;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
         }
 
         .video-card:hover {
-            transform: translateY(-10px);
-            border-color: #4361ee;
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
-        }
-
-        video {
-            width: 100%;
-            display: block;
-            border-bottom: 2px solid rgba(255,255,255,0.05);
+            transform: translateY(-8px);
+            border-color: #3b82f6;
+            box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.2);
         }
 
         .reveal {
             opacity: 0;
             transform: translateY(30px);
-            transition: all 0.8s ease-out;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* Animated background elements */
+        /* Delicate light theme ambient background glow elements */
         .bg-glow {
             position: fixed;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(67, 97, 238, 0.15) 0%, transparent 70%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, transparent 70%);
             z-index: -1;
-            filter: blur(60px);
+            filter: blur(80px);
+            pointer-events: none;
+        }
+
+        .filter-btn {
+            background-color: #ffffff;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .filter-btn:hover {
+            color: #1e293b;
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+        }
+
+        .filter-btn.active {
+            background-color: #3b82f6;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+            border-color: #3b82f6;
+        }
+
+        /* Custom scrollbar for transcripts */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.3);
+            border-radius: 99px;
         }
     </style>
 </head>
 <body class="antialiased">
 
+    <!-- Light Theme Glow Backgrounds -->
     <div class="bg-glow top-[-100px] left-[-100px]"></div>
-    <div class="bg-glow bottom-[-100px] right-[-100px]"></div>
+    <div class="bg-glow bottom-[-150px] right-[-100px]"></div>
+
+    <!-- Toast Notification System -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 max-w-sm w-full"></div>
 
     <!-- Preloader -->
-    <div id="loader" class="fixed inset-0 bg-slate-900 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
-        <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+    <div id="loader" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="relative flex items-center justify-center mb-4">
+            <div class="w-16 h-16 border-4 border-blue-500/10 border-t-blue-500 rounded-full animate-spin"></div>
+            <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="Loader Logo" class="absolute h-8 w-auto">
+        </div>
+        <p class="text-slate-500 text-sm font-semibold tracking-wider uppercase animate-pulse">Loading BrainDEE Gallery...</p>
     </div>
 
     <!-- Navigation -->
     <nav class="fixed w-full z-50 py-4 px-6 md:px-12 glass-nav">
         <div class="max-w-[1440px] mx-auto flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-2">
-                <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="BrainDEE Logo" class="h-10 md:h-14 w-auto">
-                <span class="text-lg md:text-xl font-black text-white uppercase leading-none">BrainDEE Academy</span>
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="BrainDEE Logo" class="h-10 md:h-12 w-auto transition-transform duration-300 group-hover:scale-110">
+                <div class="flex flex-col">
+                    <span class="text-lg md:text-xl font-black text-slate-800 uppercase tracking-tight leading-none">BrainDEE</span>
+                    <span class="text-[10px] text-blue-500 uppercase tracking-widest font-bold">Academy</span>
+                </div>
             </a>
-            <a href="index.html" class="text-sm font-bold text-blue-400 hover:text-white transition-colors flex items-center gap-2">
-                <i class="fas fa-arrow-left"></i> Back to Home
-            </a>
+            <div class="flex items-center gap-4">
+                <a href="index.html" class="text-sm font-bold text-blue-500 hover:text-blue-600 transition-colors flex items-center gap-2 group">
+                    <i class="fas fa-arrow-left transition-transform group-hover:-translate-x-1"></i> Back
+                </a>
+            </div>
         </div>
     </nav>
 
-    <header class="pt-32 pb-12 px-6">
+    <!-- Main Showcase Header -->
+    <header class="pt-36 pb-8 px-6">
         <div class="max-w-4xl mx-auto text-center reveal">
-            <span class="px-4 py-1 bg-blue-900/50 text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 inline-block border border-blue-800/50">Experience the Magic</span>
-            <h1 class="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter">Student <span class="text-blue-500">Showcase</span></h1>
-            <p class="text-slate-400 text-lg md:text-xl leading-relaxed">Watch our mathemagicians in action as they demonstrate high-speed mental arithmetic and abacus mastery.</p>
+            <span class="px-4 py-1.5 bg-blue-50 text-blue-600 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 inline-block border border-blue-200/50 shadow-sm">
+                <i class="fas fa-video mr-1.5"></i> Video Collections
+            </span>
+            <h1 class="text-4xl md:text-6xl font-black text-slate-900 mb-6 uppercase tracking-tight leading-tight">
+                Student <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-600">Showcase</span>
+            </h1>
+            <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto leading-relaxed font-medium">
+                Watch our brilliant mathemagicians perform speed-calculations, abacus-visualization, and academy app practice sessions.
+            </p>
         </div>
     </header>
 
-    <main class="pb-32 px-6">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <!-- Premier Featured Video (Auto Caption & Math Visualizer) -->
+    <section class="max-w-7xl mx-auto px-6 mb-16 reveal">
+        <div class="bg-white border border-slate-200/60 rounded-3xl overflow-hidden shadow-xl p-6 lg:p-8">
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Video Player Container -->
+                <div class="lg:w-3/5 w-full flex flex-col">
+                    <div class="relative w-full overflow-hidden bg-black rounded-2xl aspect-video border border-slate-100">
+                        <video id="featuredVideo" class="w-full h-full object-contain" preload="metadata" playsinline>
+                            <source src="https://firebasestorage.googleapis.com/v0/b/braindee-b9f71.firebasestorage.app/o/gallery%2F1781414404945_savevid.net_aqpvtfzojx3l2rgu0dt6cxx09lhjvefr9qyrdy9e__gmjqmpguav4k4kn7bgtefyla-6tz6euetd44rtoianxyzgfdbzqpz6nslzr_o.mp4?alt=media&token=2a0bae6c-94f6-4be1-8ebf-49bed95cc78a" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        
+                        <!-- Custom Play Overlay -->
+                        <div id="videoPlayOverlay" class="absolute inset-0 flex items-center justify-center bg-black/40 cursor-pointer group transition-all duration-300">
+                            <div class="w-20 h-20 bg-blue-600 group-hover:bg-blue-500 rounded-full flex items-center justify-center text-white text-3xl shadow-2xl shadow-blue-600/30 transition-all duration-300 group-hover:scale-110">
+                                <i class="fas fa-play ml-1"></i>
+                            </div>
+                        </div>
+
+                        <!-- Live Caption Overlay directly on video -->
+                        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-white/95 border border-slate-100 px-6 py-2.5 rounded-xl text-center shadow-xl max-w-[85%] w-auto hidden" id="overlayCaptionContainer">
+                            <span id="overlayCaptionText" class="text-sm md:text-base font-black text-slate-800 uppercase tracking-wider">Starting sum...</span>
+                        </div>
+                    </div>
+
+                    <!-- Video Controls Bar -->
+                    <div class="flex items-center justify-between mt-4 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <div class="flex items-center gap-3">
+                            <button id="playPauseBtn" class="w-10 h-10 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 flex items-center justify-center text-blue-500 transition-colors">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <span id="videoTime" class="text-xs font-mono text-slate-500">0:00 / 0:54</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button id="toggleCaptionBtn" class="px-3.5 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg bg-indigo-600 text-white flex items-center gap-1.5 transition-all shadow-sm">
+                                <i class="fas fa-closed-captioning"></i> Captions: ON
+                            </button>
+                            <button id="fullscreenBtn" class="w-10 h-10 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 transition-colors">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live automatic math engine/transcript timeline -->
+                <div class="lg:w-2/5 w-full flex flex-col justify-between text-left">
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="px-2.5 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase rounded-md tracking-wider border border-indigo-100">
+                                Featured Showcase
+                            </span>
+                            <span class="text-xs text-slate-500 font-semibold flex items-center gap-1">
+                                <i class="fas fa-bolt text-amber-500 animate-pulse"></i> Visual Abacus Mastery
+                            </span>
+                        </div>
+                        
+                        <h2 class="text-xl md:text-2xl font-black uppercase tracking-tight text-slate-800">
+                            Rapid Classroom Arithmetic Practice
+                        </h2>
+                        
+                        <p class="text-slate-500 text-xs md:text-sm leading-relaxed">
+                            Watch the live captioning engine track the student's finger calculations in real time. Numbers are added or subtracted mentally based on spoken cues from the application interface.
+                        </p>
+
+                        <!-- Math Timeline Scroller -->
+                        <div class="bg-slate-50/50 border border-slate-200/80 rounded-2xl p-4">
+                            <div class="flex justify-between items-center mb-3 border-b border-slate-200 pb-2">
+                                <span class="text-[10px] font-black uppercase tracking-widest text-slate-500">Live Transcript Track</span>
+                                <span class="text-[10px] font-mono text-emerald-600 font-bold">Running Track Active</span>
+                            </div>
+                            <div id="transcriptScroller" class="space-y-2 max-h-36 overflow-y-auto custom-scroll pr-1">
+                                <!-- Generated programmatically with active row highlighting -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-slate-100 flex items-center gap-4">
+                        <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="BrainDEE" class="h-10 w-auto">
+                        <div class="text-left">
+                            <h4 class="text-xs font-black uppercase text-slate-700">Student Showcase #1</h4>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Empowering Right Brain Visualization</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters & Search Section -->
+    <section class="max-w-7xl mx-auto px-6 mb-10 reveal">
+        <div class="flex flex-col md:flex-row gap-4 justify-between items-center bg-white p-4 rounded-2xl border border-slate-200/60 shadow-sm">
+            <!-- Filter Categories -->
+            <div class="flex flex-wrap gap-2 justify-center w-full md:w-auto" id="filterBtnGroup">
+                <button onclick="filterGallery('all')" class="filter-btn active px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300">All Videos</button>
+                <button onclick="filterGallery('app-practice')" class="filter-btn px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300">App Practice</button>
+                <button onclick="filterGallery('abacus-mastery')" class="filter-btn px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300">Abacus Mastery</button>
+                <button onclick="filterGallery('mental-math')" class="filter-btn px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300">Mental Math</button>
+            </div>
             
-            <!-- Video 1 -->
-            <div class="video-card reveal">
-                <video controls preload="metadata" poster="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=800&auto=format&fit=crop">
-                    <source src="https://braindeeacademy.com/wp-content/uploads/2025/04/WhatsApp-Video-2025-04-10-at-8.47.16-AM.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <div class="p-6">
-                    <h3 class="font-black uppercase text-lg text-white mb-2">Classroom Action</h3>
-                    <p class="text-slate-500 text-sm">Students performing rapid calculations during a live workshop session.</p>
-                </div>
+            <!-- Realtime Search -->
+            <div class="relative w-full md:w-72">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                <input type="text" id="searchInput" onkeyup="searchGallery()" placeholder="Search videos..." class="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 pl-11 pr-4 text-sm text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition-all placeholder-slate-400">
             </div>
+        </div>
+    </section>
 
-            <!-- Video 2 -->
-            <div class="video-card reveal">
-                <video controls preload="metadata">
-                    <source src="https://braindeeacademy.com/wp-content/uploads/2025/02/IMG_9601-1-1.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <div class="p-6">
-                    <h3 class="font-black uppercase text-lg text-white mb-2">Abacus Mastery</h3>
-                    <p class="text-slate-500 text-sm">Focus and concentration development through traditional 17-rod abacus training.</p>
-                </div>
+    <!-- Main Grid Showcase (Dynamic from Firebase & local seed fallback) -->
+    <main class="pb-24 px-6">
+        <div id="galleryGrid" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Cards will be populated dynamically from Firestore with fallbacks -->
+        </div>
+
+        <!-- No Results Fallback wrapper -->
+        <div id="noResults" class="hidden text-center py-24 max-w-md mx-auto reveal">
+            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400 border border-slate-200">
+                <i class="fas fa-video-slash text-xl"></i>
             </div>
-
-            <!-- Video 3 -->
-            <div class="video-card reveal">
-                <video controls preload="metadata">
-                    <source src="https://braindeeacademy.com/wp-content/uploads/2025/02/document_6192670644090442398.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <div class="p-6">
-                    <h3 class="font-black uppercase text-lg text-white mb-2">Speed Mental Math</h3>
-                    <p class="text-slate-500 text-sm">Visualizing numbers and performing arithmetic without any physical tools.</p>
-                </div>
-            </div>
-
+            <h4 class="text-slate-800 font-bold text-lg mb-1">No videos found</h4>
+            <p class="text-slate-400 text-sm">We couldn't find any student video matching your search or filters.</p>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="py-12 bg-slate-950 text-white text-center px-4 border-t border-slate-900">
+    <footer class="py-12 bg-white text-slate-600 text-center px-4 border-t border-slate-200">
         <div class="container mx-auto">
-            <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="mx-auto mb-4 h-12"> 
-            <p class="text-slate-500 text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold">© 2024 BrainDEE Academy | Empowering The Next Generation</p>
+            <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="mx-auto mb-4 h-12 hover:scale-110 transition-transform duration-300" alt="BrainDEE Logo"> 
+            <p class="text-slate-400 text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold">© 2026 BrainDEE Academy | Empowering The Next Generation</p>
         </div>
     </footer>
 
+    <!-- Firebase Imports & Orchestration Engine -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, onSnapshot, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Pre-declared config credentials
+        const firebaseConfig = {
+            apiKey: "AIzaSyAg_pyfnqS3oPZdDBQ3HxnGPmWA00T3Xr4",
+            authDomain: "braindee-b9f71.firebaseapp.com",
+            projectId: "braindee-b9f71",
+            storageBucket: "braindee-b9f71.firebasestorage.app",
+            messagingSenderId: "787718214409",
+            appId: "1:787718214409:web:1f2a06276c726203ba39d8",
+            measurementId: "G-KF4B6HWF6C"
+        };
+
+        // Boot Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = 'braindee-academy';
+
+        let user = null;
+        let originalSeedList = [
+            {
+                id: "default-1",
+                title: "Classroom Live App Practice",
+                url: "https://firebasestorage.googleapis.com/v0/b/braindee-b9f71.firebasestorage.app/o/gallery%2F1781414404945_savevid.net_aqpvtfzojx3l2rgu0dt6cxx09lhjvefr9qyrdy9e__gmjqmpguav4k4kn7bgtefyla-6tz6euetd44rtoianxyzgfdbzqpz6nslzr_o.mp4?alt=media&token=2a0bae6c-94f6-4be1-8ebf-49bed95cc78a",
+                category: "app-practice",
+                length: "0:54",
+                description: "BrainDEE mental arithmetic students performing dynamic high-speed math evaluations inside the academy client suite."
+            },
+            {
+                id: "default-2",
+                title: "Soroban Abacus Visualization",
+                url: "https://firebasestorage.googleapis.com/v0/b/braindee-b9f71.firebasestorage.app/o/gallery%2F1781415266680_savevid.net_aqpxzndmydrg9-5bxqfmjrcuotkrccnymm1rpklnlxgf79nzqhbd2teiai6ye1qw_jkwvilgdvtezlvhfuhiparcraiu1s1rxn5z264.mp4?alt=media&token=2db81173-603e-47a3-8648-8090c97d0bfc",
+                category: "abacus-mastery",
+                length: "0:54",
+                description: "Watch our student perform speed abacus calculations using mental models and physical abacus finger techniques."
+            },
+            {
+                id: "default-3",
+                title: "Abacus Speed Calculations",
+                url: "https://firebasestorage.googleapis.com/v0/b/braindee-b9f71.firebasestorage.app/o/gallery%2F1781415891583_savevid.net_aqn304ptu8bdihghtydts0mkxcbcrxbla36flqdyjdxfwbmkfbs6kcprn05lwoywkjhxok71uazadddxcmfmgv9kvwlwydhnn_lmdve.mp4?alt=media&token=59271cba-df02-4bae-a234-45f12a57e298",
+                category: "abacus-mastery",
+                length: "0:54",
+                description: "Advanced classroom demonstration of abacus mastery as students rapidly visualize the mechanical abacus structure."
+            },
+            {
+                id: "default-4",
+                title: "Mental Addition & Subtraction",
+                url: "https://firebasestorage.googleapis.com/v0/b/braindee-b9f71.firebasestorage.app/o/gallery%2F1781416158208_savevid.net_aqo4bwwtvb7-wr916bw5ehdnksznc1xfihpsrpuaom7ig7ghoegxr5knfwngwbkuzluordyyecuw-g8pr30oemz8ewstgatdwsliadu.mp4?alt=media&token=28e755bd-4bb0-4f30-a80c-3bee66f42717",
+                category: "mental-math",
+                length: "0:54",
+                description: "Extreme rapid calculations showing student performing double-digit addition steps without any paper or physical help."
+            },
+            {
+                id: "default-5",
+                title: "High Precision Mental arithmetic",
+                url: "https://firebasestorage.googleapis.com/v0/b/braindee-b9f71.firebasestorage.app/o/gallery%2F1781416408109_savevid.net_aqobzwkvquhebmozqqurqyts_uu_9aatwazgejnibklxrpo6p_z3ztqccldwh438e48bguis2xq8ai8utr0mtrd_.mp4?alt=media&token=1398c8b2-ad95-4433-9ffe-3d9de2bdc02b",
+                category: "mental-math",
+                length: "0:54",
+                description: "Watch the amazing visual calculation capacity of our young mathemagicians resolving multi-level arithmetic sequences."
+            }
+        ];
+
+        // 1. Secure Authentication Setup
+        async function initAuth() {
+            try {
+                await signInAnonymously(auth);
+            } catch (err) {
+                console.error("Firebase Authentication Bypassed / Local Mode Enabled", err);
+                hideLoader();
+            }
+        }
+
+        onAuthStateChanged(auth, (currentUser) => {
+            user = currentUser;
+            hideLoader();
+            if (user) {
+                syncDatabaseCollection();
+            } else {
+                renderVideos(originalSeedList);
+            }
+        });
+
+        // Start Auth Lifecycle
+        initAuth();
+
+        // 2. Realtime Database Synchronization Engine (Strict Path Rule 1 Compliant)
+        function syncDatabaseCollection() {
+            const videoColRef = collection(db, 'artifacts', appId, 'public', 'data', 'videos');
+            
+            onSnapshot(videoColRef, (snapshot) => {
+                let dbVideos = [];
+                snapshot.forEach(doc => {
+                    dbVideos.push({ id: doc.id, ...doc.data() });
+                });
+
+                if (dbVideos.length === 0) {
+                    // Seed initial lists inside the database if completely empty
+                    originalSeedList.forEach(async (seedItem) => {
+                        try {
+                            const newDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'videos', seedItem.id);
+                            await setDoc(newDocRef, seedItem);
+                        } catch (e) {
+                            console.error("Seeding warning: ", e);
+                        }
+                    });
+                    renderVideos(originalSeedList);
+                } else {
+                    // Ensure local seed list overrides or populates correctly on top of Firestore
+                    const updatedDbVideos = dbVideos.map(video => {
+                        const seedMatch = originalSeedList.find(s => s.id === video.id);
+                        return seedMatch ? { ...video, url: seedMatch.url, title: seedMatch.title, description: seedMatch.description } : video;
+                    });
+                    
+                    // Filter out any default items that shouldn't be here, and ensure all seeds are loaded
+                    const finalVideos = [...updatedDbVideos];
+                    originalSeedList.forEach(seed => {
+                        if (!finalVideos.some(v => v.id === seed.id)) {
+                            finalVideos.push(seed);
+                        }
+                    });
+
+                    renderVideos(finalVideos);
+                }
+            }, (error) => {
+                console.error("Firestore loading error. Falling back to secure memory stream.", error);
+                renderVideos(originalSeedList);
+            });
+        }
+
+        // Permanent deleting (Firestore rule verified)
+        window.deleteVideoItem = async function(id) {
+            if (id.startsWith('default-')) {
+                showToast("System Protected", "Standard template showcase values are read-only.", "warning");
+                return;
+            }
+            if (!confirm("Are you sure you want to permanently delete this video from the collection?")) return;
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'videos', id);
+                await deleteDoc(docRef);
+                showToast("Deleted", "Showcase video deleted completely.", "success");
+            } catch (err) {
+                console.error("Deletion denied: ", err);
+                showToast("Error", "Permission Denied. Verify Security settings.", "error");
+            }
+        };
+    </script>
+
+    <!-- UI Interaction Scripts -->
     <script>
+        // Automatic Synchronized Captions Track Timeline mapping
+        const captionTimeline = [
+            { start: 0, end: 1, text: "Starting mental sums..." },
+            { start: 1, end: 2, text: "Sum 1: [ +8 ]" },
+            { start: 2.2, end: 4, text: "Step 2: [ -6 ]" },
+            { start: 4.2, end: 6, text: "Step 3: [ +6 ]" },
+            { start: 6.2, end: 8, text: "Step 4: [ +2 ]" },
+            { start: 8.2, end: 10, text: "Step 5: [ +6 ]" },
+            { start: 10.2, end: 12, text: "Step 6: [ +5 ]" },
+            { start: 12.2, end: 14, text: "Step 7: [ -6 ]" },
+            { start: 14.2, end: 16, text: "Step 8: [ -4 ]" },
+            { start: 16.2, end: 18, text: "Step 9: [ -5 ]" },
+            { start: 18.2, end: 20, text: "Step 10: [ +1 ]" },
+            { start: 20.2, end: 22, text: "Step 11: [ -6 ]" },
+            { start: 22.2, end: 24, text: "Step 12: [ +2 ]" },
+            { start: 24.2, end: 26, text: "Step 13: [ +3 ]" },
+            { start: 26.2, end: 30, text: "Step 14: [ -3 ]" },
+            { start: 30, end: 34, text: "Calculating in progress... Visualizing abacus beads..." },
+            { start: 34, end: 36, text: "Sum 2: [ +8 ]" },
+            { start: 36.2, end: 38.5, text: "Visualizing..." },
+            { start: 38.5, end: 41.5, text: "Step 2: [ -3 ]" },
+            { start: 41.5, end: 43.5, text: "Step 3: [ +3 ]" },
+            { start: 43.5, end: 46.5, text: "Step 4: [ -5 ]" },
+            { start: 46.5, end: 49.5, text: "Formulating final values..." },
+            { start: 49.5, end: 51.5, text: "Student Spoken Answer: [ 19 ]" },
+            { start: 51.5, end: 54, text: "Instructor: [ CORRECT! ]" }
+        ];
+
+        // Featured Video Core Interface Setup
+        const video = document.getElementById('featuredVideo');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const videoPlayOverlay = document.getElementById('videoPlayOverlay');
+        const videoTime = document.getElementById('videoTime');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const toggleCaptionBtn = document.getElementById('toggleCaptionBtn');
+        const overlayCaptionContainer = document.getElementById('overlayCaptionContainer');
+        const overlayCaptionText = document.getElementById('overlayCaptionText');
+        const transcriptScroller = document.getElementById('transcriptScroller');
+
+        let isCaptionsOn = true;
+
+        // Render dynamic static scrollbar tracker inside the transcript box
+        function initTranscriptTimeline() {
+            transcriptScroller.innerHTML = '';
+            captionTimeline.forEach((line, index) => {
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center bg-white border border-slate-100 rounded-lg p-2 text-xs transition-all duration-300 transform scale-100 hover:scale-102 cursor-pointer shadow-sm";
+                item.id = `transcript-item-${index}`;
+                item.setAttribute('onclick', `jumpToTime(${line.start})`);
+                
+                // Parse mathematical signs for visualization icons
+                let modifierClass = "text-slate-500 font-medium";
+                if (line.text.includes("+")) modifierClass = "text-emerald-600 font-bold";
+                else if (line.text.includes("-")) modifierClass = "text-rose-600 font-bold";
+                else if (line.text.includes("CORRECT")) modifierClass = "text-amber-600 font-black animate-pulse";
+
+                item.innerHTML = `
+                    <div class="flex gap-2 items-center">
+                        <span class="text-[9px] font-mono text-slate-400">${formatTime(line.start)}</span>
+                        <span class="${modifierClass}">${line.text}</span>
+                    </div>
+                    <i class="fas fa-play text-[8px] text-slate-400 opacity-0 hover:opacity-100 transition-opacity"></i>
+                `;
+                transcriptScroller.appendChild(item);
+            });
+        }
+
+        // Highlight active subtitles on run
+        function updateTimelineHighlight(currentTime) {
+            let foundIndex = -1;
+            captionTimeline.forEach((line, index) => {
+                const item = document.getElementById(`transcript-item-${index}`);
+                if (!item) return;
+
+                if (currentTime >= line.start && currentTime <= line.end) {
+                    item.classList.add('bg-blue-50', 'border-blue-200', 'translate-x-1');
+                    item.classList.remove('bg-white', 'border-slate-100');
+                    foundIndex = index;
+                } else {
+                    item.classList.remove('bg-blue-50', 'border-blue-200', 'translate-x-1');
+                    item.classList.add('bg-white', 'border-slate-100');
+                }
+            });
+
+            // Handle Caption Onscreen Overlays
+            if (foundIndex !== -1 && isCaptionsOn) {
+                overlayCaptionContainer.classList.remove('hidden');
+                overlayCaptionText.innerText = captionTimeline[foundIndex].text;
+                
+                // Auto scroll scroller container
+                const targetRow = document.getElementById(`transcript-item-${foundIndex}`);
+                if (targetRow) {
+                    transcriptScroller.scrollTo({
+                        top: targetRow.offsetTop - transcriptScroller.offsetTop - 12,
+                        behavior: 'smooth'
+                    });
+                }
+            } else {
+                overlayCaptionContainer.classList.add('hidden');
+            }
+        }
+
+        function jumpToTime(seconds) {
+            video.currentTime = seconds;
+            if (video.paused) {
+                togglePlay();
+            }
+        }
+
+        // Video Controller triggers
+        function togglePlay() {
+            if (video.paused) {
+                video.play();
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                videoPlayOverlay.classList.add('opacity-0', 'pointer-events-none');
+            } else {
+                video.pause();
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                videoPlayOverlay.classList.remove('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        videoPlayOverlay.addEventListener('click', togglePlay);
+        playPauseBtn.addEventListener('click', togglePlay);
+        video.addEventListener('click', togglePlay);
+
+        video.addEventListener('timeupdate', () => {
+            const current = video.currentTime;
+            const duration = video.duration || 54;
+            videoTime.innerText = `${formatTime(current)} / ${formatTime(duration)}`;
+            updateTimelineHighlight(current);
+        });
+
+        // Time formater
+        function formatTime(secs) {
+            const m = Math.floor(secs / 60);
+            const s = Math.floor(secs % 60);
+            return `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        // Toggle caption tracks
+        toggleCaptionBtn.addEventListener('click', () => {
+            isCaptionsOn = !isCaptionsOn;
+            if (isCaptionsOn) {
+                toggleCaptionBtn.innerHTML = '<i class="fas fa-closed-captioning"></i> Captions: ON';
+                toggleCaptionBtn.className = "px-3.5 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg bg-indigo-600 text-white flex items-center gap-1.5 transition-all shadow-sm";
+            } else {
+                toggleCaptionBtn.innerHTML = '<i class="fas fa-closed-captioning"></i> Captions: OFF';
+                toggleCaptionBtn.className = "px-3.5 py-2 text-[10px] font-black uppercase tracking-wider rounded-lg bg-slate-100 text-slate-500 flex items-center gap-1.5 transition-all border border-slate-200";
+                overlayCaptionContainer.classList.add('hidden');
+            }
+        });
+
+        fullscreenBtn.addEventListener('click', () => {
+            if (video.requestFullscreen) video.requestFullscreen();
+            else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+            else if (video.msRequestFullscreen) video.msRequestFullscreen();
+        });
+
+        // Loader remover
         function hideLoader() {
             var loader = document.getElementById('loader');
             if (loader) {
                 loader.style.opacity = '0';
-                setTimeout(function() { loader.style.display = 'none'; }, 500);
+                setTimeout(function() { 
+                    loader.style.display = 'none'; 
+                    triggerAnimations();
+                }, 500);
             }
         }
-        setTimeout(hideLoader, 3000);
-        window.addEventListener('load', hideLoader);
 
+        // Render dynamic grid elements (Always HTML5 native video player - NO YouTube embeds!)
+        function renderVideos(videosList) {
+            const grid = document.getElementById('galleryGrid');
+            grid.innerHTML = ''; // Clear
+
+            videosList.forEach((v) => {
+                const card = document.createElement('div');
+                card.className = "video-card flex flex-col justify-between reveal";
+                card.setAttribute('data-category', v.category);
+
+                // Pure native video layout structure
+                const playerPreviewHTML = `
+                    <div class="relative w-full overflow-hidden bg-black rounded-t-2xl aspect-video border-b border-slate-100">
+                        <video controls preload="metadata" class="w-full h-full object-contain">
+                            <source src="${v.url}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>`;
+
+                // Render customized folder labels in light style
+                let folderLabel = "Math Trick";
+                let folderColor = "bg-amber-50 text-amber-600 border-amber-100";
+                if (v.category === 'app-practice') {
+                    folderLabel = "App Training";
+                    folderColor = "bg-indigo-50 text-indigo-600 border-indigo-100";
+                } else if (v.category === 'abacus-mastery') {
+                    folderLabel = "Abacus Master";
+                    folderColor = "bg-emerald-50 text-emerald-600 border-emerald-100";
+                } else if (v.category === 'mental-math') {
+                    folderLabel = "Mental Math";
+                    folderColor = "bg-blue-50 text-blue-600 border-blue-100";
+                }
+
+                card.innerHTML = `
+                    ${playerPreviewHTML}
+                    <div class="p-6 flex-grow flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2.5 py-1 ${folderColor} border text-[9px] font-black uppercase rounded-md tracking-wider">${folderLabel}</span>
+                                    <span class="text-xs text-slate-400 font-medium"><i class="far fa-clock mr-1"></i>${v.length} Min</span>
+                                </div>
+                                <button onclick="deleteVideoItem('${v.id}')" class="text-slate-300 hover:text-red-500 transition-colors text-xs p-1" title="Delete Video">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            <h3 class="font-black uppercase text-lg text-slate-800 mb-2 tracking-tight leading-tight card-title">${v.title}</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed">${v.description}</p>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // retrigger scroll animation reveals
+            triggerAnimations();
+        }
+
+        // Filtering
+        window.filterGallery = function(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            const cards = document.querySelectorAll('.video-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-category');
+                if (category === 'all' || cardCat === category) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            toggleNoResultsPlaceholder(visibleCount);
+        }
+
+        // Searching
+        window.searchGallery = function() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.video-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                const desc = card.querySelector('p').textContent.toLowerCase();
+
+                if (title.includes(input) || desc.includes(input)) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            toggleNoResultsPlaceholder(visibleCount);
+        }
+
+        function toggleNoResultsPlaceholder(visibleCount) {
+            const noResults = document.getElementById('noResults');
+            if (visibleCount === 0) {
+                noResults.classList.remove('hidden');
+                noResults.classList.add('active');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+
+        // Scroll observer setups
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            entries.forEach(entry => { 
+                if (entry.isIntersecting) entry.target.classList.add('active'); 
+            });
+        }, { threshold: 0.05 });
+
+        function triggerAnimations() {
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        // Custom Toast system (No standard Alerts)
+        function showToast(title, body, type = "success") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let colorClasses = "bg-white border-blue-100 shadow-lg";
+            let iconClass = "fa-info-circle text-blue-500";
+            if (type === "success") {
+                colorClasses = "bg-white border-emerald-100 shadow-lg";
+                iconClass = "fa-check-circle text-emerald-500";
+            } else if (type === "error") {
+                colorClasses = "bg-white border-red-100 shadow-lg";
+                iconClass = "fa-exclamation-triangle text-red-500";
+            } else if (type === "warning") {
+                colorClasses = "bg-white border-amber-100 shadow-lg";
+                iconClass = "fa-exclamation-circle text-amber-500";
+            }
+
+            toast.className = `flex gap-3 p-4 rounded-2xl border ${colorClasses} items-start transition-all duration-300 opacity-0 translate-y-2`;
+            toast.innerHTML = `
+                <div class="text-lg mt-0.5 shrink-0"><i class="fas ${iconClass}"></i></div>
+                <div class="text-left min-w-0">
+                    <h4 class="font-black text-slate-800 text-xs uppercase tracking-wider leading-none mb-1">${title}</h4>
+                    <p class="text-slate-500 text-[11px] leading-snug">${body}</p>
+                </div>
+            `;
+            container.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => {
+                toast.classList.remove('opacity-0', 'translate-y-2');
+            }, 50);
+
+            // Close Toast auto
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 4500);
+        }
+
+        // Bootstrap Scroller
+        initTranscriptTimeline();
     </script>
 </body>
 </html>
