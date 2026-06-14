@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CRITICAL FIX: Forces the browser to send a valid referrer header to YouTube -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Video Gallery | BrainDEE Academy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap');
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #0f172a; 
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3 { 
+            font-family: 'Poppins', sans-serif; 
+            letter-spacing: -0.01em; 
+        }
+        
+        .glass-nav { 
+            background: rgba(15, 23, 42, 0.9); 
+            backdrop-filter: blur(12px); 
+            border-bottom: 1px solid rgba(255,255,255,0.08); 
+        }
+
+        .video-card {
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .video-card:hover {
+            transform: translateY(-8px);
+            border-color: #3b82f6;
+            box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.3);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Ambient glowing background */
+        .bg-glow {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(80px);
+            pointer-events: none;
+        }
+
+        /* Filter Active State Styling */
+        .filter-btn.active {
+            background-color: #3b82f6;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            border-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Ambient Glow Effects -->
+    <div class="bg-glow top-[-100px] left-[-100px]"></div>
+    <div class="bg-glow bottom-[-150px] right-[-100px]"></div>
+    <div class="bg-glow top-[40%] left-[50%] -translate-x-1/2"></div>
+
+    <!-- Preloader -->
+    <div id="loader" class="fixed inset-0 bg-slate-950 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500">
+        <div class="relative flex items-center justify-center mb-4">
+            <div class="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+            <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="Loader Logo" class="absolute h-8 w-auto">
+        </div>
+        <p class="text-slate-400 text-sm font-semibold tracking-wider uppercase animate-pulse">Loading BrainDEE Gallery...</p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 py-4 px-6 md:px-12 glass-nav">
+        <div class="max-w-[1440px] mx-auto flex justify-between items-center">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" alt="BrainDEE Logo" class="h-10 md:h-12 w-auto transition-transform duration-300 group-hover:scale-110">
+                <div class="flex flex-col">
+                    <span class="text-lg md:text-xl font-black text-white uppercase tracking-tight leading-none">BrainDEE</span>
+                    <span class="text-[10px] text-blue-400 uppercase tracking-widest font-bold">Academy</span>
+                </div>
+            </a>
+            <a href="index.html" class="text-sm font-bold text-blue-400 hover:text-white transition-colors flex items-center gap-2 group">
+                <i class="fas fa-arrow-left transition-transform group-hover:-translate-x-1"></i> Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="pt-36 pb-12 px-6">
+        <div class="max-w-4xl mx-auto text-center reveal">
+            <span class="px-4 py-1.5 bg-blue-900/30 text-blue-400 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 inline-block border border-blue-500/20 shadow-sm">
+                <i class="fas fa-bolt mr-1.5"></i> Showcase Zone
+            </span>
+            <h1 class="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tight leading-tight">
+                Student <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">Showcase</span>
+            </h1>
+            <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+                Watch our mathemagicians in action as they demonstrate extreme focus, high-speed mental arithmetic, and visual abacus mastery.
+            </p>
+        </div>
+    </header>
+
+    <!-- Controls (Filters & Search) -->
+    <section class="max-w-7xl mx-auto px-6 mb-12 reveal">
+        <div class="flex flex-col md:flex-row gap-4 justify-between items-center bg-slate-900/50 p-4 rounded-2xl border border-slate-800/80 backdrop-blur-md">
+            <!-- Dynamic Filters -->
+            <div class="flex flex-wrap gap-2 justify-center w-full md:w-auto">
+                <button onclick="filterGallery('all')" class="filter-btn active px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl border border-slate-700/60 text-slate-400 hover:text-white hover:border-slate-500 transition-all duration-300">
+                    All Work
+                </button>
+                <button onclick="filterGallery('app-practice')" class="filter-btn px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl border border-slate-700/60 text-slate-400 hover:text-white hover:border-slate-500 transition-all duration-300">
+                    App Practice
+                </button>
+                <button onclick="filterGallery('abacus-mastery')" class="filter-btn px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl border border-slate-700/60 text-slate-400 hover:text-white hover:border-slate-500 transition-all duration-300">
+                    Abacus Mastery
+                </button>
+                <button onclick="filterGallery('mental-math')" class="filter-btn px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl border border-slate-700/60 text-slate-400 hover:text-white hover:border-slate-500 transition-all duration-300">
+                    Mental Math
+                </button>
+            </div>
+            
+            <!-- Realtime Search -->
+            <div class="relative w-full md:w-72">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+                <input type="text" id="searchInput" onkeyup="searchGallery()" placeholder="Search video..." class="w-full bg-slate-950/80 border border-slate-800 rounded-xl py-2.5 pl-11 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors placeholder-slate-500">
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Grid Showcase -->
+    <main class="pb-32 px-6">
+        <div id="galleryGrid" class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Video 1 (User Request - BrainDEE App Practice) -->
+            <div class="video-card reveal flex flex-col" data-category="app-practice">
+                <!-- 9:16 Aspect Ratio container for Portrait YouTube Shorts -->
+                <div class="relative w-full overflow-hidden bg-slate-950 rounded-t-2xl" style="padding-top: 177.77%;">
+                    <!-- referrerpolicy="strict-origin-when-cross-origin" added here -->
+                    <iframe class="absolute top-0 left-0 w-full h-full border-b border-slate-800"
+                        src="https://www.youtube-nocookie.com/embed/RAwj5D-bgSQ?rel=0" 
+                        title="BrainDEE Students Live App Practice" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="p-6 flex-grow flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2.5 py-1 bg-indigo-900/40 text-indigo-400 text-[9px] font-black uppercase rounded-md tracking-wider">App Training</span>
+                            <span class="text-xs text-slate-500 font-medium"><i class="far fa-clock mr-1"></i>0:54 Min</span>
+                        </div>
+                        <h3 class="font-black uppercase text-lg text-white mb-2 tracking-tight leading-tight card-title">Classroom App Practice</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Our brilliant BrainDEE student using the academy app to practice high-speed arithmetic and solve math equations instantly.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video 2 (Abacus Mastery Concept) -->
+            <div class="video-card reveal flex flex-col" data-category="abacus-mastery">
+                <div class="relative w-full overflow-hidden bg-slate-950 rounded-t-2xl" style="padding-top: 177.77%;">
+                    <!-- referrerpolicy="strict-origin-when-cross-origin" added here -->
+                    <iframe class="absolute top-0 left-0 w-full h-full border-b border-slate-800"
+                        src="https://www.youtube-nocookie.com/embed/8w2_z-n6AMc?rel=0" 
+                        title="ABACUS - Visualisation Power" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="p-6 flex-grow flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2.5 py-1 bg-emerald-900/40 text-emerald-400 text-[9px] font-black uppercase rounded-md tracking-wider">Abacus Power</span>
+                            <span class="text-xs text-slate-500 font-medium"><i class="far fa-clock mr-1"></i>0:13 Min</span>
+                        </div>
+                        <h3 class="font-black uppercase text-lg text-white mb-2 tracking-tight leading-tight card-title">Abacus Visualization</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Concentration and visualization development through traditional 17-rod abacus training, activating the right brain.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video 3 (Speed Mental Math Concept) -->
+            <div class="video-card reveal flex flex-col" data-category="mental-math">
+                <div class="relative w-full overflow-hidden bg-slate-950 rounded-t-2xl" style="padding-top: 177.77%;">
+                    <!-- referrerpolicy="strict-origin-when-cross-origin" added here -->
+                    <iframe class="absolute top-0 left-0 w-full h-full border-b border-slate-800"
+                        src="https://www.youtube-nocookie.com/embed/VFxbPYWX-_0?rel=0" 
+                        title="Genius Mental Math Trick" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="p-6 flex-grow flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2.5 py-1 bg-amber-900/40 text-amber-400 text-[9px] font-black uppercase rounded-md tracking-wider">Speed Math</span>
+                            <span class="text-xs text-slate-500 font-medium"><i class="far fa-clock mr-1"></i>0:16 Min</span>
+                        </div>
+                        <h3 class="font-black uppercase text-lg text-white mb-2 tracking-tight leading-tight card-title">Speed Mental Math</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Visualizing numbers and performing lightning-fast arithmetic without any physical devices or calculators.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- No Results fallback placeholder -->
+        <div id="noResults" class="hidden text-center py-24 max-w-md mx-auto reveal">
+            <div class="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-500 border border-slate-700/50">
+                <i class="fas fa-video-slash text-xl"></i>
+            </div>
+            <h4 class="text-white font-bold text-lg mb-1">No videos found</h4>
+            <p class="text-slate-500 text-sm">We couldn't find any student showcase video matching your search term. Try another keyword!</p>
+        </div>
+    </main>
+
+    <!-- Submit Video Call to Action banner -->
+    <section class="pb-32 px-6">
+        <div class="max-w-5xl mx-auto bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 p-8 md:p-12 rounded-3xl text-center relative overflow-hidden reveal">
+            <div class="absolute -right-24 -bottom-24 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl"></div>
+            <div class="relative z-10">
+                <i class="fas fa-trophy text-4xl text-yellow-500 mb-6 animate-bounce"></i>
+                <h2 class="text-2xl md:text-4xl font-black uppercase text-white mb-4">Want to be featured?</h2>
+                <p class="text-slate-400 max-w-xl mx-auto mb-8 text-sm md:text-base">Record your child solving rapid mental math sums and send it to our official coordinator email or WhatsApp group!</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="mailto:info@braindeeacademy.com" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg hover:shadow-blue-500/20 flex items-center justify-center gap-2">
+                        <i class="fas fa-envelope"></i> Email Video
+                    </a>
+                    <a href="https://wa.me/#" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-8 py-4 rounded-xl text-xs uppercase tracking-widest transition-all shadow-lg hover:shadow-emerald-500/20 flex items-center justify-center gap-2">
+                        <i class="fab fa-whatsapp"></i> Send via WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-slate-950 text-white text-center px-4 border-t border-slate-900">
+        <div class="container mx-auto">
+            <img src="https://atomic-red-himj8q3bms.edgeone.app/IMG_9614.png" class="mx-auto mb-4 h-12 hover:scale-110 transition-transform duration-300" alt="BrainDEE Logo"> 
+            <p class="text-slate-500 text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold">© 2026 BrainDEE Academy | Empowering The Next Generation</p>
+        </div>
+    </footer>
+
+    <script>
+        // Preloader functionality
+        function hideLoader() {
+            var loader = document.getElementById('loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(function() { 
+                    loader.style.display = 'none'; 
+                    // Trigger animations on visible blocks
+                    triggerAnimations();
+                }, 500);
+            }
+        }
+        
+        // Auto remove loader on load or after fallback timeout
+        setTimeout(hideLoader, 1500);
+        window.addEventListener('load', hideLoader);
+
+        // Intersection Observer for scroll triggers
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { 
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active'); 
+                }
+            });
+        }, { threshold: 0.05 });
+
+        function triggerAnimations() {
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        // Realtime Category Filter
+        function filterGallery(category) {
+            // Adjust button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+
+            // Filter elements
+            const cards = document.querySelectorAll('.video-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-category');
+                if (category === 'all' || cardCat === category) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Toggle No Results placeholder
+            const noResults = document.getElementById('noResults');
+            if (visibleCount === 0) {
+                noResults.classList.remove('hidden');
+                noResults.classList.add('active');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+
+        // Realtime Search Gallery
+        function searchGallery() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.video-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const title = card.querySelector('.card-title').textContent.toLowerCase();
+                const text = card.querySelector('p').textContent.toLowerCase();
+
+                if (title.includes(input) || text.includes(input)) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Toggle No Results placeholder
+            const noResults = document.getElementById('noResults');
+            if (visibleCount === 0) {
+                noResults.classList.remove('hidden');
+                noResults.classList.add('active');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
