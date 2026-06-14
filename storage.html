@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrainDEE Cloud Image Host & URL Generator</title>
+    <!-- Forces the browser to send a valid referrer header to YouTube / Firebase -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>BrainDEE Cloud Media Host & URL Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome for sleek modern icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -69,8 +71,8 @@
         <div class="bg-gradient-to-r from-slate-900 to-slate-950 border border-slate-800 rounded-[2rem] p-6 md:p-8 mb-10 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div class="max-w-2xl text-left">
                 <span class="px-3.5 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-md text-[10px] font-black uppercase tracking-widest mb-3 inline-block">Production-Ready CDN Builder</span>
-                <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white mb-2">Cloud Image to Direct URL Converter</h2>
-                <p class="text-slate-400 text-sm leading-relaxed">Compress, optimize, and organize your images directly within your BrainDEE Firebase Storage bucket. Copy optimized HTML image elements in one click.</p>
+                <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white mb-2 font-bold text-transparent bg-clip-text bg-gradient-to-r from-slate-100 to-slate-300">Media Host &amp; Direct URL Generator</h2>
+                <p class="text-slate-400 text-sm leading-relaxed">Compress images, host fast-loading student classroom videos, and store documents safely inside your Firebase Storage bucket. Copy direct web snippets instantly.</p>
             </div>
             <a href="https://console.firebase.google.com/u/0/project/braindee-b9f71/storage/braindee-b9f71.firebasestorage.app/files" target="_blank" class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 rounded-xl font-bold uppercase text-[10px] tracking-wider transition-all flex items-center gap-2 shrink-0">
                 <i class="fab fa-google text-amber-500"></i> Open Firebase Console
@@ -88,9 +90,10 @@
                         <div>
                             <label class="block text-[10px] font-black uppercase text-slate-400 mb-2">Predefined Path</label>
                             <select id="folder-preset" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-200 font-bold outline-none focus:border-blue-500 transition-all">
-                                <option value="gallery">gallery/ (Classroom Images)</option>
+                                <option value="gallery">gallery/ (Classroom Photos)</option>
+                                <option value="videos">videos/ (Student Showcases)</option>
+                                <option value="docs">docs/ (Certificates &amp; PDFs)</option>
                                 <option value="partners">partners/ (School Logos)</option>
-                                <option value="leaders">leaders/ (Visionary Leaders)</option>
                                 <option value="general">general/ (Uncategorized)</option>
                                 <option value="custom">-- Create Custom Directory --</option>
                             </select>
@@ -108,7 +111,10 @@
                 <!-- Client-Side Compression Optimization configuration card -->
                 <div class="bg-slate-900/40 border border-slate-800 p-6 md:p-8 rounded-3xl">
                     <div class="flex justify-between items-center mb-5">
-                        <h3 class="text-xs font-black uppercase tracking-widest text-slate-400"><i class="fas fa-compress-alt mr-2 text-orange-500"></i> 2. Auto-Compression Settings</h3>
+                        <div class="flex flex-col text-left">
+                            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400"><i class="fas fa-compress-alt mr-2 text-orange-500"></i> 2. Auto-Compression Settings</h3>
+                            <span class="text-[9px] text-slate-500 mt-0.5 uppercase tracking-wider font-bold">Applies only to Photo/Image formats</span>
+                        </div>
                         <label class="relative inline-flex items-center cursor-pointer select-none">
                             <input type="checkbox" id="compress-toggle" checked class="sr-only peer">
                             <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-slate-400 after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:bg-white peer-checked:bg-blue-600"></div>
@@ -116,10 +122,10 @@
                     </div>
 
                     <div id="compression-panel" class="space-y-5">
-                        <p class="text-slate-400 text-xs leading-relaxed">Converts PNG/JPEG images into highly optimized JPEGs before uploading. Highly recommended to keep your website pages loading instantaneously!</p>
+                        <p class="text-slate-400 text-xs leading-relaxed text-left">Converts heavy image files into highly optimized JPEGs on your local system before initiating transmission. Note: Videos and documents bypass compression automatically to protect stream rates and readability.</p>
                         <div class="space-y-2">
                             <div class="flex justify-between items-center">
-                                <span class="text-[10px] font-black uppercase text-slate-400">Target Image Quality</span>
+                                <span class="text-[10px] font-black uppercase text-slate-400">Target Photo Quality</span>
                                 <span id="quality-badge" class="px-2.5 py-0.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-md text-[10px] font-black uppercase tracking-wider">75% (Balanced)</span>
                             </div>
                             <input type="range" id="quality-slider" min="10" max="100" value="75" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-600">
@@ -129,12 +135,13 @@
 
                 <!-- Drag and drop zone -->
                 <div id="drop-zone" class="custom-dashed-border h-64 flex flex-col justify-center items-center p-6 text-center cursor-pointer feature-hover-card transition-all relative">
-                    <input type="file" id="file-picker" accept="image/*" class="hidden">
+                    <!-- Accept all support extensions -->
+                    <input type="file" id="file-picker" accept="image/*,video/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain" class="hidden">
                     <div class="space-y-4">
-                        <div class="w-16 h-16 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center text-2xl mx-auto"><i class="fas fa-cloud-arrow-up"></i></div>
+                        <div class="w-16 h-16 bg-blue-500/10 text-blue-500 rounded-full flex items-center justify-center text-2xl mx-auto"><i class="fas fa-photo-film"></i></div>
                         <div>
-                            <p class="font-black text-slate-100 uppercase tracking-wide text-sm">Drag and Drop your image here</p>
-                            <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-bold">or <span class="text-blue-500 underline">browse your device files</span></p>
+                            <p class="font-black text-slate-100 uppercase tracking-wide text-sm">Drag &amp; Drop media or docs here</p>
+                            <p class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-bold">Supports Photos, MP4/Videos, &amp; Worksheets (<span class="text-blue-500 underline">browse files</span>)</p>
                         </div>
                     </div>
                 </div>
@@ -142,13 +149,15 @@
                 <!-- Active Upload Card -->
                 <div id="active-upload-card" class="hidden bg-slate-900 border border-slate-800 p-6 rounded-3xl">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-xl flex items-center justify-center text-lg shrink-0"><i class="fas fa-file-image"></i></div>
+                        <div id="active-file-icon" class="w-12 h-12 bg-blue-500/10 text-blue-500 rounded-xl flex items-center justify-center text-lg shrink-0">
+                            <i class="fas fa-file-arrow-up"></i>
+                        </div>
                         <div class="flex-grow min-w-0 text-left">
-                            <h4 id="active-file-name" class="font-bold text-sm text-slate-100 truncate uppercase">filename.png</h4>
+                            <h4 id="active-file-name" class="font-bold text-sm text-slate-100 truncate uppercase">filename.mp4</h4>
                             <div class="flex gap-2 text-[10px] font-black text-slate-400 uppercase tracking-wider mt-1">
-                                <span id="active-file-original-size">Original: 1.2 MB</span>
+                                <span id="active-file-original-size">Original: --</span>
                                 <span class="text-slate-600">|</span>
-                                <span id="active-file-target-size" class="text-orange-400">Target: 245 KB</span>
+                                <span id="active-file-target-size" class="text-orange-400">Target: Streaming Direct</span>
                             </div>
                         </div>
                     </div>
@@ -159,7 +168,7 @@
                         </div>
                         <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400">
                             <span id="upload-percent">0% Completed</span>
-                            <span id="upload-status" class="text-blue-500 animate-pulse">Compressing Asset...</span>
+                            <span id="upload-status" class="text-blue-500 animate-pulse">Analyzing...</span>
                         </div>
                     </div>
                 </div>
@@ -175,8 +184,9 @@
                     <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-5"><i class="fas fa-check-circle mr-2 text-emerald-500"></i> Generation Successful</h3>
                     
                     <div class="flex gap-4 mb-6">
-                        <div class="w-16 h-16 bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shrink-0">
-                            <img id="result-preview" src="" class="w-full h-full object-cover">
+                        <!-- Dynamic preview container (shows image frame, video frame, or document code depending on format) -->
+                        <div id="result-preview-frame" class="w-16 h-16 bg-slate-950 border border-slate-800 rounded-xl overflow-hidden shrink-0 flex items-center justify-center">
+                            <!-- Injected programmatically -->
                         </div>
                         <div class="text-left min-w-0 flex-grow">
                             <h4 id="result-name" class="font-black text-slate-100 text-sm truncate uppercase">file.jpg</h4>
@@ -187,7 +197,7 @@
                     <div class="space-y-4">
                         <!-- Direct URL copy block -->
                         <div>
-                            <label class="block text-[10px] font-black uppercase text-slate-400 mb-1.5">Direct Image Link</label>
+                            <label class="block text-[10px] font-black uppercase text-slate-400 mb-1.5">Direct Public Link</label>
                             <div class="flex bg-slate-950 border border-slate-800 rounded-xl p-2.5 items-center justify-between gap-2">
                                 <span id="result-direct-url" class="text-xs font-mono truncate select-all text-left text-slate-300 max-w-[220px]">https://firebase...</span>
                                 <button onclick="copyGeneratedURL('result-direct-url', this)" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-black text-[10px] uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0">
@@ -196,9 +206,9 @@
                             </div>
                         </div>
 
-                        <!-- HTML Image tag copy block -->
+                        <!-- Configured HTML Snippet copy block -->
                         <div>
-                            <label class="block text-[10px] font-black uppercase text-slate-400 mb-1.5">HTML Code Snippet</label>
+                            <label id="result-snippet-label" class="block text-[10px] font-black uppercase text-slate-400 mb-1.5">HTML Embedded Snippet</label>
                             <div class="flex bg-slate-950 border border-slate-800 rounded-xl p-2.5 items-center justify-between gap-2">
                                 <span id="result-html-snippet" class="text-xs font-mono truncate select-all text-left text-slate-300 max-w-[220px]">&lt;img src="..." alt=""&gt;</span>
                                 <button onclick="copyGeneratedURL('result-html-snippet', this)" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg font-black text-[10px] uppercase tracking-wider transition-all flex items-center gap-1.5 shrink-0">
@@ -221,10 +231,10 @@
                         <input type="text" id="search-history" placeholder="Search Upload Logs..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 pl-9 text-xs text-slate-200 font-bold outline-none focus:border-blue-500 transition-all">
                     </div>
 
-                    <div id="history-container" class="space-y-3 max-h-[360px] overflow-y-auto no-scrollbar pr-1">
+                    <div id="history-container" class="space-y-3 max-h-[380px] overflow-y-auto no-scrollbar pr-1">
                         <!-- Dynamic history logs rendered here -->
                         <div class="text-center py-8 text-slate-500">
-                            <i class="fas fa-cloud-upload-alt text-3xl mb-3 opacity-30"></i>
+                            <i class="fas fa-folder-open text-3xl mb-3 opacity-30"></i>
                             <p class="text-xs uppercase tracking-wider font-bold">No assets uploaded yet</p>
                         </div>
                     </div>
@@ -356,38 +366,65 @@ service firebase.storage {
             }
         });
 
+        // Detect dynamic file properties (Image / Video / Document)
+        function analyzeFileType(file) {
+            const mime = file.type;
+            const extension = file.name.split('.').pop().toLowerCase();
+
+            if (mime.startsWith('image/')) {
+                return { category: 'image', icon: 'fa-file-image text-indigo-400' };
+            } else if (mime.startsWith('video/')) {
+                return { category: 'video', icon: 'fa-file-video text-pink-400' };
+            } else {
+                // Documents & General files sorting
+                let icon = 'fa-file-alt text-slate-400';
+                if (extension === 'pdf') icon = 'fa-file-pdf text-red-400';
+                else if (['doc', 'docx'].includes(extension)) icon = 'fa-file-word text-blue-400';
+                else if (['xls', 'xlsx'].includes(extension)) icon = 'fa-file-excel text-emerald-400';
+                else if (['ppt', 'pptx'].includes(extension)) icon = 'fa-file-powerpoint text-orange-400';
+                else if (extension === 'txt') icon = 'fa-file-lines text-slate-300';
+                
+                return { category: 'document', icon: icon };
+            }
+        }
+
         // Process, Compress and Upload Pipeline
         async function processFile(file) {
-            if (!file.type.startsWith('image/')) {
-                showToast("File Type Error", "Please select an image file only.", "error");
-                return;
-            }
+            if (!file) return;
 
             const targetFolder = customPathInput.value.trim().replace(/^\/|\/$/g, '') || 'general';
             const originalName = file.name;
             let formattedName = originalName.toLowerCase().replace(/[^a-z0-9.-]/g, '_');
             
-            // UI elements
+            // Extract media specs
+            const specs = analyzeFileType(file);
+
+            // Update predefined active upload icon in progress card
+            const activeIconContainer = document.getElementById('active-file-icon');
+            activeIconContainer.innerHTML = `<i class="fas ${specs.icon}"></i>`;
+
+            // UI elements setup
             document.getElementById('active-upload-card').classList.remove('hidden');
             document.getElementById('active-file-name').innerText = formattedName;
             document.getElementById('active-file-original-size').innerText = `Original: ${formatBytes(file.size)}`;
             document.getElementById('upload-progress-bar').style.width = '0%';
             document.getElementById('upload-percent').innerText = "0% Completed";
-            document.getElementById('upload-status').innerText = "Analyzing file...";
+            document.getElementById('upload-status').innerText = "Analyzing file content...";
 
             let fileToUpload = file;
 
-            // Apply compression if checked
-            if (compressToggle.checked) {
-                document.getElementById('upload-status').innerText = "Optimizing Image (Local Compress)...";
+            // Apply compression ONLY to compatible images
+            if (specs.category === 'image' && compressToggle.checked) {
+                document.getElementById('upload-status').innerText = "Optimizing Photo (Local Compress)...";
                 const quality = parseInt(qualitySlider.value) / 100;
                 fileToUpload = await compressImage(file, quality, formattedName);
-                document.getElementById('active-file-target-size').innerText = `Compressed target: ${formatBytes(fileToUpload.size)}`;
-                // update naming scheme to ensure optimized .jpg extensions
+                document.getElementById('active-file-target-size').innerText = `Compressed: ${formatBytes(fileToUpload.size)}`;
                 formattedName = fileToUpload.name;
                 document.getElementById('active-file-name').innerText = formattedName;
             } else {
-                document.getElementById('active-file-target-size').innerText = `Skipping compress`;
+                // Bypassed for video / documents
+                const bypassReason = specs.category === 'image' ? 'Skipping compress' : 'Direct Streaming';
+                document.getElementById('active-file-target-size').innerText = bypassReason;
             }
 
             // Secure Path generation
@@ -405,11 +442,11 @@ service firebase.storage {
                 }, 
                 (error) => {
                     console.error("Upload error", error);
-                    showToast("Cloud Error", "Permission denied or network failure. Verify Firebase Storage rules schema.", "error");
+                    showToast("Cloud Error", "Upload denied or network failed. Verify storage rules schema.", "error");
                     document.getElementById('active-upload-card').classList.add('hidden');
                 }, 
                 async () => {
-                    // Success callback
+                    // Successful Transmission Callback
                     try {
                         const directUrl = await getDownloadURL(uploadTask.snapshot.ref);
                         const fileMetadata = {
@@ -417,15 +454,17 @@ service firebase.storage {
                             path: uniquePath,
                             size: fileToUpload.size,
                             url: directUrl,
+                            category: specs.category,
+                            iconClass: specs.icon,
                             uploadedAt: Date.now()
                         };
 
                         saveToHistory(fileMetadata);
                         renderResult(fileMetadata);
-                        showToast("Host Success", "Direct URL created successfully!", "success");
+                        showToast("Host Success", "Direct Public URL generated!", "success");
                     } catch (err) {
                         console.error(err);
-                        showToast("URL fetch failed", "Upload succeeded but failed generating public link.", "error");
+                        showToast("URL fetch failed", "Asset uploaded but direct URL fetching failed.", "error");
                     }
                     document.getElementById('active-upload-card').classList.add('hidden');
                 }
@@ -445,7 +484,7 @@ service firebase.storage {
                         let width = img.width;
                         let height = img.height;
 
-                        // Downscale high-resolution mobile cameras
+                        // Downscale high-resolution cameras to max bounds
                         const maxDimension = 2048;
                         if (width > maxDimension || height > maxDimension) {
                             if (width > height) {
@@ -463,7 +502,7 @@ service firebase.storage {
                         ctx.drawImage(img, 0, 0, width, height);
 
                         canvas.toBlob((blob) => {
-                            // rename extension to .jpg for consistent web processing
+                            // clean up file extension name matching
                             const cleanJpgName = outputName.replace(/\.[^/.]+$/, "") + ".jpg";
                             const compressedFile = new File([blob], cleanJpgName, {
                                 type: "image/jpeg",
@@ -476,14 +515,49 @@ service firebase.storage {
             });
         }
 
+        // Generate tailored snippets & dynamic preview views depending on Format Type
         function renderResult(meta) {
             const container = document.getElementById('result-container');
             container.classList.remove('hidden');
-            document.getElementById('result-preview').src = meta.url;
+
+            // Render Dynamic Preview Panel
+            const previewFrame = document.getElementById('result-preview-frame');
+            previewFrame.innerHTML = ''; // reset
+
+            if (meta.category === 'image') {
+                previewFrame.innerHTML = `<img src="${meta.url}" class="w-full h-full object-cover">`;
+            } else if (meta.category === 'video') {
+                previewFrame.innerHTML = `
+                    <div class="relative w-full h-full bg-slate-900 flex items-center justify-center">
+                        <i class="fas fa-play text-[10px] text-white absolute bg-blue-600/80 p-1.5 rounded-full z-10"></i>
+                        <video src="${meta.url}" class="w-full h-full object-cover opacity-60" muted preload="metadata"></video>
+                    </div>`;
+            } else {
+                // Documents icon matching
+                previewFrame.innerHTML = `
+                    <div class="w-full h-full bg-slate-950 flex items-center justify-center text-xl">
+                        <i class="fas ${meta.iconClass}"></i>
+                    </div>`;
+            }
+
             document.getElementById('result-name').innerText = meta.name;
             document.getElementById('result-size-badge').innerText = `Size: ${formatBytes(meta.size)}`;
             document.getElementById('result-direct-url').innerText = meta.url;
-            document.getElementById('result-html-snippet').innerText = `<img src="${meta.url}" alt="${meta.name.replace(/\.[^/.]+$/, "")}">`;
+
+            // Tailor the Direct HTML Snippet copy blocks depending on File Category types
+            const snippetLabel = document.getElementById('result-snippet-label');
+            const snippetSpan = document.getElementById('result-html-snippet');
+
+            if (meta.category === 'image') {
+                snippetLabel.innerText = "HTML Embedded Photo Code";
+                snippetSpan.innerText = `<img src="${meta.url}" alt="${meta.name.replace(/\.[^/.]+$/, "")}">`;
+            } else if (meta.category === 'video') {
+                snippetLabel.innerText = "HTML Video Player Code";
+                snippetSpan.innerText = `<video src="${meta.url}" controls class="w-full max-w-lg rounded-2xl"></video>`;
+            } else {
+                snippetLabel.innerText = "HTML Document Link Code";
+                snippetSpan.innerText = `<a href="${meta.url}" target="_blank" download class="text-blue-500 hover:underline">Download ${meta.name}</a>`;
+            }
         }
 
         // LocalStorage persistent logger helpers
@@ -542,9 +616,27 @@ service firebase.storage {
             filtered.forEach((item, index) => {
                 const logCard = document.createElement('div');
                 logCard.className = "flex gap-3 bg-slate-950/60 p-3 rounded-xl items-center border border-slate-900 justify-between";
+                
+                // Construct format-specific preview HTML elements inside past logs items list
+                let previewHTML = '';
+                if (item.category === 'image') {
+                    previewHTML = `<img src="${item.url}" class="w-full h-full object-cover">`;
+                } else if (item.category === 'video') {
+                    previewHTML = `
+                        <div class="relative w-full h-full bg-slate-900 flex items-center justify-center">
+                            <i class="fas fa-play text-[8px] text-white absolute z-10"></i>
+                            <video src="${item.url}" class="w-full h-full object-cover opacity-60" muted preload="metadata"></video>
+                        </div>`;
+                } else {
+                    previewHTML = `
+                        <div class="w-full h-full bg-slate-900 border border-slate-800 rounded-md flex items-center justify-center text-sm">
+                            <i class="fas ${item.iconClass || 'fa-file-alt'}"></i>
+                        </div>`;
+                }
+
                 logCard.innerHTML = `
-                    <div class="w-10 h-10 bg-slate-900 border border-slate-800 rounded-lg overflow-hidden shrink-0">
-                        <img src="${item.url}" class="w-full h-full object-cover">
+                    <div class="w-10 h-10 bg-slate-900 border border-slate-800 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
+                        ${previewHTML}
                     </div>
                     <div class="text-left min-w-0 flex-grow">
                         <h4 class="text-xs font-black text-slate-300 truncate uppercase leading-none mb-1">${item.name}</h4>
